@@ -44,16 +44,15 @@ public class LevelView extends JComponent {
 	private List<Item> items;
 	
 	private Item newItem;
-	
 	private Cursor cursor = new Cursor(this);
 	
 	public LevelView() {
 		items = new ArrayList<Item>();
 		
-		// for test purposes until we can create stuff with the mouse
-		items.add(new Circle(50, 50, 50, false));
-		items.add(new Rect(20, 20, 10, 10, true));
-		System.out.println(encodeJava());
+		items.add(new Circle(50, 50, 50, 2, false));
+		items.add(new Rect(20, 20, 10, 10, 3, false));
+		decode(encode());
+		decode(encode());
 		
 		setDoubleBuffered(true);
 		setPreferredSize(new Dimension(640, 480));
@@ -242,6 +241,7 @@ public class LevelView extends JComponent {
 		return result;
 	}
 	
+	// this whole decode method is pretty bad but whatever
 	public void decode(String str) {
 		items.clear();
 		
@@ -266,6 +266,8 @@ public class LevelView extends JComponent {
 					line.y1 = str.charAt(index++);
 					line.x2 = str.charAt(index++);
 					line.y2 = str.charAt(index++);
+					
+					line.thickness = str.charAt(index++);
 					items.add(line);
 					break;
 				case Item.TYPE_RECT:
@@ -275,6 +277,7 @@ public class LevelView extends JComponent {
 					rect.y = str.charAt(index++);
 					rect.width = str.charAt(index++);
 					rect.height = str.charAt(index++);
+					rect.thickness = str.charAt(index++);
 					items.add(rect);
 					break;
 				case Item.TYPE_CIRCLE:
@@ -283,6 +286,7 @@ public class LevelView extends JComponent {
 					circle.centerX = str.charAt(index++);
 					circle.centerY = str.charAt(index++);
 					circle.radius = str.charAt(index++);
+					circle.thickness = str.charAt(index++);
 					items.add(circle);
 					break;
 			}
@@ -296,7 +300,8 @@ public class LevelView extends JComponent {
 	}
 
 	public void placeItemDrag() {
-		newItem.placeItemDrag(cursor);
+		if(newItem != null)
+			newItem.placeItemDrag(cursor);
 		repaint();
 	}
 	
@@ -308,6 +313,10 @@ public class LevelView extends JComponent {
 		newItem = null;
 		
 		repaint();
+	}
+	
+	public void removeItemUnderCursor() {
+		
 	}
 	
 	class KeyHandler extends KeyAdapter {
@@ -324,8 +333,12 @@ public class LevelView extends JComponent {
 		public void mousePressed(MouseEvent e) {
 			cursor.clicked(e.getX(), e.getY(), e.getButton());
 			
-			if(cursor.isButtonDown(MouseEvent.BUTTON1))
-				placeItemStart(ItemFactory.newItem(LevelEditor.getInstance().getSelectedTool()));
+			if(cursor.isButtonDown(MouseEvent.BUTTON1)) {
+				String mode = LevelEditor.getInstance().getSelectedMode();
+				if(mode.equals("add"))
+					placeItemStart(ItemFactory.newItem(LevelEditor.getInstance().getSelectedTool()));
+				else removeItemUnderCursor();
+			}
 		}
 
 		public void mouseMoved(MouseEvent e) {
@@ -348,9 +361,16 @@ public class LevelView extends JComponent {
 		}
 
 		public void mouseWheelMoved(MouseWheelEvent e) {
-			if(e.getWheelRotation() < 0)
-				zoomIn();
-			else zoomOut();
+			if(newItem != null) {
+				// currently placing an item
+				if(e.getWheelRotation() < 0)
+					newItem.setThickness(newItem.getThickness() + 1);
+				else newItem.setThickness(newItem.getThickness() - 1);
+			} else {
+				if(e.getWheelRotation() < 0)
+					zoomIn();
+				else zoomOut();
+			}
 		}
 	}
 }

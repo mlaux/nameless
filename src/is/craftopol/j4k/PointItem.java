@@ -49,4 +49,12 @@ public class PointItem extends java.awt.Point implements Item {
 	public void placeItemDrag(Cursor cursor) {
 		setLocation(cursor.getGridPos());
 	}
+
+	public void setThickness(int thickness) {
+		// do nothing b/c points don't have thickness really
+	}
+	
+	public int getThickness() {
+		return 1;
+	}
 }

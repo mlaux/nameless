@@ -12,8 +12,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
+import javax.swing.SpinnerNumberModel;
 
 // wheeeeeeeeeee
 public class LevelEditor extends JFrame implements ActionListener {
@@ -77,6 +79,10 @@ public class LevelEditor extends JFrame implements ActionListener {
 					.setContents(ss, null);
 			JOptionPane.showMessageDialog(this, "Code for level copied to clipboard.");
 		}
+	}
+	
+	public String getSelectedMode() {
+		return optionGroup.getSelection().getActionCommand().toLowerCase();
 	}
 	
 	public String getSelectedTool() {

@@ -59,4 +59,8 @@ public interface Item {
 	public abstract void placeItemStart(Cursor cursor);
 	
 	public abstract void placeItemDrag(Cursor cursor);
+	
+	public abstract void setThickness(int thickness);
+	
+	public abstract int getThickness();
 }
