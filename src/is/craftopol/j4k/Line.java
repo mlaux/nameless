@@ -60,11 +60,8 @@ public class Line implements Item {
 	}
 
 	public void setThickness(int thickness) {
-		if (thickness > 0) {
+		if (thickness > 0)
 			this.thickness = thickness;
-		} else {
-			this.thickness = 1;
-		}
 	}
 
 	public int getThickness() {
@@ -72,7 +69,7 @@ public class Line implements Item {
 	}
 	
 	public boolean contains(int x, int y) {
-		return distanceTo(x, y) < 4;
+		return distanceTo(x, y) < Math.max(5, thickness);
 	}
 	
 	public int distanceTo(int px, int py) {

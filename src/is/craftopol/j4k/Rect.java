@@ -55,13 +55,12 @@ public class Rect implements Item {
 	}
 
 	public void placeItemStart(Cursor cursor) {
-		// TODO Auto-generated method stub
-		
+		setPosition(cursor.getGridX(), cursor.getGridY());
 	}
 
 	public void placeItemDrag(Cursor cursor) {
-		// TODO Auto-generated method stub
-		
+		width  = cursor.getGridX() - x;
+		height = cursor.getGridY() - y;
 	}
 
 	public void setThickness(int thickness) {
@@ -71,5 +70,9 @@ public class Rect implements Item {
 
 	public int getThickness() {
 		return thickness;
+	}
+
+	public boolean contains(int x, int y) {
+		return x >= this.x && y >= this.y && x <= this.x + this.width && y <= this.y + this.height;
 	}
 }

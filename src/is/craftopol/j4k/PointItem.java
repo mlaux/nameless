@@ -57,4 +57,8 @@ public class PointItem extends java.awt.Point implements Item {
 	public int getThickness() {
 		return 1;
 	}
+
+	public boolean contains(int x, int y) {
+		return x == this.x && y == this.y;
+	}
 }

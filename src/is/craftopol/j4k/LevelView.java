@@ -49,11 +49,6 @@ public class LevelView extends JComponent {
 	public LevelView() {
 		items = new ArrayList<Item>();
 		
-		items.add(new Circle(50, 50, 50, 2, false));
-		items.add(new Rect(20, 20, 10, 10, 3, false));
-		decode(encode());
-		decode(encode());
-		
 		setDoubleBuffered(true);
 		setPreferredSize(new Dimension(640, 480));
 		
@@ -250,7 +245,6 @@ public class LevelView extends JComponent {
 			// type is in lower 8 bits, flags are in upper 8 bits
 			char ch = str.charAt(index++);
 			int type = ch & 0xff, flags = ch & 0xff00;
-			System.out.println(flags);
 			
 			switch(type) {
 				case Item.TYPE_SPAWNPOINT:
@@ -316,7 +310,9 @@ public class LevelView extends JComponent {
 	}
 	
 	public void removeItemUnderCursor() {
-		
+		for(int k = items.size() - 1; k >= 0; k--) 
+			if(items.get(k).contains(cursor.getGridX(), cursor.getGridY()))
+				items.remove(k);
 	}
 	
 	class KeyHandler extends KeyAdapter {
@@ -366,6 +362,8 @@ public class LevelView extends JComponent {
 				if(e.getWheelRotation() < 0)
 					newItem.setThickness(newItem.getThickness() + 1);
 				else newItem.setThickness(newItem.getThickness() - 1);
+				
+				repaint();
 			} else {
 				if(e.getWheelRotation() < 0)
 					zoomIn();

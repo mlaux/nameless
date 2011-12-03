@@ -7,15 +7,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JSpinner;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
-import javax.swing.SpinnerNumberModel;
 
 // wheeeeeeeeeee
 public class LevelEditor extends JFrame implements ActionListener {
@@ -82,7 +81,12 @@ public class LevelEditor extends JFrame implements ActionListener {
 	}
 	
 	public String getSelectedMode() {
-		return optionGroup.getSelection().getActionCommand().toLowerCase();
+		ButtonModel mod = optionGroup.getSelection();
+		if(mod.equals(addButton.getModel()))
+			return "add";
+		else if(mod.equals(delButton.getModel()))
+			return "remove";
+		else throw new RuntimeException("wat");
 	}
 	
 	public String getSelectedTool() {

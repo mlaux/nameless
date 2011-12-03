@@ -63,4 +63,6 @@ public interface Item {
 	public abstract void setThickness(int thickness);
 	
 	public abstract int getThickness();
+	
+	public abstract boolean contains(int x, int y);
 }

@@ -68,4 +68,8 @@ public class Circle implements Item {
 	public int getThickness() {
 		return thickness;
 	}
+
+	public boolean contains(int x, int y) {
+		return Math.hypot(x - centerX, y - centerY) <= radius;
+	}
 }
