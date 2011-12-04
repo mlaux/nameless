@@ -43,26 +43,23 @@ public class ClickHelper extends JComponent implements Runnable {
 		
 		g.setColor(Color.black);
 		
-		if (running>0) {
-			for (int i = 0; i < currentX.length; i++) {
-				// when implementing replace currentX.length with the actual
-				// count (less data?)
-				moveX[i] -= moveX[i] / 200;
-				moveY[i] -= moveY[i] / 200 + 0.005;
+		for (int i = 0; i < currentX.length; i++) {
+			// when implementing replace currentX.length with the actual
+			// count (less data?)
+			moveX[i] -= moveX[i] / 200;
+			moveY[i] -= moveY[i] / 200 + 0.005;
 
-				currentX[i] += moveX[i];
-				currentY[i] -= moveY[i];
+			currentX[i] += moveX[i];
+			currentY[i] -= moveY[i];
 
-				if (currentY[i] >= 597) {
-					currentY[i] -= (currentY[i] - 597);
-					moveY[i] = 0;
-				}
-
-				g.fillOval((int) (currentX[i] - 3 * scale),
-						(int) (currentY[i] - 3 * scale), 6 * scale, 6 * scale);
+			if (currentY[i] >= 597) {
+				currentY[i] -= (currentY[i] - 597);
+				moveY[i] = 0;
 			}
 
-			running--;
+			g.setColor(new Color(0, 0, 0, 30));
+			g.fillOval((int) (currentX[i] - 3 * scale),
+					(int) (currentY[i] - 3 * scale), 6 * scale, 6 * scale);
 		}
 	}
 	
