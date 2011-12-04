@@ -10,24 +10,15 @@ import java.awt.event.MouseEvent;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
-public class ClickHelper extends JComponent implements Runnable {
+public class ClickHelperAwesome extends JComponent implements Runnable {
 	private int lastX;
 	private int lastY;
 	
 	private int running;
 	
-	private double currentX[] = new double[500];
-	private double currentY[] = new double[500];
+	private int count = 500;
 	
-	private double moveX[] = new double[500];
-	private double moveY[] = new double[500];
-	
-	private double currentAlpha[] = new double[500];
-	private double moveAlpha[] =  new double[500];
-	
-	private int scale = 1;
-	
-	public ClickHelper() {
+	public ClickHelperAwesome() {
 		addMouseListener(new Mouse());
 		setPreferredSize(new Dimension(800, 600));
 		setDoubleBuffered(true);
@@ -40,49 +31,33 @@ public class ClickHelper extends JComponent implements Runnable {
 		}
 	}
 	
+	
+	double frequency = Math.random() * 7.5 + 2.5;
+	double depth = Math.random() * 5 + 10;
+	int height = (int) (Math.random() * 50 + 75);
+	
+	
 	public void paintComponent(Graphics g) {
 		g.setColor(Color.white);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		
 		g.setColor(Color.black);
 		
-		for (int i = 0; i < currentX.length; i++) {
-			// when implementing replace currentX.length with the actual
-			// count (less data?)
-			moveX[i] -= moveX[i] / 150;
-			moveY[i] -= moveY[i] / 200 + 0.002;
-
-			currentX[i] += moveX[i];
-			currentY[i] -= moveY[i];
-
-			if (currentY[i] >= (600-3*scale)) {
-				currentY[i] -= (currentY[i] - (600-3*scale));
-				moveY[i] = 0;
-			}
-			if (currentAlpha[i]>5) {
-				currentAlpha[i]-=moveAlpha[i];
+		for (int i = 0; i < height; i++) {
+			int currentSpot = (int) Math.round(Math.sin(Math.toRadians((600 - i) * frequency)) * (depth * ((height - i)/20)) + 400);
+			if (i > height / 2) {
+				int alpha = (int)(((double)(height/2 - (i - height/2)) / (height / 2)) * 255);
+				g.setColor(new Color(0,0,0,alpha));
 			} else {
-				currentAlpha[i]=0;
+				g.setColor(new Color(0,0,0,255));
 			}
-			
-			
-			g.setColor(new Color(0, 0, 0, (int)(currentAlpha[i]-moveAlpha[i])));
-			g.fillOval((int) (currentX[i] - 3 * scale),
-					(int) (currentY[i] - 3 * scale), 6 * scale, 6 * scale);
+			g.fillRect(currentSpot, 600 - i, 1, 1);
 		}
 	}
 	
 	private void setupBlobs() {
-		for (int i = 0; i < currentX.length; i++) {
-			int pos = ((int) (Math.random() * 2)) * 2 - 1;
-			currentX[i] = pos * 25 * scale + lastX;
-			currentY[i] = lastY;
-
-			moveX[i] = Math.random() * 1.5 * pos * (scale / 1.9);
-			moveY[i] = Math.random() * 1 * (scale / 1.9) + 0.5;
+		for (int i = 0; i < count; i++) {
 			
-			currentAlpha[i] = 30;
-			moveAlpha[i] = (Math.random()*0.5 + 0.5)/5;
 		}
 		
 		running = 4000;
@@ -90,7 +65,7 @@ public class ClickHelper extends JComponent implements Runnable {
 	
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Click thing");
-		ClickHelper ch = new ClickHelper();
+		ClickHelperAwesome ch = new ClickHelperAwesome();
 		frame.add(ch);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
