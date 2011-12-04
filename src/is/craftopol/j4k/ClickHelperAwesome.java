@@ -18,6 +18,11 @@ public class ClickHelperAwesome extends JComponent implements Runnable {
 	
 	private int initial = 0;
 	
+	private double frequency;
+	private double depth;
+	private int finalheight;
+	private int height;
+	
 	public ClickHelperAwesome() {
 		addMouseListener(new Mouse());
 		setPreferredSize(new Dimension(800, 600));
@@ -31,34 +36,48 @@ public class ClickHelperAwesome extends JComponent implements Runnable {
 		}
 	}
 	
-	
-	double frequency = Math.random() * 7.5 + 2.5;
-	double depth = Math.random() * 5 + 10;
-	int height = (int) (Math.random() * 50 + 75);
-	
-	
 	public void paintComponent(Graphics g) {
 		g.setColor(Color.white);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		
 		g.setColor(Color.black);
 		
-		initial++;
-		for (int i = 0; i < height; i++) {
-			int currentSpot = (int) Math.round(Math.sin(Math.toRadians((initial - i) * frequency)) * (depth * ((double)(height - i)/10)) + 400);
-			if (i > height / 2) {
-				int alpha = (int)(((double)(height/2 - (i - height/2)) / (height / 2)) * 255);
-				g.setColor(new Color(0,0,0,alpha));
-			} else {
-				g.setColor(new Color(0,0,0,255));
+		if (running>0) {
+			if (height < finalheight && running > finalheight) {
+				height++;
+				initial++;
 			}
-			g.fillRect(currentSpot, 600 - i, 1, 1);
+			if (running <= finalheight) {
+				height--;
+			}
+			initial++;
+			for (int i = 0; i < height; i++) {
+				int currentSpotX = (int) Math.round(Math.sin(Math.toRadians((initial - i) * frequency)) * (depth * ((double)(height - i)/10)) + lastX);
+				int currentSpotY = (height - i) + lastY - height;
+				if (i > height / 2) {
+					int alpha = (int)(((double)(height/2 - (i - height/2)) / (height / 2)) * 255);
+					g.setColor(new Color(0,0,0,alpha));
+				} else {
+					g.setColor(new Color(0,0,0,255));
+				}
+				g.fillRect(currentSpotX, currentSpotY, 1, 1);
+				for (int a = 0; a < 100; a++) {
+					
+				}
+			}
+			running--;
+			System.out.println(running);
 		}
 	}
 	
 	private void setupBlobs() {
+		frequency = Math.random() * 7.5 + 2.5;
+		depth = Math.random() * 5 + 10;
+		finalheight = (int) (Math.random() * 50 + 75);
+		height = 0;
 		
-		running = 4000;
+		
+		running = 800;
 	}
 	
 	public static void main(String[] args) {
