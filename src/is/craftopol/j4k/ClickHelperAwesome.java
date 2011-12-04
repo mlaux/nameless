@@ -61,9 +61,10 @@ public class ClickHelperAwesome extends JComponent implements Runnable {
 					g.setColor(new Color(0,0,0,255));
 				}
 				g.fillRect(currentSpotX, currentSpotY, 1, 1);
-				for (int a = 0; a < 100; a++) {
+//				for (int a = 0; a < 2; a++) {
 					
-				}
+//				}
+				Math.sin(currentSpotX);
 			}
 			running--;
 			System.out.println(running);
