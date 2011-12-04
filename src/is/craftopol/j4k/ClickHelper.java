@@ -24,8 +24,6 @@ public class ClickHelper extends JComponent implements Runnable {
 	
 	private int scale = 4;
 	
-	private Image buffer;
-	
 	public ClickHelper() {
 		addMouseListener(new Mouse());
 		setPreferredSize(new Dimension(800, 600));
@@ -67,10 +65,6 @@ public class ClickHelper extends JComponent implements Runnable {
 		}
 	}
 	
-	private void setupBuffer() {
-		buffer = createImage(getWidth(), getHeight());
-	}
-	
 	private void setupBlobs() {
 		for (int i = 0; i < currentX.length; i++) {
 			int pos = ((int) (Math.random() * 2)) * 2 - 1;
@@ -92,8 +86,6 @@ public class ClickHelper extends JComponent implements Runnable {
 		frame.pack();
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
-		
-		ch.setupBuffer();
 		
 		new Thread(ch).start();
 	}
