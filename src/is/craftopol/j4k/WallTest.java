@@ -7,6 +7,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RadialGradientPaint;
+import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
@@ -41,7 +42,8 @@ public class WallTest extends JComponent implements Runnable {
 	
 	ArrayList<Double> hitX = new ArrayList();
 	ArrayList<Double> hitY = new ArrayList();
-	ArrayList<Integer> counter = new ArrayList();
+	ArrayList<Integer> counterHit = new ArrayList();
+	ArrayList<Integer> alpha = new ArrayList();
 	
 	ArrayList<Double> moveHitX = new ArrayList();
 	ArrayList<Double> moveHitY = new ArrayList(); 
@@ -67,7 +69,6 @@ public class WallTest extends JComponent implements Runnable {
 				onGround = true;
 			}
 			if (!onGround) {
-				System.out.println(moveY);
 				moveHitX.add(moveX);
 				moveHitY.add(moveY);
 				posHitX.add(curX+moveX*5);
@@ -98,6 +99,9 @@ public class WallTest extends JComponent implements Runnable {
 			moveX = -moveX;
 		}
 		
+		//Anti-aliasing is a gift from god.
+		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		
 		g.setColor(Color.black);
 		g.fillOval((int) curX,(int) curY, 20, 20);
 		
@@ -108,35 +112,38 @@ public class WallTest extends JComponent implements Runnable {
 			if (Math.abs(moveHitX.get(i)) + Math.abs(moveHitY.get(i))>=1) {
 				posHitX.set(i, posHitX.get(i) + moveHitX.get(i));
 				posHitY.set(i, posHitY.get(i) - moveHitY.get(i));
+				//not gonna try to remove this ^^^^^ after 250 ticks
 				
 				hitX.add(posHitX.get(i));
 				hitY.add(posHitY.get(i));
-				counter.add(250);
+				double speed = Math.sqrt(Math.pow(moveHitX.get(i), 2)+Math.pow(moveHitY.get(i),2));
+				if (((int)(speed*(speed/2.5)*10))<=255) {
+					//took me forever, but sexy as hell
+					//to change how fast it goes transparent edit the 2.5 (the higher it is the faster)
+					alpha.add((int)(speed*(speed/2.5)*10));
+				} else {
+					alpha.add(255);
+				}
+				counterHit.add(250);
 			}
 		}
 		
-		/*
-		double speed = Math.sqrt(Math.pow(moveY, 2)+Math.pow(moveX,2));
-		if (speed<5) {
-			g.setColor(new Color(0,50,50,(int)(speed*51)));
-			System.out.println(speed + " - " + ((int)(speed*51)));
-		} else {
-			g.setColor(new Color(0,50,50));
-		}
-		*/
-		
-		//VVVV not necessary VVVV
-		g.setColor(new Color(0,200,200,10));
+		//I wanted it to kind of start bold and go transparent but that's not easy because it makes more the slower it gets. BOOM: done.
 		for (int i = 0; i<hitX.size(); i++) {
-			if (counter.get(i)>0) {
+			if (counterHit.get(i)>0) {
 				Point2D center = new Point2D.Float((int)(hitX.get(i)+10), (int)(hitY.get(i)+10));
 				float radius = 10;
 				float[] dist = {0f, 1f};
-				Color[] colors = {new Color(0,200,200,30), new Color(0,200,200,0)};
+				Color[] colors = {new Color(0,200,200,alpha.get(i)), new Color(0,200,200,0)};
 				((Graphics2D) g).setPaint(new RadialGradientPaint(center, radius, dist, colors));
 				g.fillOval((int)(hitX.get(i)-0),(int)(hitY.get(i)-0),20,20);
 				//Explain why I have to do -0?
-				counter.set(i, counter.get(i)-1);
+				counterHit.set(i, counterHit.get(i)-1);
+			} else {
+				hitX.remove(i);
+				hitY.remove(i);
+				counterHit.remove(i);
+				alpha.remove(i);
 			}
 		}
 	}
