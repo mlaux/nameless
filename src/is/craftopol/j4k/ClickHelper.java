@@ -1,17 +1,17 @@
 package is.craftopol.j4k;
 
-import java.awt.AlphaComposite;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JFrame;
 
-public class ClickHelper extends Canvas {
+public class ClickHelper extends Canvas implements Runnable {
 	private int lastX;
 	private int lastY;
 	private int running;
@@ -19,33 +19,33 @@ public class ClickHelper extends Canvas {
 	private double currentY[] = new double[200];
 	private double moveX[] = new double[200];
 	private double moveY[] = new double[200];
-	private int scale = 4;
+	private int scale = 4; 
+	
+	private Image buffer;
+	
 	
 	public ClickHelper() {
 		addMouseListener(new Mouse());
 		setPreferredSize(new Dimension(800, 600));
 	}
 	
-	public void paint(Graphics g) {
-		super.paint(g);
+	public void run() {
+		while(true) {
+			renderStuff();
+			
+			repaint();
+			try { Thread.sleep(5); } catch(Exception e) { }
+		}
+	}
+	
+	private void renderStuff() {
+		Graphics g = buffer.getGraphics();
+		g.setColor(Color.white);
+		g.fillRect(0, 0, getWidth(), getHeight());
+		
+		g.setColor(Color.black);
 		
 		if (running>0) {
-			if (running==4000) {	
-				for(int i = 0; i < currentX.length; i++) {
-					int pos = ((int)(Math.random()*2))*2-1;
-					currentX[i]=pos*25*scale + lastX;
-					currentY[i]=lastY;
-					
-					moveX[i]=Math.random()*0.5*pos*(scale/2);
-					moveY[i]=Math.random()*0.5*(scale/2);
-					
-//					AlphaComposite alpha = AlphaComposite.getInstance(AlphaComposite.SRC);
-					g.fillOval((int)(currentX[i] - 3*scale), (int)(currentY[i] - 3*scale), 6*scale, 6*scale);
-					Color color = new Color(0,0,0,0);
-					((Graphics2D) g).setPaint(color);
-//					((Graphics2D) g).setComposite(alpha);		
-				}
-			}
 			for(int i = 0; i < currentX.length; i++) {
 				//when implementing replace currentX.length with the actual count (less data?)
 				moveX[i]-=moveX[i]/200;
@@ -59,22 +59,52 @@ public class ClickHelper extends Canvas {
 					moveY[i]=0;
 				}
 				
-				g.fillOval((int)(currentX[i] - 3*scale), (int)(currentY[i] - 3*scale), 6*scale, 6*scale);
+				g.fillOval((int) (currentX[i] - 3 * scale),
+						(int) (currentY[i] - 3 * scale), 6 * scale, 6 * scale);
 			}
 			
 			running--;
-			
-			repaint();
 		}
+	}
+	
+	public void update(Graphics g) {
+		paint(g);
+	}
+	
+	public void paint(Graphics g) {
+		renderStuff();
+		g.drawImage(buffer, 0, 0, this);
+	}
+	
+	private void setupBuffer() {
+		buffer = createImage(getWidth(), getHeight());
+	}
+	
+	private void setupBlobs() {
+		for (int i = 0; i < currentX.length; i++) {
+			int pos = ((int) (Math.random() * 2)) * 2 - 1;
+			currentX[i] = pos * 25 * scale + lastX;
+			currentY[i] = lastY;
+
+			moveX[i] = Math.random() * 0.5 * pos * (scale / 2);
+			moveY[i] = Math.random() * 0.5 * (scale / 2);
+		}
+		
+		running = 4000;
 	}
 	
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Click thing");
-		frame.add(new ClickHelper());
+		ClickHelper ch = new ClickHelper();
+		frame.add(ch);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
+		
+		ch.setupBuffer();
+		
+		new Thread(ch).start();
 	}
 	
 	class Mouse extends MouseAdapter {
@@ -82,10 +112,7 @@ public class ClickHelper extends Canvas {
 			lastX = e.getX();
 			lastY = e.getY();
 			
-			running=4000;
-			
-			
-			repaint();
+			setupBlobs();
 			
 			System.out.println("Mouse clicked at (" + lastX + ", " + lastY + ")");
 		}
