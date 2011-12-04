@@ -27,6 +27,7 @@ public class ClickHelper extends JComponent implements Runnable {
 	public ClickHelper() {
 		addMouseListener(new Mouse());
 		setPreferredSize(new Dimension(800, 600));
+		setDoubleBuffered(true);
 	}
 	
 	public void run() {
