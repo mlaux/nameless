@@ -1,28 +1,30 @@
 package is.craftopol.j4k;
 
-import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 
-public class ClickHelper extends Canvas implements Runnable {
+public class ClickHelper extends JComponent implements Runnable {
 	private int lastX;
 	private int lastY;
+	
 	private int running;
+	
 	private double currentX[] = new double[200];
 	private double currentY[] = new double[200];
+	
 	private double moveX[] = new double[200];
 	private double moveY[] = new double[200];
-	private int scale = 4; 
+	
+	private int scale = 4;
 	
 	private Image buffer;
-	
 	
 	public ClickHelper() {
 		addMouseListener(new Mouse());
@@ -31,49 +33,38 @@ public class ClickHelper extends Canvas implements Runnable {
 	
 	public void run() {
 		while(true) {
-			renderStuff();
-			
 			repaint();
 			try { Thread.sleep(5); } catch(Exception e) { }
 		}
 	}
 	
-	private void renderStuff() {
-		Graphics g = buffer.getGraphics();
+	public void paintComponent(Graphics g) {
 		g.setColor(Color.white);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		
 		g.setColor(Color.black);
 		
 		if (running>0) {
-			for(int i = 0; i < currentX.length; i++) {
-				//when implementing replace currentX.length with the actual count (less data?)
-				moveX[i]-=moveX[i]/200;
-				moveY[i]-=moveY[i]/200 + 0.005;
-				
-				currentX[i]+=moveX[i];
-				currentY[i]-=moveY[i];
-				
-				if (currentY[i]>=597) {
-					currentY[i]-=(currentY[i]-597);
-					moveY[i]=0;
+			for (int i = 0; i < currentX.length; i++) {
+				// when implementing replace currentX.length with the actual
+				// count (less data?)
+				moveX[i] -= moveX[i] / 200;
+				moveY[i] -= moveY[i] / 200 + 0.005;
+
+				currentX[i] += moveX[i];
+				currentY[i] -= moveY[i];
+
+				if (currentY[i] >= 597) {
+					currentY[i] -= (currentY[i] - 597);
+					moveY[i] = 0;
 				}
-				
+
 				g.fillOval((int) (currentX[i] - 3 * scale),
 						(int) (currentY[i] - 3 * scale), 6 * scale, 6 * scale);
 			}
-			
+
 			running--;
 		}
-	}
-	
-	public void update(Graphics g) {
-		paint(g);
-	}
-	
-	public void paint(Graphics g) {
-		renderStuff();
-		g.drawImage(buffer, 0, 0, this);
 	}
 	
 	private void setupBuffer() {
