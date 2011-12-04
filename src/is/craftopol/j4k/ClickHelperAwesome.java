@@ -16,7 +16,7 @@ public class ClickHelperAwesome extends JComponent implements Runnable {
 	
 	private int running;
 	
-	private int count = 500;
+	private int initial = 0;
 	
 	public ClickHelperAwesome() {
 		addMouseListener(new Mouse());
@@ -43,8 +43,9 @@ public class ClickHelperAwesome extends JComponent implements Runnable {
 		
 		g.setColor(Color.black);
 		
+		initial++;
 		for (int i = 0; i < height; i++) {
-			int currentSpot = (int) Math.round(Math.sin(Math.toRadians((600 - i) * frequency)) * (depth * ((double)(height - i)/10)) + 400);
+			int currentSpot = (int) Math.round(Math.sin(Math.toRadians((initial - i) * frequency)) * (depth * ((double)(height - i)/10)) + 400);
 			if (i > height / 2) {
 				int alpha = (int)(((double)(height/2 - (i - height/2)) / (height / 2)) * 255);
 				g.setColor(new Color(0,0,0,alpha));
@@ -56,9 +57,6 @@ public class ClickHelperAwesome extends JComponent implements Runnable {
 	}
 	
 	private void setupBlobs() {
-		for (int i = 0; i < count; i++) {
-			
-		}
 		
 		running = 4000;
 	}
