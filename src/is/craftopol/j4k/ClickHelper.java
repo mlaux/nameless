@@ -16,13 +16,16 @@ public class ClickHelper extends JComponent implements Runnable {
 	
 	private int running;
 	
-	private double currentX[] = new double[200];
-	private double currentY[] = new double[200];
+	private double currentX[] = new double[500];
+	private double currentY[] = new double[500];
 	
-	private double moveX[] = new double[200];
-	private double moveY[] = new double[200];
+	private double moveX[] = new double[500];
+	private double moveY[] = new double[500];
 	
-	private int scale = 4;
+	private double currentAlpha[] = new double[500];
+	private double moveAlpha[] =  new double[500];
+	
+	private int scale = 1;
 	
 	public ClickHelper() {
 		addMouseListener(new Mouse());
@@ -46,18 +49,24 @@ public class ClickHelper extends JComponent implements Runnable {
 		for (int i = 0; i < currentX.length; i++) {
 			// when implementing replace currentX.length with the actual
 			// count (less data?)
-			moveX[i] -= moveX[i] / 200;
-			moveY[i] -= moveY[i] / 200 + 0.005;
+			moveX[i] -= moveX[i] / 150;
+			moveY[i] -= moveY[i] / 200 + 0.002;
 
 			currentX[i] += moveX[i];
 			currentY[i] -= moveY[i];
 
-			if (currentY[i] >= 597) {
-				currentY[i] -= (currentY[i] - 597);
+			if (currentY[i] >= (600-3*scale)) {
+				currentY[i] -= (currentY[i] - (600-3*scale));
 				moveY[i] = 0;
 			}
-
-			g.setColor(new Color(0, 0, 0, 30));
+			if (currentAlpha[i]>5) {
+				currentAlpha[i]-=moveAlpha[i];
+			} else {
+				currentAlpha[i]=0;
+			}
+			
+			
+			g.setColor(new Color(0, 0, 0, (int)(currentAlpha[i]-moveAlpha[i])));
 			g.fillOval((int) (currentX[i] - 3 * scale),
 					(int) (currentY[i] - 3 * scale), 6 * scale, 6 * scale);
 		}
@@ -69,8 +78,11 @@ public class ClickHelper extends JComponent implements Runnable {
 			currentX[i] = pos * 25 * scale + lastX;
 			currentY[i] = lastY;
 
-			moveX[i] = Math.random() * 0.5 * pos * (scale / 2);
-			moveY[i] = Math.random() * 0.5 * (scale / 2);
+			moveX[i] = Math.random() * 1.5 * pos * (scale / 1.9);
+			moveY[i] = Math.random() * 1 * (scale / 1.9) + 0.5;
+			
+			currentAlpha[i] = 30;
+			moveAlpha[i] = (Math.random()*0.5 + 0.5)/5;
 		}
 		
 		running = 4000;
