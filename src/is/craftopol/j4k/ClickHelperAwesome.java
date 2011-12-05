@@ -44,11 +44,13 @@ public class ClickHelperAwesome extends JComponent implements Runnable {
 		
 		if (running>0) {
 			if (height < finalheight && running > finalheight) {
-				height++;
-				initial++;
+				height+=2;
+				initial+=2;
 			}
 			if (running <= finalheight) {
-				height--;
+				height-=2;
+				lastY-=2;
+				initial--;
 			}
 			initial++;
 			for (int i = 0; i < height; i++) {
@@ -78,7 +80,7 @@ public class ClickHelperAwesome extends JComponent implements Runnable {
 		height = 0;
 		
 		
-		running = 800;
+		running = finalheight + finalheight/2 + 30;
 	}
 	
 	public static void main(String[] args) {
