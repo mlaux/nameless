@@ -13,7 +13,10 @@ import javax.swing.JFrame;
 public class ClickHelperAwesome extends JComponent implements Runnable {
 	private int lastX;
 	private int lastY;
+	private int realLastX;
+	private int realLastY;
 	
+	private int finalrunning;
 	private int running;
 	
 	private int initial = 0;
@@ -22,6 +25,9 @@ public class ClickHelperAwesome extends JComponent implements Runnable {
 	private double depth;
 	private int finalheight;
 	private int height;
+	
+	private int[] pickSpotX = new int[10];
+	private int[] pickSpotY = new int[10];
 	
 	public ClickHelperAwesome() {
 		addMouseListener(new Mouse());
@@ -63,13 +69,28 @@ public class ClickHelperAwesome extends JComponent implements Runnable {
 					g.setColor(new Color(0,0,0,255));
 				}
 				g.fillRect(currentSpotX, currentSpotY, 1, 1);
-//				for (int a = 0; a < 2; a++) {
-					
-//				}
 				Math.sin(currentSpotX);
 			}
+			
+			if (running == finalheight + finalheight/2 + 30) {
+				for (int i = 0; i<pickSpotX.length; i++) {
+					pickSpotY[i] = (int) (realLastY - Math.random()*Math.random()*finalheight);
+					pickSpotX[i] = (int) ((Math.pow((finalheight - (realLastY - pickSpotY[i]))/10*Math.random(),2)))*(((int) (Math.random() * 2)) * 2 - 1) + realLastX;
+				}
+			}
+			
+			
+			
+			for (int i = 0; i<pickSpotX.length; i++) {
+				g.setColor(Color.BLACK);
+				int addX = (int)(Math.cos(Math.atan2(pickSpotY[i] - realLastY, pickSpotX[i] - realLastX)) * (Math.pow((finalrunning), 2) - Math.pow((running), 2) + 1)/400);
+				int addY = (int)(Math.sin(Math.atan2(pickSpotY[i] - realLastY, pickSpotX[i] - realLastX)) * (Math.pow((finalrunning), 2) - Math.pow((running), 2) + 1)/400);
+				System.out.println(Math.atan2(pickSpotY[i], pickSpotX[i] - lastX));
+				// * (Math.pow(finalrunning, 2)/Math.pow(finalrunning - running,2)))
+				g.fillRect(pickSpotX[i]+addX, pickSpotY[i]+addY, 5, 5);
+			}
+			
 			running--;
-			System.out.println(running);
 		}
 	}
 	
@@ -79,8 +100,8 @@ public class ClickHelperAwesome extends JComponent implements Runnable {
 		finalheight = (int) (Math.random() * 50 + 75);
 		height = 0;
 		
-		
-		running = finalheight + finalheight/2 + 30;
+		finalrunning = finalheight + finalheight/2 + 50;
+		running = finalrunning;
 	}
 	
 	public static void main(String[] args) {
@@ -99,6 +120,8 @@ public class ClickHelperAwesome extends JComponent implements Runnable {
 		public void mousePressed(MouseEvent e) {
 			lastX = e.getX();
 			lastY = e.getY();
+			realLastX = lastX;
+			realLastY = lastY;
 			
 			setupBlobs();
 			
