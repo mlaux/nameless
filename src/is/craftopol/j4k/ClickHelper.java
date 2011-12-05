@@ -55,14 +55,14 @@ public class ClickHelper extends JComponent implements Runnable {
 			currentX[i] += moveX[i];
 			currentY[i] -= moveY[i];
 
-			if (currentY[i] >= (600-3*scale)) {
-				currentY[i] -= (currentY[i] - (600-3*scale));
+			if (currentY[i] >= (600 - 3 * scale)) {
+				currentY[i] -= (currentY[i] - (600 - 3 * scale));
 				moveY[i] = 0;
 			}
-			if (currentAlpha[i]>5) {
-				currentAlpha[i]-=moveAlpha[i];
+			if (currentAlpha[i] > 5) {
+				currentAlpha[i] -= moveAlpha[i];
 			} else {
-				currentAlpha[i]=0;
+				currentAlpha[i] = 0;
 			}
 			
 			

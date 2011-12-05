@@ -40,16 +40,16 @@ public class WallTest extends JComponent implements Runnable {
 	
 	private boolean onGround;
 	
-	ArrayList<Double> hitX = new ArrayList();
-	ArrayList<Double> hitY = new ArrayList();
-	ArrayList<Integer> counterHit = new ArrayList();
-	ArrayList<Integer> alpha = new ArrayList();
+	ArrayList<Double> hitX = new ArrayList<Double>();
+	ArrayList<Double> hitY = new ArrayList<Double>();
+	ArrayList<Integer> counterHit = new ArrayList<Integer>();
+	ArrayList<Integer> alpha = new ArrayList<Integer>();
 	
-	ArrayList<Double> moveHitX = new ArrayList();
-	ArrayList<Double> moveHitY = new ArrayList(); 
+	ArrayList<Double> moveHitX = new ArrayList<Double>();
+	ArrayList<Double> moveHitY = new ArrayList<Double>(); 
 	
-	ArrayList<Double> posHitX = new ArrayList();
-	ArrayList<Double> posHitY = new ArrayList(); 
+	ArrayList<Double> posHitX = new ArrayList<Double>();
+	ArrayList<Double> posHitY = new ArrayList<Double>(); 
 	
 	public void paintComponent(Graphics g) {
 		g.setColor(Color.white);
@@ -136,8 +136,17 @@ public class WallTest extends JComponent implements Runnable {
 				float[] dist = {0f, 1f};
 				Color[] colors = {new Color(0,200,200,alpha.get(i)), new Color(0,200,200,0)};
 				((Graphics2D) g).setPaint(new RadialGradientPaint(center, radius, dist, colors));
-				g.fillOval((int)(hitX.get(i)-0),(int)(hitY.get(i)-0),20,20);
-				//Explain why I have to do -0?
+				
+				// arraylist stores doubles as Double objects, not the actual primitive type 'double'
+				// so when you do .get(), it returns the Double
+				// and you can't cast a Double to an int directly
+				// but if you subtract something from it, it internally gets the double out of the Double object
+				// and subtracts the 0
+				// and then you can cast that to int but it's messy
+				// this is the preferred way to do it:
+				
+				g.fillOval(hitX.get(i).intValue(), hitY.get(i).intValue(), 20, 20);
+				
 				counterHit.set(i, counterHit.get(i)-1);
 			} else {
 				hitX.remove(i);
