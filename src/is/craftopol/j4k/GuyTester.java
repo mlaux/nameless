@@ -12,8 +12,7 @@ import javax.swing.JFrame;
 public class GuyTester extends JComponent implements Runnable {
 	private static final int WALK = 1;
 	private static final int PUSH = 2;
-	private static final int JUMP = 3;
-	private static final int STAND = 4;
+	private static final int STAND = 3;
 	
 	private int time = 10;
 	private int calc = 2;
@@ -22,7 +21,7 @@ public class GuyTester extends JComponent implements Runnable {
 	private double posX = 600;
 	private double posY = 300;
 	private int stillCalc;
-	private int stillCalcMove;
+	private double armAngle;
 	
 	public GuyTester() {
 		setPreferredSize(new Dimension(1600, 1000));
@@ -35,7 +34,7 @@ public class GuyTester extends JComponent implements Runnable {
 			try { Thread.sleep(15); } catch(Exception e) { }
 		}
 	}
-	
+	private double test;
 	public void paintComponent(Graphics g) {
 		time++;
 		
@@ -47,19 +46,20 @@ public class GuyTester extends JComponent implements Runnable {
 		g.fillRect(1200, 0, 400, getHeight());
 		
 		
-		if (time<250) {
+		if (time<100) {
 			paintGuy(g, WALK, 0, time);
-		} else if (time<500) {
+		} else if (time<200) {
 			paintGuy(g, PUSH, 20, time);
 		} else {
-			paintGuy(g, STAND, 0, time);
+			test+=0.01;
+			paintGuy(g, STAND, test, time);
 		}
 		
 		//Anti-aliasing is a gift from god.
 		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 	}
 	
-	public void paintGuy(Graphics _g, int action, int weight, int time) {
+	public void paintGuy(Graphics _g, int action, double param, int time) {
 		
 		Graphics2D g = (Graphics2D) _g;
 		
@@ -72,7 +72,7 @@ public class GuyTester extends JComponent implements Runnable {
 		
 		if (action == WALK) {
 			stillCalc = calc;
-			//walking
+			armAngle = calc;
 			
 			//Find a way to make this simpler, I accidently found it, it's a sexytastic bounce effect due to not correctly reversing the sin and cos of the rotation
 			//The reason it works is because I cancel out the angle change itself but not what it rotates around
@@ -82,25 +82,25 @@ public class GuyTester extends JComponent implements Runnable {
 			//I've tried my hardest... all to vain.
 			
 			//back arm
-			g.setColor(Color.BLUE);
-			g.rotate(Math.toRadians(calc), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*32) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32));
+			//g.setColor(Color.BLUE);
+			g.rotate(Math.toRadians(calc*1.3), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*32) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32));
 			g.fillRoundRect((int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*32) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32), 6, 30, 6, 10);
-			g.rotate(Math.toRadians(-calc), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*32) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32));
+			g.rotate(Math.toRadians(-calc*1.3), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*32) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32));
 			
 			//back leg1
-			g.setColor(Color.BLUE);
+			//g.setColor(Color.BLUE);
 			g.rotate(Math.toRadians(-calc),(int)posX, (int)posY - 35);
 			g.fillRoundRect((int)posX - 4, (int)posY - 35, 7, 18, 5, 10);
 			g.rotate(Math.toRadians(calc),(int)posX, (int)posY - 35);
 			
 			//back leg2
-			g.setColor(Color.BLUE);
+			//g.setColor(Color.BLUE);
 			g.rotate(Math.toRadians(-calc+15),(int)(posX - 4 + Math.sin(Math.toRadians(-calc+15))*16 + 2), (int)(posY - 35 + Math.cos(Math.toRadians(-calc+15))*16) + 2);
 			g.fillRoundRect((int)(posX - 4 + Math.sin(Math.toRadians(calc+15))*16) - 2, (int)(posY - 35 + Math.cos(Math.toRadians(calc+15))*16) + 2, 6, 20, 6, 10);
 			g.rotate(Math.toRadians(calc-15),(int)(posX - 4 + Math.sin(Math.toRadians(-calc+15))*16 + 2), (int)(posY - 35 + Math.cos(Math.toRadians(-calc+15))*16) + 2);
 			
 			//body
-			g.setColor(Color.BLACK);
+			//g.setColor(Color.BLACK);
 			g.rotate(Math.toRadians(bodyAngle), (int)posX, (int)posY - 35);
 			g.fillRoundRect((int)posX - 8, (int)(posY - 72), 15, 40, 10, 15);
 			
@@ -110,31 +110,33 @@ public class GuyTester extends JComponent implements Runnable {
 			//I have to draw the head down here because I am getting a nice bounce effect
 			
 			//front arm
-			g.setColor(Color.GRAY);
-			g.rotate(Math.toRadians(-calc), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*32) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32));
+			//g.setColor(Color.GRAY);
+			g.rotate(Math.toRadians(-calc*1.3), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*32) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32));
 			g.fillRoundRect((int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*32) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32), 6, 30, 6, 10);
-			g.rotate(Math.toRadians(calc), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*32) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32));
+			g.rotate(Math.toRadians(calc*1.3), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*32) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32));
 			
 			//front leg1
-			g.setColor(Color.GRAY);
+			//g.setColor(Color.GRAY);
 			g.rotate(Math.toRadians(calc),(int)posX, (int)posY - 35);
 			g.fillRoundRect((int)posX - 4, (int)posY - 35, 7, 18, 5, 10);
 			g.rotate(Math.toRadians(-calc),(int)posX, (int)posY - 35);
 			
 			//front leg2
-			g.setColor(Color.GRAY);
+			//g.setColor(Color.GRAY);
 			g.rotate(Math.toRadians(calc+15),(int)(posX - 4 + Math.sin(Math.toRadians(calc+15))*16 - 2), (int)(posY - 35 + Math.cos(Math.toRadians(calc+15))*16) + 2);
 			g.fillRoundRect((int)(posX - 4 + Math.sin(Math.toRadians(-calc+15))*16) - 2, (int)(posY - 35 + Math.cos(Math.toRadians(-calc+15))*16) + 2, 6, 20, 6, 10);
 		
 		} else if (action == PUSH) {
+			stillCalc = calc;
+			armAngle = calc;
 			//be careful about changing the rate at which the body moves because it only accounts for moving by 1 right now
-			if (bodyAngle<weight) {
+			
+			//param is weight
+			if (bodyAngle<param) {
 				bodyAngle++;
-			} else if (bodyAngle>weight) {
+			} else if (bodyAngle>param) {
 				bodyAngle--;
 			}
-			
-			stillCalc = calc;
 			
 			//Find a way to make this simpler, I accidently found it, it's a sexytastic bounce effect due to not correctly reversing the sin and cos of the rotation
 			//The reason it works is because I cancel out the angle change itself but not what it rotates around
@@ -144,25 +146,25 @@ public class GuyTester extends JComponent implements Runnable {
 			//I've tried my hardest... all to vain.
 			
 			//back arm
-			g.setColor(Color.BLUE);
+			//g.setColor(Color.BLUE);
 			g.rotate(Math.toRadians(-100), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*32) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32));
 			g.fillRoundRect((int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*32) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32), 6, 30, 6, 10);
 			g.rotate(Math.toRadians(100), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*32) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32));
 			
 			//back leg1
-			g.setColor(Color.BLUE);
+			//g.setColor(Color.BLUE);
 			g.rotate(Math.toRadians(-calc),(int)posX, (int)posY - 35);
 			g.fillRoundRect((int)posX - 4, (int)posY - 35, 7, 18, 5, 10);
 			g.rotate(Math.toRadians(calc),(int)posX, (int)posY - 35);
 			
 			//back leg2
-			g.setColor(Color.BLUE);
+			//g.setColor(Color.BLUE);
 			g.rotate(Math.toRadians(-calc+15),(int)(posX - 4 + Math.sin(Math.toRadians(-calc+15))*16 + 2), (int)(posY - 35 + Math.cos(Math.toRadians(-calc+15))*16) + 2);
 			g.fillRoundRect((int)(posX - 4 + Math.sin(Math.toRadians(calc+15))*16) - 2, (int)(posY - 35 + Math.cos(Math.toRadians(calc+15))*16) + 2, 6, 20, 6, 10);
 			g.rotate(Math.toRadians(calc-15),(int)(posX - 4 + Math.sin(Math.toRadians(-calc+15))*16 + 2), (int)(posY - 35 + Math.cos(Math.toRadians(-calc+15))*16) + 2);
 			
 			//body
-			g.setColor(Color.BLACK);
+			//g.setColor(Color.BLACK);
 			g.rotate(Math.toRadians(bodyAngle), (int)posX, (int)posY - 35);
 			g.fillRoundRect((int)posX - 8, (int)(posY - 72), 15, 40, 10, 15);
 			
@@ -171,32 +173,45 @@ public class GuyTester extends JComponent implements Runnable {
 			g.rotate(Math.toRadians(-bodyAngle), (int)posX, (int)posY - 35);
 			
 			//front arm
-			g.setColor(Color.GRAY);
+			//g.setColor(Color.GRAY);
 			g.rotate(Math.toRadians(-75), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*32) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*27));
 			g.fillRoundRect((int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*32) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*27), 6, 30, 6, 10);
 			g.rotate(Math.toRadians(75), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*32) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*27));
 			
 			//front leg1
-			g.setColor(Color.GRAY);
+			//g.setColor(Color.GRAY);
 			g.rotate(Math.toRadians(calc),(int)posX, (int)posY - 35);
 			g.fillRoundRect((int)posX - 4, (int)posY - 35, 7, 18, 5, 10);
 			g.rotate(Math.toRadians(-calc),(int)posX, (int)posY - 35);
 			
 			//front leg2
-			g.setColor(Color.GRAY);
+			//g.setColor(Color.GRAY);
 			g.rotate(Math.toRadians(calc+15),(int)(posX - 4 + Math.sin(Math.toRadians(calc+15))*16 - 2), (int)(posY - 35 + Math.cos(Math.toRadians(calc+15))*16) + 2);
 			g.fillRoundRect((int)(posX - 4 + Math.sin(Math.toRadians(-calc+15))*16) - 2, (int)(posY - 35 + Math.cos(Math.toRadians(-calc+15))*16) + 2, 6, 20, 6, 10);
-		} else if (action == JUMP) {
-			//jumping
-			//don't know if we need this
-		} else if(action == STAND) {
+		} else if (action == STAND) {
 			//standing still
 			
-			//again, be careful about increments greater than 1 - current SHOULD BE at 0.1
-			if (Math.abs(stillCalc)+Math.abs(stillCalcMove)>0) {
-				stillCalc-=Math.abs(stillCalc)/(stillCalc*10);
-			} else if (Math.abs(stillCalc)+Math.abs(stillCalcMove)<0) {
-				stillCalc+=Math.abs(stillCalc)/(stillCalc*10);
+			//param is velocity in the Z direction
+			//+ param is going down
+			if (Math.abs(armAngle)>150) {
+				armAngle = 150;
+			} else if (Math.abs(armAngle)<20) {
+				armAngle = 20;
+			} else {
+				armAngle+=param*(Math.abs(armAngle)/armAngle);
+			}
+			
+			
+			//again, be careful about increments greater than 1
+			if (stillCalc>-10) {
+				stillCalc-=0.01;
+			} else if (stillCalc<-10) {
+				stillCalc+=0.01;
+			}
+			if (bodyAngle<0) {
+				bodyAngle++;
+			} else if (bodyAngle>0) {
+				bodyAngle--;
 			}
 			
 			//Find a way to make this simpler, I accidently found it, it's a sexytastic bounce effect due to not correctly reversing the sin and cos of the rotation
@@ -207,25 +222,25 @@ public class GuyTester extends JComponent implements Runnable {
 			//I've tried my hardest... all to vain.
 			
 			//back arm
-			g.setColor(Color.BLUE);
-			g.rotate(Math.toRadians(stillCalc), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*32) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32));
+			//g.setColor(Color.BLUE);
+			g.rotate(Math.toRadians(armAngle), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*32) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32));
 			g.fillRoundRect((int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*32) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32), 6, 30, 6, 10);
-			g.rotate(Math.toRadians(-stillCalc), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*32) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32));
+			g.rotate(Math.toRadians(-armAngle), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*32) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32));
 			
 			//back leg1
-			g.setColor(Color.BLUE);
+			//g.setColor(Color.BLUE);
 			g.rotate(Math.toRadians(-stillCalc),(int)posX, (int)posY - 35);
 			g.fillRoundRect((int)posX - 4, (int)posY - 35, 7, 18, 5, 10);
 			g.rotate(Math.toRadians(stillCalc),(int)posX, (int)posY - 35);
 			
 			//back leg2
-			g.setColor(Color.BLUE);
-			g.rotate(Math.toRadians(stillCalc+15),(int)(posX - 4 + Math.sin(Math.toRadians(stillCalc+15))*16 + 2), (int)(posY - 35 + Math.cos(Math.toRadians(stillCalc+15))*16) + 2);
+			//g.setColor(Color.BLUE);
+			g.rotate(Math.toRadians(-stillCalc+8),(int)(posX - 4 + Math.sin(Math.toRadians(-stillCalc+15))*16 + 2), (int)(posY - 35 + Math.cos(Math.toRadians(-stillCalc+15))*16) + 2);
 			g.fillRoundRect((int)(posX - 4 + Math.sin(Math.toRadians(stillCalc+15))*16) - 2, (int)(posY - 35 + Math.cos(Math.toRadians(stillCalc+15))*16) + 2, 6, 20, 6, 10);
-			g.rotate(Math.toRadians(-stillCalc-15),(int)(posX - 4 + Math.sin(Math.toRadians(stillCalc+15))*16 + 2), (int)(posY - 35 + Math.cos(Math.toRadians(stillCalc+15))*16) + 2);
+			g.rotate(Math.toRadians(stillCalc-8),(int)(posX - 4 + Math.sin(Math.toRadians(-stillCalc+15))*16 + 2), (int)(posY - 35 + Math.cos(Math.toRadians(-stillCalc+15))*16) + 2);
 			
 			//body
-			g.setColor(Color.BLACK);
+			//g.setColor(Color.BLACK);
 			g.rotate(Math.toRadians(bodyAngle), (int)posX, (int)posY - 35);
 			g.fillRoundRect((int)posX - 8, (int)(posY - 72), 15, 40, 10, 15);
 			
@@ -235,19 +250,19 @@ public class GuyTester extends JComponent implements Runnable {
 			//I have to draw the head down here because I am getting a nice bounce effect
 			
 			//front arm
-			g.setColor(Color.GRAY);
-			g.rotate(Math.toRadians(-stillCalc), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*32) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32));
+			//g.setColor(Color.GRAY);
+			g.rotate(Math.toRadians(-armAngle), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*32) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32));
 			g.fillRoundRect((int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*32) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32), 6, 30, 6, 10);
-			g.rotate(Math.toRadians(stillCalc), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*32) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32));
+			g.rotate(Math.toRadians(armAngle), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*32) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32));
 			
 			//front leg1
-			g.setColor(Color.GRAY);
+			//g.setColor(Color.GRAY);
 			g.rotate(Math.toRadians(stillCalc),(int)posX, (int)posY - 35);
 			g.fillRoundRect((int)posX - 4, (int)posY - 35, 7, 18, 5, 10);
 			g.rotate(Math.toRadians(-stillCalc),(int)posX, (int)posY - 35);
 			
 			//front leg2
-			g.setColor(Color.GRAY);
+			//g.setColor(Color.GRAY);
 			g.rotate(Math.toRadians(stillCalc+15),(int)(posX - 4 + Math.sin(Math.toRadians(stillCalc+15))*16 - 2), (int)(posY - 35 + Math.cos(Math.toRadians(stillCalc+15))*16) + 2);
 			g.fillRoundRect((int)(posX - 4 + Math.sin(Math.toRadians(-stillCalc+15))*16) - 2, (int)(posY - 35 + Math.cos(Math.toRadians(-stillCalc+15))*16) + 2, 6, 20, 6, 10);
 		}
