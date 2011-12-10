@@ -86,7 +86,6 @@ public class ClickHelperAwesome extends JComponent implements Runnable {
 				int addX = (int)(Math.cos(Math.atan2(pickSpotY[i] - realLastY, pickSpotX[i] - realLastX)) * (Math.pow((finalrunning), 2) - Math.pow((running), 2) + 1)/400);
 				int addY = (int)(Math.sin(Math.atan2(pickSpotY[i] - realLastY, pickSpotX[i] - realLastX)) * (Math.pow((finalrunning), 2) - Math.pow((running), 2) + 1)/400);
 				System.out.println(Math.atan2(pickSpotY[i], pickSpotX[i] - lastX));
-				// * (Math.pow(finalrunning, 2)/Math.pow(finalrunning - running,2)))
 				g.fillRect(pickSpotX[i]+addX, pickSpotY[i]+addY, 5, 5);
 			}
 			
