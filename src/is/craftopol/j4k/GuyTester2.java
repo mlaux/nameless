@@ -48,23 +48,14 @@ public class GuyTester2 extends JComponent implements Runnable {
 
 		int angle = (frame % 360);
 		
-		int bx = x;
-		int by = y + (int) (3 * Math.sin(Math.toRadians(6 * angle)));
+		int bodyx = x;
+		int bodyy = y + (int) (3 * Math.sin(Math.toRadians(6 * angle)));
 		
 		g.setColor(Color.white);
-		g.fillOval(bx, by, 30, 30);
-		
-		bx += 5;
-		by += 30;
-		
-		g.setColor(Color.blue);
-		g.fillRoundRect(bx, by, 20, 60, 10, 10);
-		
-		g.setColor(Color.white);
+		g.fillOval(bodyx, bodyy, 30, 30);
 
-		bx = x + 15;
-		by = y + 50;
-		
+		int bx = x + 15;
+		int by = y + 50;
 		
 		int arm = (angle % 60) + 60;
 		
@@ -74,6 +65,15 @@ public class GuyTester2 extends JComponent implements Runnable {
 		
 		int dx = (int) (bx + (35 * Math.cos(Math.toRadians(arm))));
 		int dy = (int) (by + (35 * Math.sin(Math.toRadians(arm))));
+		g.drawLine(bx, by, dx, dy);
+		
+
+		g.setColor(Color.blue);
+		g.fillRoundRect(bodyx + 5, bodyy + 30, 20, 60, 10, 10);
+		
+		g.setColor(Color.white);
+		
+		dx = (int) (bx - (45 * Math.cos(Math.toRadians(arm))));
 		g.drawLine(bx, by, dx, dy);
 		
 		by += 40;
