@@ -19,13 +19,13 @@ public class Line implements Item {
 	}
 	
 	public Line(int x1, int y1, int x2, int y2, int thick) {
+		this.thickness = thick;
+		
 		this.x1 = x1;
 		this.y1 = y1;
 		
 		this.x2 = x2;
 		this.y2 = y2;
-		
-		this.thickness = thick;
 	}
 	
 	public String serialize() {
@@ -38,7 +38,8 @@ public class Line implements Item {
 
 	public void render(Graphics g) {
 		((Graphics2D) g).setStroke(new BasicStroke(thickness));
-		g.drawLine(x1, y1, x2, y2);
+		double angle = Math.atan2(y2-y1,x2-x1);
+		g.drawLine((int)(x1 - Math.cos(angle)*(thickness - 1)/2),(int)(y1 - Math.sin(angle)*(thickness - 1)/2), (int)(x2 - Math.cos(angle)*(thickness - 1)/2 - Math.cos(angle+Math.PI/2)*(thickness - 1)/2), (int)(y2 - Math.sin(angle)*(thickness - 1)/2 - Math.sin(angle+Math.PI/2)*(thickness - 1)/2));
 	}
 
 	public void setPosition(int x, int y) {

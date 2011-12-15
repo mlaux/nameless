@@ -21,8 +21,8 @@ public class Rect implements Item {
 	}
 	
 	public Rect(int x, int y, int w, int h, int t, boolean f) {
-		this.x = x;
-		this.y = y;
+		this.x = x + thickness/2;
+		this.y = y + thickness/2;
 		
 		width = w;
 		height = h;
