@@ -80,7 +80,7 @@ public class G extends Applet implements Runnable {
 			g.setColor(Color.white);
 			g.drawString("FPS " + String.valueOf(fps), 20, 30);
 			
-			//drawGuy(g, WALK, 0, tick);
+			drawGuy(g, WALK, 0, tick);
 			
 			// Draw the entire results on the screen.
 			appletGraphics.drawImage(screen, 0, 0, this);
@@ -95,7 +95,7 @@ public class G extends Applet implements Runnable {
 		}
 	}
 	public void drawGuy(Graphics _g, int action, double param, int time) {
-		Graphics2D g = (Graphics2D) _g;
+		Graphics2D g = (Graphics2D) _g.create();
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
 		if (time%20 == 0) {
@@ -239,6 +239,8 @@ public class G extends Applet implements Runnable {
 			g.fillRoundRect((int)(posX - 4 + Math.sin(Math.toRadians(-stillCalc+15))*16) - 2, (int)(posY - 35 + Math.cos(Math.toRadians(-stillCalc+15))*16) + 2, 6, 20, 6, 10);
 			g.rotate(Math.toRadians(-stillCalc-15),(int)(posX - 4 + Math.sin(Math.toRadians(stillCalc+15))*16 - 2), (int)(posY - 35 + Math.cos(Math.toRadians(stillCalc+15))*16) + 2);
 		}
+		
+		g.dispose();
 	}
 
 	public boolean handleEvent(Event e) {

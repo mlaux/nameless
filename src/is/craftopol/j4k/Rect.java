@@ -64,8 +64,11 @@ public class Rect implements Item {
 	}
 
 	public void setThickness(int thickness) {
-		if(thickness > 0)
+		if(thickness > 0) {
 			this.thickness = thickness;
+			this.x += thickness / 2;
+			this.y += thickness / 2;
+		}
 	}
 
 	public int getThickness() {
