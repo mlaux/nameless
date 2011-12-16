@@ -87,7 +87,7 @@ public class G extends Applet implements Runnable {
 			appletGraphics.drawImage(screen, 0, 0, this);
 			
 			try {
-				Thread.sleep(15);
+				Thread.sleep(10);
 			} catch(Exception e) { }
 
 			/*do {

@@ -21,6 +21,8 @@ public class ItemFactory {
 			return new Rect();
 		else if(type.equals("circle"))
 			return new Circle();
+		else if(type.equals("triangle"))
+			return new Triangle();
 		else throw new RuntimeException("Invalid item type");
 	}
 }
