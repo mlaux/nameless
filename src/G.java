@@ -70,7 +70,7 @@ public class G extends Applet implements Runnable {
 			// TODO add some update logic here.
 
 			lastTime = now;
-
+			
 			g.setColor(Color.black);
 			g.fillRect(0, 0, 800, 600);
 			
