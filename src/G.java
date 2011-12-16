@@ -21,7 +21,7 @@ public class G extends Applet implements Runnable {
 	private int direction = 1;
 	private double bodyAngle;
 	private double posX = 300;
-	private double posY = 300;
+	private double posY = 400;
 	private double stillCalc;
 	private double armAngle;
 	
@@ -80,6 +80,7 @@ public class G extends Applet implements Runnable {
 			g.setColor(Color.white);
 			g.drawString("FPS " + String.valueOf(fps), 20, 30);
 			
+			time++;
 			drawGuy(g, WALK, 0, time);
 			
 			// Draw the entire results on the screen.
@@ -101,6 +102,7 @@ public class G extends Applet implements Runnable {
 	public void drawGuy(Graphics _g, int action, double param, int time) {
 		Graphics2D g = (Graphics2D) _g.create();
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setColor(Color.black);
 		
 		if (time%20 == 0) {
 			direction = -direction;
@@ -169,7 +171,6 @@ public class G extends Applet implements Runnable {
 			//front leg2
 			g.rotate(Math.toRadians(calc+15),(int)(posX - 4 + Math.sin(Math.toRadians(calc+15))*16 - 2), (int)(posY - 35 + Math.cos(Math.toRadians(calc+15))*16) + 2);
 			g.fillRoundRect((int)(posX - 4 + Math.sin(Math.toRadians(-calc+15))*16) - 2, (int)(posY - 35 + Math.cos(Math.toRadians(-calc+15))*16) + 2, 6, 20, 6, 10);
-			g.rotate(Math.toRadians(-stillCalc-15),(int)(posX - 4 + Math.sin(Math.toRadians(stillCalc+15))*16 - 2), (int)(posY - 35 + Math.cos(Math.toRadians(stillCalc+15))*16) + 2);
 		} else if (action == STAND) {
 			//For a good segue
 			time=0;
@@ -241,7 +242,6 @@ public class G extends Applet implements Runnable {
 			//front leg2
 			g.rotate(Math.toRadians(stillCalc+15),(int)(posX - 4 + Math.sin(Math.toRadians(stillCalc+15))*16 - 2), (int)(posY - 35 + Math.cos(Math.toRadians(stillCalc+15))*16) + 2);
 			g.fillRoundRect((int)(posX - 4 + Math.sin(Math.toRadians(-stillCalc+15))*16) - 2, (int)(posY - 35 + Math.cos(Math.toRadians(-stillCalc+15))*16) + 2, 6, 20, 6, 10);
-			g.rotate(Math.toRadians(-stillCalc-15),(int)(posX - 4 + Math.sin(Math.toRadians(stillCalc+15))*16 - 2), (int)(posY - 35 + Math.cos(Math.toRadians(stillCalc+15))*16) + 2);
 		}
 		
 		g.dispose();
