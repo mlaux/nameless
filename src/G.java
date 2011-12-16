@@ -80,14 +80,18 @@ public class G extends Applet implements Runnable {
 			g.setColor(Color.white);
 			g.drawString("FPS " + String.valueOf(fps), 20, 30);
 			
-			drawGuy(g, WALK, 0, tick);
+			drawGuy(g, WALK, 0, time);
 			
 			// Draw the entire results on the screen.
 			appletGraphics.drawImage(screen, 0, 0, this);
+			
+			try {
+				Thread.sleep(15);
+			} catch(Exception e) { }
 
-			do {
+			/*do {
 				Thread.yield();
-			} while (System.nanoTime() - lastTime < 0);
+			} while (System.nanoTime() - lastTime < 0); */
 
 			if (!isActive()) {
 				return;
