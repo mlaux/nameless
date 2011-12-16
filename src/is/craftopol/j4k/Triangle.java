@@ -36,6 +36,8 @@ public class Triangle implements Item {
 		int[] yp = { y1, y2, Math.max(y1, y2) };
 		
 		g.fillPolygon(xp, yp, 3);
+		
+		g.fillRect(Math.min(x1, x2), Math.max(y1, y2), Math.abs(x2 - x1), 2000);
 	}
 
 	public void setPosition(int x, int y) {
@@ -69,12 +71,8 @@ public class Triangle implements Item {
 		int minY = Math.max(y2, y1);
 		int width = x2-x1;
 		
-		double percAcross = (x-x1)/((double)width);
-		if (y2 > y1) {
-			//if you drag from bottom to top
-			percAcross = 1 - percAcross;
-		}
-		if (y <= minY && y >= (minY - ((double)height)*((double)percAcross))) {
+		double percAcross = (x - x1) / ((double) width);
+		if (y <= minY && y >= (minY - ((double) height) * ((double) percAcross))) {
 			if (percAcross <= 1 && percAcross >=0) {
 				//did it on a different line so you'll get it. because of how I did percAcross it's always in between 0 and 1 if your mouse is inside the triangle.
 				System.out.println("true");
