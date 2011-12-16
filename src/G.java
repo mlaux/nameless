@@ -2,6 +2,8 @@ import java.applet.Applet;
 import java.awt.Color;
 import java.awt.Event;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
@@ -9,6 +11,19 @@ public class G extends Applet implements Runnable {
 	private static final int width = 400;
 	private static final int height = 300;
 	private static final int scale = 2;
+	
+	private static final int WALK = 1;
+	private static final int PUSH = 2;
+	private static final int STAND = 3;
+	
+	private int time = 10; //use tick??
+	private int calc = 2;
+	private int direction = 1;
+	private double bodyAngle;
+	private double posX = 300;
+	private double posY = 300;
+	private double stillCalc;
+	private double armAngle;
 	
 
 	public void start() {
@@ -64,7 +79,9 @@ public class G extends Applet implements Runnable {
 			
 			g.setColor(Color.white);
 			g.drawString("FPS " + String.valueOf(fps), 20, 30);
-
+			
+			//drawGuy(g, WALK, 0, tick);
+			
 			// Draw the entire results on the screen.
 			appletGraphics.drawImage(screen, 0, 0, this);
 
@@ -75,6 +92,152 @@ public class G extends Applet implements Runnable {
 			if (!isActive()) {
 				return;
 			}
+		}
+	}
+	public void drawGuy(Graphics _g, int action, double param, int time) {
+		Graphics2D g = (Graphics2D) _g;
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		
+		if (time%20 == 0) {
+			direction = -direction;
+		}
+		calc+=direction*2;
+		
+		if (action == WALK || action == PUSH) {
+			stillCalc = calc;
+			armAngle = calc;
+			
+			if (param>bodyAngle) {
+				bodyAngle++;
+			} else if (param < bodyAngle) {
+				bodyAngle--;
+			}
+			
+			//Bounce effect
+			g.rotate(Math.toRadians(-calc),(int)(posX - 4 + Math.sin(Math.toRadians(-calc))*-16), (int)(posY - 35 + Math.cos(Math.toRadians(-calc))*16));
+			g.rotate(Math.toRadians(calc),(int)(posX - 4 + Math.sin(Math.toRadians(calc))*-16), (int)(posY - 35 + Math.cos(Math.toRadians(calc))*16));
+			
+			if (action==WALK) {
+				g.rotate(Math.toRadians(calc*1.3), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*35), (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32));
+				g.fillRoundRect((int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*35) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32), 6, 30, 6, 10);
+				g.rotate(Math.toRadians(-calc*1.3), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*35), (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32));
+			} else {
+				g.rotate(Math.toRadians(-75), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*35), (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32));
+				g.fillRoundRect((int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*35) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32), 6, 30, 6, 10);
+				g.rotate(Math.toRadians(75), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*35), (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32));
+			}
+			
+			//back leg1
+			g.rotate(Math.toRadians(-calc),(int)posX, (int)posY - 35);
+			g.fillRoundRect((int)posX - 4, (int)posY - 35, 7, 18, 5, 10);
+			g.rotate(Math.toRadians(calc),(int)posX, (int)posY - 35);
+			
+			//back leg2
+			g.rotate(Math.toRadians(-calc+15),(int)(posX - 4 + Math.sin(Math.toRadians(-calc+15))*16 + 2), (int)(posY - 35 + Math.cos(Math.toRadians(-calc+15))*16) + 2);
+			g.fillRoundRect((int)(posX - 4 + Math.sin(Math.toRadians(calc+15))*16) - 2, (int)(posY - 35 + Math.cos(Math.toRadians(calc+15))*16) + 2, 6, 20, 6, 10);
+			g.rotate(Math.toRadians(calc-15),(int)(posX - 4 + Math.sin(Math.toRadians(-calc+15))*16 + 2), (int)(posY - 35 + Math.cos(Math.toRadians(-calc+15))*16) + 2);
+			
+			//body
+			g.rotate(Math.toRadians(bodyAngle), (int)posX, (int)posY - 35);
+			g.fillRoundRect((int)posX - 8, (int)(posY - 72), 15, 40, 10, 15);
+			
+			//head
+			g.fillRoundRect((int)posX - 12, (int)(posY - 96), 22, 25, 20, 20);
+			g.rotate(Math.toRadians(-bodyAngle), (int)posX, (int)posY - 35);
+			//I have to draw the head down here because I am getting a nice bounce effect
+			
+			//front arm
+			if (action==WALK) {
+				g.rotate(Math.toRadians(-calc*1.3), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*35), (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32));
+				g.fillRoundRect((int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*35) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32), 6, 30, 6, 10);
+				g.rotate(Math.toRadians(calc*1.3), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*35), (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32));
+			} else {
+				g.rotate(Math.toRadians(-100), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*35), (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32));
+				g.fillRoundRect((int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*35) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32), 6, 30, 6, 10);
+				g.rotate(Math.toRadians(100), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*35), (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32));
+			}
+			
+			//front leg1
+			g.rotate(Math.toRadians(calc),(int)posX, (int)posY - 35);
+			g.fillRoundRect((int)posX - 4, (int)posY - 35, 7, 18, 5, 10);
+			g.rotate(Math.toRadians(-calc),(int)posX, (int)posY - 35);
+			
+			//front leg2
+			g.rotate(Math.toRadians(calc+15),(int)(posX - 4 + Math.sin(Math.toRadians(calc+15))*16 - 2), (int)(posY - 35 + Math.cos(Math.toRadians(calc+15))*16) + 2);
+			g.fillRoundRect((int)(posX - 4 + Math.sin(Math.toRadians(-calc+15))*16) - 2, (int)(posY - 35 + Math.cos(Math.toRadians(-calc+15))*16) + 2, 6, 20, 6, 10);
+			g.rotate(Math.toRadians(-stillCalc-15),(int)(posX - 4 + Math.sin(Math.toRadians(stillCalc+15))*16 - 2), (int)(posY - 35 + Math.cos(Math.toRadians(stillCalc+15))*16) + 2);
+		} else if (action == STAND) {
+			//For a good segue
+			time=0;
+			
+			if (Math.abs(param)>25) {
+				param = 25 * Math.signum(param);
+			}
+			//param is velocity in the Z direction
+			if (armAngle==0) {
+				armAngle = 1;
+			}
+			if (Math.round(armAngle)>150) {
+				armAngle = 150;
+			} else if (Math.round(armAngle)<20) {
+				armAngle = 20;
+			} else if((Math.round(armAngle)==150.0 && (param<0)) || ((Math.round(armAngle)==20) && (param>0)) || (Math.round(armAngle)!=20 && Math.round(armAngle)!=150)) {
+				armAngle+=param;
+			}
+			
+			if (Math.round(stillCalc)>-10) {
+				stillCalc-=0.1;
+			} else if (Math.round(stillCalc)<-10) {
+				stillCalc+=0.1;
+			}
+			if (bodyAngle<0) {
+				bodyAngle++;
+			} else if (bodyAngle>0) {
+				bodyAngle--;
+			}
+			
+			//Bounce effect
+			g.rotate(Math.toRadians(-stillCalc),(int)(posX - 4 + Math.sin(Math.toRadians(-stillCalc))*-16), (int)(posY - 35 + Math.cos(Math.toRadians(-stillCalc))*16));
+			g.rotate(Math.toRadians(stillCalc),(int)(posX - 4 + Math.sin(Math.toRadians(stillCalc))*-16), (int)(posY - 35 + Math.cos(Math.toRadians(stillCalc))*16));
+			
+			//back arm
+			g.rotate(Math.toRadians(armAngle), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*35), (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32));
+			g.fillRoundRect((int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*32) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32), 6, 30, 6, 10);
+			g.rotate(Math.toRadians(-armAngle), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*35), (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32));
+			
+			//back leg1
+			g.rotate(Math.toRadians(-stillCalc),(int)posX, (int)posY - 35);
+			g.fillRoundRect((int)posX - 4, (int)posY - 35, 7, 18, 5, 10);
+			g.rotate(Math.toRadians(stillCalc),(int)posX, (int)posY - 35);
+			
+			//back leg2
+			g.rotate(Math.toRadians(-stillCalc+8),(int)(posX - 4 + Math.sin(Math.toRadians(-stillCalc+15))*16 + 2), (int)(posY - 35 + Math.cos(Math.toRadians(-stillCalc+15))*16) + 2);
+			g.fillRoundRect((int)(posX - 4 + Math.sin(Math.toRadians(stillCalc+15))*16) - 2, (int)(posY - 35 + Math.cos(Math.toRadians(stillCalc+15))*16) + 2, 6, 20, 6, 10);
+			g.rotate(Math.toRadians(stillCalc-8),(int)(posX - 4 + Math.sin(Math.toRadians(-stillCalc+15))*16 + 2), (int)(posY - 35 + Math.cos(Math.toRadians(-stillCalc+15))*16) + 2);
+			
+			//body
+			g.rotate(Math.toRadians(bodyAngle), (int)posX, (int)posY - 35);
+			g.fillRoundRect((int)posX - 8, (int)(posY - 72), 15, 40, 10, 15);
+			
+			//head
+			g.fillRoundRect((int)posX - 12, (int)(posY - 96), 22, 25, 20, 20);
+			g.rotate(Math.toRadians(-bodyAngle), (int)posX, (int)posY - 35);
+			//I have to draw the head down here because I am getting a nice bounce effect
+			
+			//front arm
+			g.rotate(Math.toRadians(-armAngle), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*32) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32));
+			g.fillRoundRect((int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*32) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32), 6, 30, 6, 10);
+			g.rotate(Math.toRadians(armAngle), (int)(posX - Math.cos(Math.toRadians(bodyAngle+90))*32) - 3, (int)(posY - 35 - Math.sin(Math.toRadians(bodyAngle+90))*32));
+			
+			//front leg1
+			g.rotate(Math.toRadians(stillCalc),(int)posX, (int)posY - 35);
+			g.fillRoundRect((int)posX - 4, (int)posY - 35, 7, 18, 5, 10);
+			g.rotate(Math.toRadians(-stillCalc),(int)posX, (int)posY - 35);
+			
+			//front leg2
+			g.rotate(Math.toRadians(stillCalc+15),(int)(posX - 4 + Math.sin(Math.toRadians(stillCalc+15))*16 - 2), (int)(posY - 35 + Math.cos(Math.toRadians(stillCalc+15))*16) + 2);
+			g.fillRoundRect((int)(posX - 4 + Math.sin(Math.toRadians(-stillCalc+15))*16) - 2, (int)(posY - 35 + Math.cos(Math.toRadians(-stillCalc+15))*16) + 2, 6, 20, 6, 10);
+			g.rotate(Math.toRadians(-stillCalc-15),(int)(posX - 4 + Math.sin(Math.toRadians(stillCalc+15))*16 - 2), (int)(posY - 35 + Math.cos(Math.toRadians(stillCalc+15))*16) + 2);
 		}
 	}
 

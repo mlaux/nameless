@@ -42,7 +42,6 @@ public class GuyTester extends JComponent implements Runnable {
 		g.fillRect(0, 0, getWidth(), getHeight());
 		g.setColor(Color.black);
 		
-		
 		if (time<100) {
 			paintGuy(g, WALK, 0, time);
 		} else if (time<200) {
@@ -50,9 +49,11 @@ public class GuyTester extends JComponent implements Runnable {
 		} else if(time<400) {
 			test+=0.02;
 			paintGuy(g, STAND, test, time);
-		} else {
+		} else if (time<500) {
 			test=-25;
 			paintGuy(g, STAND, test, time);
+		} else {
+			paintGuy(g, WALK, 0, time);
 		}
 		
 		//Anti-aliasing is a gift from god.
@@ -139,6 +140,8 @@ public class GuyTester extends JComponent implements Runnable {
 			g.rotate(Math.toRadians(calc+15),(int)(posX - 4 + Math.sin(Math.toRadians(calc+15))*16 - 2), (int)(posY - 35 + Math.cos(Math.toRadians(calc+15))*16) + 2);
 			g.fillRoundRect((int)(posX - 4 + Math.sin(Math.toRadians(-calc+15))*16) - 2, (int)(posY - 35 + Math.cos(Math.toRadians(-calc+15))*16) + 2, 6, 20, 6, 10);
 		} else if (action == STAND) {
+			time=0;
+			
 			//standing still
 			if (Math.abs(param)>25) {
 				param = 25 * Math.signum(param);
@@ -153,7 +156,6 @@ public class GuyTester extends JComponent implements Runnable {
 			} else if (Math.round(armAngle)<20) {
 				armAngle = 20;
 			} else if((Math.round(armAngle)==150.0 && (param<0)) || ((Math.round(armAngle)==20) && (param>0)) || (Math.round(armAngle)!=20 && Math.round(armAngle)!=150)) {
-				System.out.println("ran");
 				armAngle+=param;
 			}
 			
