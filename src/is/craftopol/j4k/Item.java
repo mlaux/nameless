@@ -17,8 +17,8 @@ public interface Item {
 	/** Type constant for a {@link Line}. */
 	public static final byte TYPE_LINE = 0x03;
 	
-	/** Type constant for a {@link Rect}. */
-	public static final byte TYPE_RECT = 0x04;
+	/** Type constant for a {@link Triangle}. */
+	public static final byte TYPE_TRIANGLE = 0x04;
 	
 	/** Type constant for a {@link Circle}. */
 	public static final byte TYPE_CIRCLE = 0x05;

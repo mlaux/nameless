@@ -2,7 +2,6 @@ package is.craftopol.j4k;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.util.Arrays;
 
 public class Triangle implements Item {
 	public int x1;

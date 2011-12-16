@@ -36,7 +36,7 @@ public class LevelView extends JComponent {
 	
 	private boolean showGrid = true;
 	
-	private int zoom = 16;
+	private int zoom = 2;
 	
 	private int scrollX;
 	private int scrollY;
@@ -264,15 +264,13 @@ public class LevelView extends JComponent {
 					line.thickness = str.charAt(index++);
 					items.add(line);
 					break;
-				case Item.TYPE_RECT:
-					Rect rect = new Rect();
-					rect.filled = (flags & Item.FLAG_FILLED) != 0;
-					rect.x = str.charAt(index++);
-					rect.y = str.charAt(index++);
-					rect.width = str.charAt(index++);
-					rect.height = str.charAt(index++);
-					rect.thickness = str.charAt(index++);
-					items.add(rect);
+				case Item.TYPE_TRIANGLE:
+					Triangle tri = new Triangle();
+					tri.x1 = str.charAt(index++);
+					tri.y1 = str.charAt(index++);
+					tri.x2 = str.charAt(index++);
+					tri.y2 = str.charAt(index++);
+					items.add(tri);
 					break;
 				case Item.TYPE_CIRCLE:
 					Circle circle = new Circle();

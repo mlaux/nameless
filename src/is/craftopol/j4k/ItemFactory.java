@@ -17,8 +17,6 @@ public class ItemFactory {
 			return new PointItem(Item.TYPE_EXITPOINT);
 		else if(type.equals("line"))
 			return new Line();
-		else if(type.equals("rect") || type.equals("rectangle"))
-			return new Rect();
 		else if(type.equals("circle"))
 			return new Circle();
 		else if(type.equals("triangle"))
