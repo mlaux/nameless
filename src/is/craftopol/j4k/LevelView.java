@@ -106,13 +106,14 @@ public class LevelView extends JComponent {
 		
 		g.setStroke(THIN_STROKE);
 		g.setColor(REG_COLOR);
-		
+		/*
 		for(int y = startY; y < getHeight(); y += zoom) {
 			g.drawLine(0, y, getWidth(), y);
 			for(int x = startX; x < getWidth(); x += zoom) {
 				g.drawLine(x, 0, x, getHeight());
 			}
 		}
+		*/
 	}
 	
 	public void scroll(int dx, int dy) {
