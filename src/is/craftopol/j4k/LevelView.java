@@ -231,9 +231,11 @@ public class LevelView extends JComponent {
 		String actual = encode();
 		for(char ch : actual.toCharArray()) {
 			if(ch == 13)
-				result += "\r";
+				result += "\\r";
 			else if(ch == 10)
-				result += "\n";
+				result += "\\n";
+			else if(ch == 22)
+				result += "\\\"";
 			else result += String.format("\\u%04x", (int) ch);
 		}
 		result += "\";";

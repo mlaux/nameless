@@ -1,4 +1,5 @@
 import java.applet.Applet;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Event;
 import java.awt.Graphics;
@@ -8,11 +9,12 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
 public class G extends Applet implements Runnable {
-	public static final byte TYPE_SPAWNPOINT = 0x01;
-	public static final byte TYPE_EXITPOINT = 0x02;
-	public static final byte TYPE_LINE = 0x03;
-	public static final byte TYPE_TRIANGLE = 0x04;
-	public static final byte TYPE_CIRCLE = 0x05;
+	private static final int TYPE_SPAWNPOINT = 0x01;
+	private static final int TYPE_EXITPOINT = 0x02;
+	private static final int TYPE_LINE = 0x03;
+	private static final int TYPE_TRIANGLE = 0x04;
+	private static final int TYPE_CIRCLE = 0x05;
+	private static final int FLAG_FILLED = 0x100;
 	
 	private static final int width = 400;
 	private static final int height = 300;
@@ -22,7 +24,7 @@ public class G extends Applet implements Runnable {
 	private static final int PUSH = 2;
 	private static final int STAND = 3;
 	
-	private static final String level = "\u0003\u0009\u001d\u003c\u0012\u0001\u0004\u0011\u0047\u0068\n\u0068\u0047\u0101\u0011\u003e\u0102\u005d\r";
+	private static final String level = "\u0005\u0009\u0009\u0010\u0004\u0005\u0025\u0034\u0018\u0003\u0005\u0057\u005f\u0017\u0004\u0004\u007e\u0054\u00be\u0027\u00be\u0054\u0004\u00be\"\u0105\u0070\u00be\u0070\u0004\u0102\u0069\u011d\u0028\u011d\u0069\u0004\u0085\u0046\u0057\u000b\u0057\u0046";
 	
 	private int time = 10; //use tick??
 	private int calc = 2;
@@ -106,7 +108,7 @@ public class G extends Applet implements Runnable {
 					allObjects[numObjects][2] = level.charAt(index++); // centerX
 					allObjects[numObjects][3] = level.charAt(index++); // centerY
 					allObjects[numObjects][4] = level.charAt(index++); // radius
-					allObjects[numObjects][6] = level.charAt(index++); // thickness
+					allObjects[numObjects][5] = level.charAt(index++); // thickness
 					break;
 			}
 			
@@ -115,7 +117,7 @@ public class G extends Applet implements Runnable {
 		
 		// set up graphics
 		BufferedImage screen = new BufferedImage(width * scale, height * scale, BufferedImage.TYPE_INT_RGB);
-		Graphics g = screen.getGraphics();
+		Graphics2D g = (Graphics2D) screen.getGraphics();
 		Graphics appletGraphics = getGraphics();
 
 		int tick = 0, fps = 0, acc = 0;
@@ -157,6 +159,13 @@ public class G extends Applet implements Runnable {
 						g.fillPolygon(xp, yp, 3);
 						
 						g.fillRect(Math.min(obj[2], obj[4]), obj[7], Math.abs(obj[4] - obj[2]), 2000);
+						break;
+					case TYPE_CIRCLE:
+						g.setStroke(new BasicStroke(obj[5]));
+						if((obj[1] & FLAG_FILLED) != 0)
+							g.fillOval(obj[2] - obj[4], obj[3] - obj[4], obj[4] * 2, obj[4] * 2);
+						else g.drawOval(obj[2] - obj[4], obj[3] - obj[4], obj[4] * 2, obj[4] * 2);
+						
 						break;
 				}
 			}
