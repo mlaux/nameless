@@ -143,7 +143,6 @@ public class G extends Applet implements Runnable {
 			g.drawImage(bkg, 0, 0, this);
 			
 			// render level, TODO: make this good
-			g.setColor(Color.white);
 			for(int k = 0; k < numObjects; k++) {
 				int[] obj = allObjects[k];
 				
