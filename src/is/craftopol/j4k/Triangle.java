@@ -23,7 +23,9 @@ public class Triangle implements Item {
 	}
 	
 	public String serialize() {
-		return "" + (char) Item.TYPE_LINE + (char) x1 + (char) y1 + (char) x2 + (char) y2;
+		return "" + (char) Item.TYPE_TRIANGLE + (char) x1 + (char) y1 + (char) x2 + (char) y2 
+				+ (char) (y1 < y2 ? x1 : x2) // this is the x3
+				+ (char) Math.max(y1, y2); // y3
 	}
 
 	public Dimension getSize() {
@@ -31,7 +33,7 @@ public class Triangle implements Item {
 	}
 
 	public void render(Graphics g) {
-		int x3 = y1 < y2 ? x1 : x2;
+		int x3 = (y1 < y2 ? x1 : x2);
 		int[] xp = { x1, x2, x3 };
 		int[] yp = { y1, y2, Math.max(y1, y2) };
 		

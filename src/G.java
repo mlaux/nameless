@@ -8,6 +8,12 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
 public class G extends Applet implements Runnable {
+	public static final byte TYPE_SPAWNPOINT = 0x01;
+	public static final byte TYPE_EXITPOINT = 0x02;
+	public static final byte TYPE_LINE = 0x03;
+	public static final byte TYPE_TRIANGLE = 0x04;
+	public static final byte TYPE_CIRCLE = 0x05;
+	
 	private static final int width = 400;
 	private static final int height = 300;
 	private static final int scale = 2;
@@ -15,6 +21,8 @@ public class G extends Applet implements Runnable {
 	private static final int WALK = 1;
 	private static final int PUSH = 2;
 	private static final int STAND = 3;
+	
+	private static final String level = "\u0003\u0009\u001d\u003c\u0012\u0001\u0004\u0011\u0047\u0068\n\u0068\u0047\u0101\u0011\u003e\u0102\u005d\r";
 	
 	private int time = 10; //use tick??
 	private int calc = 2;
@@ -45,13 +53,71 @@ public class G extends Applet implements Runnable {
 			}
 			shade += (150.0 / (height * scale));
 		}
-
-		// Set up the graphics stuff, double-buffering.
+		
+		// make giant array for items since we can't have multiple classes
+		// assume 100 max objects in the level for now
+		
+		// for each item index:
+		// [0] = item type, [1] = flags (currently, filled/not filled is only flag)
+		
+		// [2]-[7] = item-specific data:
+		//		for points: [2] = x, [3] = y
+		//		for lines: [2] = x1, [3] = y1, [4] = x2, [5] = y2, [6] = thickness
+		//		for triangles: [2] = x1, [3] = y1, [4] = x2, [5] = y2, [6] = x3, [7] = y3
+		//		for circles: [2] = centerX, [3] = centerY, [4] = radius, [5] = thickness
+		
+		int[][] allObjects = new int[100][8];
+		
+		// load da level
+			
+		int index = 0, numObjects = 0;
+		while(index < level.length()) {
+			// type is in lower 8 bits, flags are in upper 8 bits
+			char ch = level.charAt(index++);
+			int type = ch & 0xff, flags = ch & 0xff00;
+			
+			// store base information that's common to every object in 
+			// the first 2 fields
+			allObjects[numObjects][0] = type;
+			allObjects[numObjects][1] = flags;
+			
+			switch(type) {
+				case TYPE_SPAWNPOINT:
+				case TYPE_EXITPOINT:
+					allObjects[numObjects][2] = level.charAt(index++); // x
+					allObjects[numObjects][3] = level.charAt(index++); // y
+					break;
+				case TYPE_LINE:
+					allObjects[numObjects][2] = level.charAt(index++); // x1
+					allObjects[numObjects][3] = level.charAt(index++); // y1
+					allObjects[numObjects][4] = level.charAt(index++); // x2
+					allObjects[numObjects][5] = level.charAt(index++); // y2
+					allObjects[numObjects][6] = level.charAt(index++); // thickness
+					break;
+				case TYPE_TRIANGLE:
+					allObjects[numObjects][2] = level.charAt(index++); // x1
+					allObjects[numObjects][3] = level.charAt(index++); // y1
+					allObjects[numObjects][4] = level.charAt(index++); // x2
+					allObjects[numObjects][5] = level.charAt(index++); // y2
+					allObjects[numObjects][6] = level.charAt(index++); // x3
+					allObjects[numObjects][7] = level.charAt(index++); // y3
+					break;
+				case TYPE_CIRCLE:
+					allObjects[numObjects][2] = level.charAt(index++); // centerX
+					allObjects[numObjects][3] = level.charAt(index++); // centerY
+					allObjects[numObjects][4] = level.charAt(index++); // radius
+					allObjects[numObjects][6] = level.charAt(index++); // thickness
+					break;
+			}
+			
+			numObjects++;
+		}
+		
+		// set up graphics
 		BufferedImage screen = new BufferedImage(width * scale, height * scale, BufferedImage.TYPE_INT_RGB);
 		Graphics g = screen.getGraphics();
 		Graphics appletGraphics = getGraphics();
 
-		// Some variables to use for the fps.
 		int tick = 0, fps = 0, acc = 0;
 		long lastTime = System.nanoTime();
 
@@ -66,8 +132,7 @@ public class G extends Applet implements Runnable {
 				tick = 0;
 			}
 
-			// Update
-			// TODO add some update logic here.
+			// Update here
 
 			lastTime = now;
 			
@@ -77,13 +142,34 @@ public class G extends Applet implements Runnable {
 			// render
 			g.drawImage(bkg, 0, 0, this);
 			
+			// render level, TODO: make this good
+			g.setColor(Color.white);
+			for(int k = 0; k < numObjects; k++) {
+				int[] obj = allObjects[k];
+				
+				switch(obj[0]) {
+					case TYPE_LINE:
+						g.drawLine(obj[2], obj[3], obj[4], obj[5]);
+						break;
+					case TYPE_TRIANGLE:
+						int[] xp = { obj[2], obj[4], obj[6] };
+						int[] yp = { obj[3], obj[5], obj[7] };
+						
+						g.fillPolygon(xp, yp, 3);
+						
+						g.fillRect(Math.min(obj[2], obj[4]), obj[7], Math.abs(obj[4] - obj[2]), 2000);
+						break;
+				}
+			}
+			
+			drawGuy(g, WALK, 0, time);
+			time++;
+
+			
 			g.setColor(Color.white);
 			g.drawString("FPS " + String.valueOf(fps), 20, 30);
 			
-			time++;
-			drawGuy(g, WALK, 0, time);
-			
-			// Draw the entire results on the screen.
+			// render the buffer to the applet
 			appletGraphics.drawImage(screen, 0, 0, this);
 			
 			try {
