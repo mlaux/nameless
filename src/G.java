@@ -24,9 +24,9 @@ public class G extends Applet implements Runnable {
 	private static final int PUSH = 2;
 	private static final int STAND = 3;
 	
-	private static final String level = "\u0005\u0009\u0009\u0010\u0004\u0005\u0025\u0034\u0018\u0003\u0005\u0057\u005f\u0017\u0004\u0004\u007e\u0054\u00be\u0027\u00be\u0054\u0004\u00be\"\u0105\u0070\u00be\u0070\u0004\u0102\u0069\u011d\u0028\u011d\u0069\u0004\u0085\u0046\u0057\u000b\u0057\u0046";
+	private static final String level = "\u0004\u0000\u00e8\u00bd\u0122\u0000\u0122\u0004\u00bd\u0122\u015e\u012f\u00bd\u012f\u0004\u015e\u012f\u01d7\u0131\u015e\u0131\u0004\u01d7\u0131\u024b\u0129\u024b\u0131\u0004\u024b\u0129\u027e\u0113\u027e\u0129\u0004\u027e\u0113\u02d9\u010c\u02d9\u0113\u0004\u02d9\u010c\u0342\u011d\u02d9\u011d\u0004\u0342\u011d\u039b\u0130\u0342\u0130\u0004\u039b\u0130\u03b6\u0132\u039b\u0132\u0004\u03b6\u0132\u03c0\u012f\u03c0\u0132\u0003\u006f\u011a\u0236\u0067\u0017\u0003\u0237\u0076\u0084\u0127\u0010\u0003\u0097\u012e\u0231\u0083\u000c\u0003\u0226\u0091\u0085\u013a\u0008\u0003\u01fa\u00ac\u0067\u0148\n\u0003\u01c9\u00cb\u009d\u013d\u000e\u0003\u016e\u00ff\u00ba\u013f\u0013\u0003\u0134\u012a\u00bb\u0156\u0023\u0005\u0065\u0114\u0023\u0001\u0005\u0082\u010b\u0012\u0001\u0005\u0093\u0107\u000b\u0001\u0005\u0040\u00fe\u0013\u0001\u0005\u0020\u00f8\u0014\u0001\u0005\u000b\u00f1\u000c\u0001\u0005\u0157\u0124\u001b\u0001\u0005\u00d5\u009e\u0019\u0031\u0004\u03c0\u012e\u03c8\u012b\u03c8\u012e\u0004\u03c8\u012b\u03d3\u012a\u03d3\u012b\u0004\u03d3\u012a\u03e3\u012c\u03d3\u012c\u0004\u03e3\u012c\u03f7\u0135\u03e3\u0135\u0004\u03f7\u0135\u041b\u014e\u03f7\u014e\u0004\u041b\u014e\u0454\u0169\u041b\u0169\u0004\u0454\u0169\u0485\u0174\u0454\u0174\u0004\u0485\u0174\u04aa\u0179\u0485\u0179\u0004\u04aa\u0179\u04c3\u017b\u04aa\u017b\u0004\u04c3\u017b\u050b\u017d\u04c3\u017d\u0004\u050b\u017d\u05bf\u0173\u05bf\u017d";
 	
-	private int time = 10; //use tick??
+	private int time = 10;
 	private int calc = 2;
 	private int direction = 1;
 	private double bodyAngle;
@@ -150,6 +150,7 @@ public class G extends Applet implements Runnable {
 				
 				switch(obj[0]) {
 					case TYPE_LINE:
+						((Graphics2D) g).setStroke(new BasicStroke(obj[6]));
 						g.drawLine(obj[2], obj[3], obj[4], obj[5]);
 						break;
 					case TYPE_TRIANGLE:
@@ -161,7 +162,7 @@ public class G extends Applet implements Runnable {
 						g.fillRect(Math.min(obj[2], obj[4]), obj[7], Math.abs(obj[4] - obj[2]), 2000);
 						break;
 					case TYPE_CIRCLE:
-						g.setStroke(new BasicStroke(obj[5]));
+						((Graphics2D) g).setStroke(new BasicStroke(obj[5]));
 						if((obj[1] & FLAG_FILLED) != 0)
 							g.fillOval(obj[2] - obj[4], obj[3] - obj[4], obj[4] * 2, obj[4] * 2);
 						else g.drawOval(obj[2] - obj[4], obj[3] - obj[4], obj[4] * 2, obj[4] * 2);

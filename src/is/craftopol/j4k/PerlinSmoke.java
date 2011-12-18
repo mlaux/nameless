@@ -108,7 +108,7 @@ public class PerlinSmoke extends JComponent implements Runnable {
 																// OF
 			B = p[X + 1] + Y, BA = p[B] + Z, BB = p[B + 1] + Z; // THE 8 CUBE
 																// CORNERS,
-
+			
 			return lerp(w,
 					lerp(v, lerp(u, grad(p[AA], x, y, z), // AND ADD
 							grad(p[BA], x - 1, y, z)), // BLENDED
@@ -121,7 +121,7 @@ public class PerlinSmoke extends JComponent implements Runnable {
 							lerp(u, grad(p[AB + 1], x, y - 1, z - 1),
 									grad(p[BB + 1], x - 1, y - 1, z - 1))));
 		}
-
+		
 		static double fade(double t) {
 			return t * t * t * (t * (t * 6 - 15) + 10);
 		}
