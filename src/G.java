@@ -135,6 +135,42 @@ public class G extends Applet implements Runnable {
 			}
 
 			// Update here
+			int x1, y1, x2, y2, x3, y3, cx, cy, radius, thickness;
+			
+			for(int k = 0; k < numObjects; k++) {
+				int[] obj = allObjects[k];
+				
+				switch(obj[0]) {
+					case TYPE_LINE:
+						x1 = obj[2];
+						y1 = obj[3];
+						x2 = obj[4];
+						y2 = obj[5];
+						thickness = obj[6];
+						// do things pertaining to lines
+						
+						
+						break;
+					case TYPE_TRIANGLE:
+						x1 = obj[2];
+						y1 = obj[3];
+						x2 = obj[4];
+						y2 = obj[5];
+						x3 = obj[6];
+						y3 = obj[7];
+						// do things pertaining to triangles
+						
+						break;
+					case TYPE_CIRCLE:
+						cx = obj[2];
+						cy = obj[3];
+						radius = obj[4];
+						thickness = obj[5];
+						// do things pertaining to circles
+						
+						break;
+				}
+			}
 
 			lastTime = now;
 			
