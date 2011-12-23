@@ -16,6 +16,25 @@ public class G extends Applet implements Runnable {
 	private static final int TYPE_CIRCLE = 0x05;
 	private static final int FLAG_FILLED = 0x100;
 	
+	// for ALL the objects
+	private static final int TYPE = 0;
+	private static final int FLAGS = 1;
+	
+	// for points
+	private static final int X = 2;
+	private static final int Y = 3;
+	
+	// for lines
+	private static final int X1 = 2;
+	private static final int Y1 = 3;
+	private static final int X2 = 4;
+	private static final int Y2 = 5;
+	private static final int X3 = 6;
+	private static final int Y3 = 7;
+	
+	private static final int RADIUS = 4;
+	private static final int THICKNESS = 6;
+	
 	private static final int width = 400;
 	private static final int height = 300;
 	private static final int scale = 2;
@@ -24,17 +43,20 @@ public class G extends Applet implements Runnable {
 	private static final int PUSH = 2;
 	private static final int STAND = 3;
 	
-	private static final String level = "\u0004\u0000\u00e8\u00bd\u0122\u0000\u0122\u0004\u00bd\u0122\u015e\u012f\u00bd\u012f\u0004\u015e\u012f\u01d7\u0131\u015e\u0131\u0004\u01d7\u0131\u024b\u0129\u024b\u0131\u0004\u024b\u0129\u027e\u0113\u027e\u0129\u0004\u027e\u0113\u02d9\u010c\u02d9\u0113\u0004\u02d9\u010c\u0342\u011d\u02d9\u011d\u0004\u0342\u011d\u039b\u0130\u0342\u0130\u0004\u039b\u0130\u03b6\u0132\u039b\u0132\u0004\u03b6\u0132\u03c0\u012f\u03c0\u0132\u0003\u006f\u011a\u0236\u0067\u0017\u0003\u0237\u0076\u0084\u0127\u0010\u0003\u0097\u012e\u0231\u0083\u000c\u0003\u0226\u0091\u0085\u013a\u0008\u0003\u01fa\u00ac\u0067\u0148\n\u0003\u01c9\u00cb\u009d\u013d\u000e\u0003\u016e\u00ff\u00ba\u013f\u0013\u0003\u0134\u012a\u00bb\u0156\u0023\u0005\u0065\u0114\u0023\u0001\u0005\u0082\u010b\u0012\u0001\u0005\u0093\u0107\u000b\u0001\u0005\u0040\u00fe\u0013\u0001\u0005\u0020\u00f8\u0014\u0001\u0005\u000b\u00f1\u000c\u0001\u0005\u0157\u0124\u001b\u0001\u0005\u00d5\u009e\u0019\u0031\u0004\u03c0\u012e\u03c8\u012b\u03c8\u012e\u0004\u03c8\u012b\u03d3\u012a\u03d3\u012b\u0004\u03d3\u012a\u03e3\u012c\u03d3\u012c\u0004\u03e3\u012c\u03f7\u0135\u03e3\u0135\u0004\u03f7\u0135\u041b\u014e\u03f7\u014e\u0004\u041b\u014e\u0454\u0169\u041b\u0169\u0004\u0454\u0169\u0485\u0174\u0454\u0174\u0004\u0485\u0174\u04aa\u0179\u0485\u0179\u0004\u04aa\u0179\u04c3\u017b\u04aa\u017b\u0004\u04c3\u017b\u050b\u017d\u04c3\u017d\u0004\u050b\u017d\u05bf\u0173\u05bf\u017d";
+	private static final String level = "\u0004\u0000\u0089\u007c\u00c1\u0000\u00c1\u0004\u007c\u00c1\u00a8\u00c5\u007c\u00c5\u0004\u00c8\u00c5\u00a8\u00c5\u00c8\u00c5\u0004\u00d2\u00c5\u00c8\u00c5\u00d2\u00c5\u0004\u00d2\u00c5\u00d9\u00c7\u00d2\u00c7\u0004\u00d9\u00c7\u00dd\u00c9\u00d9\u00c9\u0004\u00dd\u00c9\u00e1\u00ce\u00dd\u00ce\u0004\u00e1\u00ce\u00e7\u00d8\u00e1\u00d8\u0004\u00e7\u00d8\u00ed\u00e0\u00e7\u00e0\u0004\u00ed\u00e0\u00f3\u00e3\u00ed\u00e3\u0004\u00f3\u00e3\u00fa\u00e4\u00f3\u00e4\u0004\u0109\u00e4\u00fa\u00e4\u0109\u00e4\u0004\u0115\u00e1\u0109\u00e4\u0115\u00e4\u0004\u0118\u00df\u0115\u00e1\u0118\u00e1\u0004\u011c\u00d8\u0118\u00df\u011c\u00df\u0004\u0121\u00ce\u011c\u00d8\u0121\u00d8\u0004\u0129\u00b8\u0121\u00cd\u0129\u00cd\u0004\u0132\u00a5\u0129\u00b8\u0132\u00b8\u0004\u013d\u009c\u0132\u00a5\u013d\u00a5\u0004\u014a\u0097\u013d\u009c\u014a\u009c\u0004\u0165\u0097\u014a\u0097\u0165\u0097\u0004\u0165\u0097\u017d\u009c\u0165\u009c\u0004\u017d\u009c\u019a\u00a7\u017d\u00a7\u0004\u019a\u00a7\u01d0\u00cc\u019a\u00cc\u0004\u01d0\u00cc\u0207\u0108\u01d0\u0108\u0004\u0207\u0108\u023b\u015f\u0207\u015f\u0004\u023b\u015f\u027d\u01bc\u023b\u01bc\u0004\u027d\u01bc\u0297\u01d1\u027d\u01d1\u0004\u0297\u01d1\u02a9\u01db\u0297\u01db\u0004\u02a9\u01db\u02b5\u01df\u02a9\u01df\u0004\u02b5\u01df\u02c5\u01e2\u02b5\u01e2\u0004\u02d7\u01e2\u02c5\u01e2\u02d7\u01e2\u0004\u02eb\u01df\u02d7\u01e2\u02eb\u01e2\u0004\u030b\u01d5\u02eb\u01df\u030b\u01df\u0004\u033a\u01ad\u030b\u01d5\u033a\u01d5\u0004\u0371\u0172\u033a\u01ad\u0371\u01ad\u0004\u03af\u0116\u0371\u0172\u03af\u0172\u0004\u03b7\u00f3\u03af\u0116\u03b7\u0116\u0004\u03ba\u00ed\u03b7\u00f3\u03ba\u00f3\u0004\u03c0\u00e9\u03ba\u00ed\u03c0\u00ed\u0004\u03f1\u00e1\u03c0\u00ea\u03f1\u00ea\u0004\u041a\u00e1\u03f1\u00e1\u041a\u00e1\u0004\u041a\u00e1\u0463\u00eb\u041a\u00eb\u0004\u0463\u00eb\u0493\u00ee\u0463\u00ee\u0004\u04be\u00e3\u0493\u00ee\u04be\u00ee\u0004\u04cc\u00d6\u04be\u00e3\u04cc\u00e3\u0004\u04d5\u00c1\u04cc\u00d6\u04d5\u00d6\u0004\u04e0\u009a\u04d5\u00c1\u04e0\u00c1\u0004\u04ed\u007a\u04e0\u009a\u04ed\u009a\u0004\u0501\u0067\u04ed\u007a\u0501\u007a\u0004\u0529\u005f\u0501\u0067\u0529\u0067\u0004\u0529\u005f\u0547\u0060\u0529\u0060\u0004\u04df\u019f\u04df\u019f\u04df\u019f\u0004\u057e\u01cf\u057e\u01cf\u057e\u01cf\u0003\u04ab\u0081\u0259\u00a6\u0015\u0105\u025c\u0086\u002e";
+	//private static final String level = "\u0004\u0064\u00e8\u0000\u0105\u0064\u0105\u0004\u0091\u00d4\u0064\u00e8\u0091\u00e8\u0004\u00c0\u00d3\u0091\u00d4\u00c0\u00d4\u0004\u00c0\u00d3\u00d8\u00dd\u00c0\u00dd\u0004\u00d8\u00dd\u00e4\u00ed\u00d8\u00ed\u0004\u00e4\u00ed\u00e7\u00fe\u00e4\u00fe\u0004\u00e7\u00fe\u00ef\u0116\u00e7\u0116\u0004\u00ef\u0116\u00fe\u012b\u00ef\u012b\u0004\u00fe\u012b\u0111\u0135\u00fe\u0135\u0004\u0111\u0135\u0127\u013b\u0111\u013b\u0004\u0140\u0139\u0127\u013b\u0140\u013b\u0004\u015f\u0124\u0140\u0139\u015f\u0139\u0004\u0176\u0108\u015f\u0124\u0176\u0124\u0004\u0186\u00e5\u0176\u0108\u0186\u0108\u0004\u018f\u0017\u0186\u00e5\u018f\u00e5\u0004\u018f\u0017\u018f\u0017\u018f\u0017\u0004\u0197\"\u018f\u0026\u0197\u0026\u0004\u01a0\u0011\u0197\"\u01a0\"\u0004\u01b6\u000e\u01a0\u0011\u01b6\u0011\u0004\u01b6\u000e\u01c2\u0010\u01b6\u0010\u0004\u01c2\u0010\u01d7\u0020\u01c2\u0020\u0004\u01d7\u0020\u01e2\u0046\u01d7\u0046\u0004\u01e2\u0046\u01f4\u0115\u01e2\u0115\u0004\u01f4\u0115\u0207\u013d\u01f4\u013d\u0004\u0207\u013d\u0217\u014e\u0207\u014e\u0004\u0217\u014e\u022d\u015a\u0217\u015a\u0004\u022d\u015a\u0246\u015f\u022d\u015f\u0004\u025a\u015e\u0246\u015f\u025a\u015f\u0004\u0280\u0153\u025a\u015e\u0280\u015e\u0004\u02b6\u0140\u0280\u0153\u02b6\u0153\u0004\u0310\u012b\u02b6\u0140\u0310\u0140\u0004\u0367\u0124\u0310\u012a\u0367\u012a\u0004\u0367\u0124\u039c\u0129\u0367\u0129\u0004\u03af\u0120\u039c\u0129\u03af\u0129\u0004\u03c0\u00fc\u03af\u0120\u03c0\u0120";
 	
 	private int time = 10;
 	private int calc = 2;
 	private int direction = 1;
 	private double bodyAngle;
-	private double posX = 300;
-	private double posY = 400;
+	private static final int posX = 400;
+	private static final int posY = 300;
 	private double stillCalc;
 	private double armAngle;
+	private double armMoveY;
 	
+	private boolean[] keys = new boolean[0xFFFF];
 
 	public void start() {
 		new Thread(this).start();
@@ -43,17 +65,17 @@ public class G extends Applet implements Runnable {
 	public void run() {
 		setSize(width * scale, height * scale); // For AppletViewer, remove later.
 		
-		BufferedImage bkg = new BufferedImage(width * scale, height * scale, BufferedImage.TYPE_INT_RGB);
+		BufferedImage bkg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		int[] pixels = ((DataBufferInt) bkg.getRaster().getDataBuffer()).getData();
 		
 		double shade = 0;
 		
-		for(int y = 0; y < height * scale; y++) {
-			for(int x = 0; x < width * scale; x++) {
+		for(int y = 0; y < height; y++) {
+			for(int x = 0; x < width; x++) {
 				int is = (int) shade;
-				pixels[y * (width * scale) + x] = is << 16 | is << 8 | is;
+				pixels[y * (width) + x] = is << 16 | is << 8 | is;
 			}
-			shade += (150.0 / (height * scale));
+			shade += (150.0 / (height));
 		}
 		
 		// make giant array for items since we can't have multiple classes
@@ -68,7 +90,7 @@ public class G extends Applet implements Runnable {
 		//		for triangles: [2] = x1, [3] = y1, [4] = x2, [5] = y2, [6] = x3, [7] = y3
 		//		for circles: [2] = centerX, [3] = centerY, [4] = radius, [5] = thickness
 		
-		int[][] allObjects = new int[100][8];
+		double[][] allObjects = new double[100][8];
 		
 		// load da level
 			
@@ -80,50 +102,57 @@ public class G extends Applet implements Runnable {
 			
 			// store base information that's common to every object in 
 			// the first 2 fields
-			allObjects[numObjects][0] = type;
-			allObjects[numObjects][1] = flags;
+			allObjects[numObjects][TYPE] = type;
+			allObjects[numObjects][FLAGS] = flags;
 			
 			switch(type) {
 				case TYPE_SPAWNPOINT:
 				case TYPE_EXITPOINT:
-					allObjects[numObjects][2] = level.charAt(index++); // x
-					allObjects[numObjects][3] = level.charAt(index++); // y
+					allObjects[numObjects][X] = level.charAt(index++); // x
+					allObjects[numObjects][Y] = level.charAt(index++); // y
 					break;
 				case TYPE_LINE:
-					allObjects[numObjects][2] = level.charAt(index++); // x1
-					allObjects[numObjects][3] = level.charAt(index++); // y1
-					allObjects[numObjects][4] = level.charAt(index++); // x2
-					allObjects[numObjects][5] = level.charAt(index++); // y2
-					allObjects[numObjects][6] = level.charAt(index++); // thickness
+					allObjects[numObjects][X1] = level.charAt(index++); // x1
+					allObjects[numObjects][Y1] = level.charAt(index++); // y1
+					allObjects[numObjects][X2] = level.charAt(index++); // x2
+					allObjects[numObjects][Y2] = level.charAt(index++); // y2
+					allObjects[numObjects][THICKNESS] = level.charAt(index++); // thickness
 					break;
 				case TYPE_TRIANGLE:
-					allObjects[numObjects][2] = level.charAt(index++); // x1
-					allObjects[numObjects][3] = level.charAt(index++); // y1
-					allObjects[numObjects][4] = level.charAt(index++); // x2
-					allObjects[numObjects][5] = level.charAt(index++); // y2
-					allObjects[numObjects][6] = level.charAt(index++); // x3
-					allObjects[numObjects][7] = level.charAt(index++); // y3
+					allObjects[numObjects][X1] = level.charAt(index++); // x1
+					allObjects[numObjects][Y1] = level.charAt(index++); // y1
+					allObjects[numObjects][X2] = level.charAt(index++); // x2
+					allObjects[numObjects][Y2] = level.charAt(index++); // y2
+					allObjects[numObjects][X3] = level.charAt(index++); // x3
+					allObjects[numObjects][Y3] = level.charAt(index++); // y3
 					break;
 				case TYPE_CIRCLE:
-					allObjects[numObjects][2] = level.charAt(index++); // centerX
-					allObjects[numObjects][3] = level.charAt(index++); // centerY
-					allObjects[numObjects][4] = level.charAt(index++); // radius
-					allObjects[numObjects][5] = level.charAt(index++); // thickness
+					allObjects[numObjects][X] = level.charAt(index++); // centerX
+					allObjects[numObjects][Y] = level.charAt(index++); // centerY
+					allObjects[numObjects][RADIUS] = level.charAt(index++); // radius
 					break;
 			}
 			
 			numObjects++;
 		}
 		
+		BufferedImage level = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D lg = (Graphics2D) level.getGraphics();
+		
 		// set up graphics
 		BufferedImage screen = new BufferedImage(width * scale, height * scale, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = (Graphics2D) screen.getGraphics();
+		
 		Graphics appletGraphics = getGraphics();
 
 		int tick = 0, fps = 0, acc = 0;
 		long lastTime = System.nanoTime();
 
 		// Game loop.
+		double moveX = 0, moveY = 0;
+		boolean grabbing = false;
+		boolean onGround = false;
+		int weight = 0;
 		while (true) {
 			long now = System.nanoTime();
 			acc += now - lastTime;
@@ -133,39 +162,122 @@ public class G extends Applet implements Runnable {
 				fps = tick;
 				tick = 0;
 			}
+			
+			moveY += 0.2;
 
 			// Update here
-			int x1, y1, x2, y2, x3, y3, cx, cy, radius, thickness;
+			if(keys['a'] && !keys['d']) {
+				if (moveX>-2) {
+					moveX += -0.5;
+				} else {
+					moveX = -2;
+				}
+			} else if(keys['d'] && !keys['a']) {
+				if (moveX<2) {
+					moveX += 0.5;
+				} else {
+					moveX = 2;
+				}
+			} else {
+				moveX -= Math.signum(moveX)/2;
+			}
+			if(keys['w'] && onGround) {
+				moveY += -7;
+			}
+			grabbing = keys['e'];
 			
 			for(int k = 0; k < numObjects; k++) {
-				int[] obj = allObjects[k];
-				
-				switch(obj[0]) {
+				double[] obj = allObjects[k];
+				switch((int) obj[TYPE]) {
+					case TYPE_TRIANGLE:
+						obj[X1] -= moveX; obj[Y1] -= moveY;
+						obj[X2] -= moveX; obj[Y2] -= moveY;
+						obj[X3] -= moveX; obj[Y3] -= moveY;
+						break;
 					case TYPE_LINE:
-						x1 = obj[2];
-						y1 = obj[3];
-						x2 = obj[4];
-						y2 = obj[5];
-						thickness = obj[6];
-						// do things pertaining to lines
+						obj[X1] -= moveX; obj[Y1] -= moveY;
+						obj[X2] -= moveX; obj[Y2] -= moveY;
+						break;
+					case TYPE_CIRCLE:
+						obj[X] -= moveX; obj[Y] -= moveY;
+						break;
+				}
+			}
+			
+			onGround = false;
+			for(int k = 0; k < numObjects; k++) {
+				double[] obj = allObjects[k];
+				switch((int) obj[TYPE]) {
+					case TYPE_TRIANGLE:
+						// do things pertaining to triangles
 						
+						double x1 = obj[X1];
+						double x2 = obj[X2];
+						double y1 = obj[Y1];
+						double y2 = obj[Y2];
+						
+						double height = Math.abs(y2-y1);
+						double minY = Math.max(y2, y1);
+						double width = x2-x1;
+						
+						double percAcross = 1 - (posX/scale - x1) / ((double) width);
+						double inside = (minY - (percAcross * height)) - posY/scale;
+						if (posY/scale <= minY + 2000 && inside < 0) {
+							if (percAcross <= 1 && percAcross >=0) {
+								
+								if (Math.abs(inside) <= 10) {
+									for(int j = 0; j < numObjects; j++) {
+										double[] obj2 = allObjects[j];
+										switch((int) obj2[TYPE]) {
+											case TYPE_TRIANGLE:
+												obj2[Y1] -= inside;
+												obj2[Y2] -= inside;
+												obj2[Y3] -= inside;
+												break;
+											case TYPE_LINE:
+												obj2[Y1] -= inside;
+												obj2[Y2] -= inside;
+												break;
+											case TYPE_CIRCLE:
+												obj2[Y] -= inside;
+												break;
+										}
+									}
+								} else {
+									if (Math.abs(inside) >= 10) {
+										for(int j = 0; j < numObjects; j++) {
+											double[] obj2 = allObjects[j];
+											switch((int) obj2[TYPE]) {
+												case TYPE_TRIANGLE:
+													obj2[X1] += moveX;
+													obj2[X2] += moveX;
+													obj2[X3] += moveX;
+													break;
+												case TYPE_LINE:
+													obj2[X1] += moveX;
+													obj2[X2] += moveX;
+													break;
+												case TYPE_CIRCLE:
+													obj2[X] += moveX;
+													break;
+											}
+										}
+									}
+									moveX = 0;
+								}
+								
+								//fer bouncing
+								moveY = 1;
+								onGround = true;
+							}
+						}
 						
 						break;
-					case TYPE_TRIANGLE:
-						x1 = obj[2];
-						y1 = obj[3];
-						x2 = obj[4];
-						y2 = obj[5];
-						x3 = obj[6];
-						y3 = obj[7];
-						// do things pertaining to triangles
+					case TYPE_LINE:
+						// do things pertaining to lines
 						
 						break;
 					case TYPE_CIRCLE:
-						cx = obj[2];
-						cy = obj[3];
-						radius = obj[4];
-						thickness = obj[5];
 						// do things pertaining to circles
 						
 						break;
@@ -178,36 +290,51 @@ public class G extends Applet implements Runnable {
 			g.fillRect(0, 0, 800, 600);
 			
 			// render
-			g.drawImage(bkg, 0, 0, this);
+			
+			lg.setColor(new Color(0, 0, 0, 0));
+			lg.drawImage(bkg, 0, 0, width, height, this);
+			
+			lg.setColor(Color.black);
 			
 			// render level, TODO: make this good
 			for(int k = 0; k < numObjects; k++) {
-				int[] obj = allObjects[k];
+				double[] obj = allObjects[k];
 				
-				switch(obj[0]) {
+				switch((int) obj[TYPE]) {
 					case TYPE_LINE:
-						((Graphics2D) g).setStroke(new BasicStroke(obj[6]));
-						g.drawLine(obj[2], obj[3], obj[4], obj[5]);
+						lg.setStroke(new BasicStroke((float) obj[THICKNESS]));
+						lg.drawLine((int) obj[X1], (int) obj[Y1], (int) obj[X2], (int) obj[Y2]);
 						break;
 					case TYPE_TRIANGLE:
-						int[] xp = { obj[2], obj[4], obj[6] };
-						int[] yp = { obj[3], obj[5], obj[7] };
+						int[] xp = { (int) obj[2], (int) obj[4], (int) obj[6] };
+						int[] yp = { (int) obj[3], (int) obj[5], (int) obj[7] };
 						
-						g.fillPolygon(xp, yp, 3);
+						lg.fillPolygon(xp, yp, 3);
 						
-						g.fillRect(Math.min(obj[2], obj[4]), obj[7], Math.abs(obj[4] - obj[2]), 2000);
+						lg.fillRect((int) Math.min(obj[2], obj[4]), (int) obj[7], (int) Math.abs(obj[4] - obj[2]), 2000);
 						break;
 					case TYPE_CIRCLE:
-						((Graphics2D) g).setStroke(new BasicStroke(obj[5]));
-						if((obj[1] & FLAG_FILLED) != 0)
-							g.fillOval(obj[2] - obj[4], obj[3] - obj[4], obj[4] * 2, obj[4] * 2);
-						else g.drawOval(obj[2] - obj[4], obj[3] - obj[4], obj[4] * 2, obj[4] * 2);
+						if(((int) obj[FLAGS] & FLAG_FILLED) != 0)
+							lg.fillOval((int) (obj[X] - obj[RADIUS]), (int) (obj[Y] - obj[RADIUS]), (int) obj[RADIUS] * 2, (int) obj[RADIUS] * 2);
+						else lg.drawOval((int) (obj[X] - obj[RADIUS]), (int) (obj[Y] - obj[RADIUS]), (int) obj[RADIUS] * 2, (int) obj[RADIUS] * 2);
 						
 						break;
 				}
 			}
 			
-			drawGuy(g, WALK, 0, time);
+			g.drawImage(level, 0, 0, width * scale, height * scale, this);
+			if (!onGround) {
+				armMoveY = moveY;
+			} else {
+				armMoveY -= 5;
+			}
+			if (grabbing) {
+				drawGuy(g, PUSH, weight, time);
+			} else if (!onGround || (int) moveX == 0) {
+				drawGuy(g, STAND, armMoveY, time);
+			}else if ((int)moveX != 0) {
+				drawGuy(g, WALK, 0, time);
+			}
 			time++;
 
 			
@@ -382,10 +509,10 @@ public class G extends Applet implements Runnable {
 		switch (e.id) {
 			case Event.KEY_PRESS:
 			case Event.KEY_ACTION:
-				// key pressed
+				keys[e.key] = true;
 				break;
 			case Event.KEY_RELEASE:
-				// key released
+				keys[e.key] = false;
 				break;
 			case Event.MOUSE_DOWN:
 				// mouse button pressed

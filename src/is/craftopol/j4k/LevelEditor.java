@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
-// wheeeeeeeeeee
+//wheeeeeeeeeee
 public class LevelEditor extends JFrame implements ActionListener {
 	private static LevelEditor instance;
 	

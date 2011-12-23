@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -18,10 +19,13 @@ public class GuyTester extends JComponent implements Runnable {
 	private int calc = 2;
 	private int direction = 1;
 	private double bodyAngle;
-	private double posX = 600;
-	private double posY = 300;
+	private double posX = 20;
+	private double posY = 100;
 	private double stillCalc;
 	private double armAngle;
+	
+	private BufferedImage image = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB);
+	private Graphics imgg = image.getGraphics();
 	
 	public GuyTester() {
 		setPreferredSize(new Dimension(800, 600));
@@ -42,28 +46,31 @@ public class GuyTester extends JComponent implements Runnable {
 		g.fillRect(0, 0, getWidth(), getHeight());
 		g.setColor(Color.black);
 		
-		if (time<100) {
-			paintGuy(g, WALK, 0, time);
-		} else if (time<200) {
-			paintGuy(g, PUSH, 50, time);
+		imgg.setColor(Color.white);
+		imgg.fillRect(0, 0, image.getWidth(), image.getHeight());
+		imgg.setColor(Color.black);
+		
+		if (time<0) {
+			paintGuy(imgg, WALK, 0, time);
+		} else if (time<1000) {
+			paintGuy(imgg, PUSH, 30, time);
 		} else if(time<400) {
 			test+=0.02;
-			paintGuy(g, STAND, test, time);
+			paintGuy(imgg, STAND, test, time);
 		} else if (time<500) {
 			test=-25;
-			paintGuy(g, STAND, test, time);
+			paintGuy(imgg, STAND, test, time);
 		} else {
-			paintGuy(g, WALK, 0, time);
+			paintGuy(imgg, WALK, 0, time);
 		}
 		
 		//Anti-aliasing is a gift from god.
-		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g.drawImage(image, 100, 100, 1000, 1000, null);
 	}
 	
 	public void paintGuy(Graphics _g, int action, double param, int time) {
 		
-		Graphics2D g = (Graphics2D) _g;
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		Graphics2D g = (Graphics2D) _g.create();
 		
 		//possibly draw everything that's repeated (chest head arms) outside of it and change calc if they're pushing/pulling
 		
@@ -215,6 +222,7 @@ public class GuyTester extends JComponent implements Runnable {
 			//front leg2
 			g.rotate(Math.toRadians(stillCalc+15),(int)(posX - 4 + Math.sin(Math.toRadians(stillCalc+15))*16 - 2), (int)(posY - 35 + Math.cos(Math.toRadians(stillCalc+15))*16) + 2);
 			g.fillRoundRect((int)(posX - 4 + Math.sin(Math.toRadians(-stillCalc+15))*16) - 2, (int)(posY - 35 + Math.cos(Math.toRadians(-stillCalc+15))*16) + 2, 6, 20, 6, 10);
+			g.rotate(Math.toRadians(-stillCalc-15),(int)(posX - 4 + Math.sin(Math.toRadians(stillCalc+15))*16 - 2), (int)(posY - 35 + Math.cos(Math.toRadians(stillCalc+15))*16) + 2);
 		}
 		//don't draw anything down here, I didn't close the last rotation to save memory
 	}

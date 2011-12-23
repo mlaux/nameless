@@ -11,25 +11,21 @@ public class Circle implements Item {
 	
 	public int radius;
 	
-	public boolean filled;
-	
-	public int thickness = 1;
+	public boolean filled = true;
 	
 	public Circle() {
 		
 	}
 	
-	public Circle(int cx, int cy, int r, int t, boolean f) {
+	public Circle(int cx, int cy, int r, int t) {
 		centerX = cx;
 		centerY = cy;
 		radius = r;
-		thickness = t;
-		filled = f;
 	}
 
 	public String serialize() {
 		return "" + (char) (Item.TYPE_CIRCLE | (filled ? Item.FLAG_FILLED : 0))
-				+ (char) centerX + (char) centerY + (char) radius + (char) thickness;
+				+ (char) centerX + (char) centerY + (char) radius;
 	}
 
 	public Dimension getSize() {
@@ -38,8 +34,6 @@ public class Circle implements Item {
 
 	public void render(Graphics g) {
 		int diameter = 2 * radius;
-		
-		((Graphics2D) g).setStroke(new BasicStroke(thickness));
 		
 		if(filled)
 			g.fillOval(centerX - radius, centerY - radius, diameter, diameter);
@@ -61,12 +55,11 @@ public class Circle implements Item {
 	}
 
 	public void setThickness(int thickness) {
-		if(thickness > 0)
-			this.thickness = thickness;
+		filled = !filled;
 	}
 
 	public int getThickness() {
-		return thickness;
+		return 1;
 	}
 
 	public boolean contains(int x, int y) {

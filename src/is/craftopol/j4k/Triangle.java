@@ -23,9 +23,15 @@ public class Triangle implements Item {
 	}
 	
 	public String serialize() {
-		return "" + (char) Item.TYPE_TRIANGLE + (char) x1 + (char) y1 + (char) x2 + (char) y2 
+		if (y2>y1) {
+			return "" + (char) Item.TYPE_TRIANGLE + (char) x1 + (char) y1 + (char) x2 + (char) y2 
 				+ (char) (y1 < y2 ? x1 : x2) // this is the x3
 				+ (char) Math.max(y1, y2); // y3
+		} else {
+			return "" + (char) Item.TYPE_TRIANGLE + (char) x2 + (char) y2 + (char) x1 + (char) y1 
+			+ (char) (y1 < y2 ? x1 : x2) // this is the x3
+			+ (char) Math.max(y1, y2); // y3
+		}
 	}
 
 	public Dimension getSize() {

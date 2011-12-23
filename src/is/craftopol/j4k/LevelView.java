@@ -50,7 +50,7 @@ public class LevelView extends JComponent {
 		items = new ArrayList<Item>();
 		
 		setDoubleBuffered(true);
-		setPreferredSize(new Dimension(640, 480));
+		setPreferredSize(new Dimension(800, 616));
 		
 		// set up event listeners
 		MouseHandler mh = new MouseHandler();
@@ -227,7 +227,7 @@ public class LevelView extends JComponent {
 	}
 	
 	public String encodeJava() {
-		String result = "String level = \"";
+		String result = "private static final String level = \"";
 		String actual = encode();
 		for(char ch : actual.toCharArray()) {
 			if(ch == 13)
@@ -285,7 +285,6 @@ public class LevelView extends JComponent {
 					circle.centerX = str.charAt(index++);
 					circle.centerY = str.charAt(index++);
 					circle.radius = str.charAt(index++);
-					circle.thickness = str.charAt(index++);
 					items.add(circle);
 					break;
 			}
