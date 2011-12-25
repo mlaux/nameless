@@ -43,6 +43,8 @@ public class G extends Applet implements Runnable {
 	private static final int PUSH = 2;
 	private static final int STAND = 3;
 	
+	private static final double STEEPNESS = 0.6;
+	
 	private static final String level = "\u0004\u0000\u0089\u007c\u00c1\u0000\u00c1\u0004\u007c\u00c1\u00a8\u00c5\u007c\u00c5\u0004\u00c8\u00c5\u00a8\u00c5\u00c8\u00c5\u0004\u00d2\u00c5\u00c8\u00c5\u00d2\u00c5\u0004\u00d2\u00c5\u00d9\u00c7\u00d2\u00c7\u0004\u00d9\u00c7\u00dd\u00c9\u00d9\u00c9\u0004\u00dd\u00c9\u00e1\u00ce\u00dd\u00ce\u0004\u00e1\u00ce\u00e7\u00d8\u00e1\u00d8\u0004\u00e7\u00d8\u00ed\u00e0\u00e7\u00e0\u0004\u00ed\u00e0\u00f3\u00e3\u00ed\u00e3\u0004\u00f3\u00e3\u00fa\u00e4\u00f3\u00e4\u0004\u0109\u00e4\u00fa\u00e4\u0109\u00e4\u0004\u0115\u00e1\u0109\u00e4\u0115\u00e4\u0004\u0118\u00df\u0115\u00e1\u0118\u00e1\u0004\u011c\u00d8\u0118\u00df\u011c\u00df\u0004\u0121\u00ce\u011c\u00d8\u0121\u00d8\u0004\u0129\u00b8\u0121\u00cd\u0129\u00cd\u0004\u0132\u00a5\u0129\u00b8\u0132\u00b8\u0004\u013d\u009c\u0132\u00a5\u013d\u00a5\u0004\u014a\u0097\u013d\u009c\u014a\u009c\u0004\u0165\u0097\u014a\u0097\u0165\u0097\u0004\u0165\u0097\u017d\u009c\u0165\u009c\u0004\u017d\u009c\u019a\u00a7\u017d\u00a7\u0004\u019a\u00a7\u01d0\u00cc\u019a\u00cc\u0004\u01d0\u00cc\u0207\u0108\u01d0\u0108\u0004\u0207\u0108\u023b\u015f\u0207\u015f\u0004\u023b\u015f\u027d\u01bc\u023b\u01bc\u0004\u027d\u01bc\u0297\u01d1\u027d\u01d1\u0004\u0297\u01d1\u02a9\u01db\u0297\u01db\u0004\u02a9\u01db\u02b5\u01df\u02a9\u01df\u0004\u02b5\u01df\u02c5\u01e2\u02b5\u01e2\u0004\u02d7\u01e2\u02c5\u01e2\u02d7\u01e2\u0004\u02eb\u01df\u02d7\u01e2\u02eb\u01e2\u0004\u030b\u01d5\u02eb\u01df\u030b\u01df\u0004\u033a\u01ad\u030b\u01d5\u033a\u01d5\u0004\u0371\u0172\u033a\u01ad\u0371\u01ad\u0004\u03af\u0116\u0371\u0172\u03af\u0172\u0004\u03b7\u00f3\u03af\u0116\u03b7\u0116\u0004\u03ba\u00ed\u03b7\u00f3\u03ba\u00f3\u0004\u03c0\u00e9\u03ba\u00ed\u03c0\u00ed\u0004\u03f1\u00e1\u03c0\u00ea\u03f1\u00ea\u0004\u041a\u00e1\u03f1\u00e1\u041a\u00e1\u0004\u041a\u00e1\u0463\u00eb\u041a\u00eb\u0004\u0463\u00eb\u0493\u00ee\u0463\u00ee\u0004\u04be\u00e3\u0493\u00ee\u04be\u00ee\u0004\u04cc\u00d6\u04be\u00e3\u04cc\u00e3\u0004\u04d5\u00c1\u04cc\u00d6\u04d5\u00d6\u0004\u04e0\u009a\u04d5\u00c1\u04e0\u00c1\u0004\u04ed\u007a\u04e0\u009a\u04ed\u009a\u0004\u0501\u0067\u04ed\u007a\u0501\u007a\u0004\u0529\u005f\u0501\u0067\u0529\u0067\u0004\u0529\u005f\u0547\u0060\u0529\u0060\u0004\u04df\u019f\u04df\u019f\u04df\u019f\u0004\u057e\u01cf\u057e\u01cf\u057e\u01cf\u0003\u04ab\u0081\u0259\u00a6\u0015\u0105\u025c\u0086\u002e";
 	//private static final String level = "\u0004\u0064\u00e8\u0000\u0105\u0064\u0105\u0004\u0091\u00d4\u0064\u00e8\u0091\u00e8\u0004\u00c0\u00d3\u0091\u00d4\u00c0\u00d4\u0004\u00c0\u00d3\u00d8\u00dd\u00c0\u00dd\u0004\u00d8\u00dd\u00e4\u00ed\u00d8\u00ed\u0004\u00e4\u00ed\u00e7\u00fe\u00e4\u00fe\u0004\u00e7\u00fe\u00ef\u0116\u00e7\u0116\u0004\u00ef\u0116\u00fe\u012b\u00ef\u012b\u0004\u00fe\u012b\u0111\u0135\u00fe\u0135\u0004\u0111\u0135\u0127\u013b\u0111\u013b\u0004\u0140\u0139\u0127\u013b\u0140\u013b\u0004\u015f\u0124\u0140\u0139\u015f\u0139\u0004\u0176\u0108\u015f\u0124\u0176\u0124\u0004\u0186\u00e5\u0176\u0108\u0186\u0108\u0004\u018f\u0017\u0186\u00e5\u018f\u00e5\u0004\u018f\u0017\u018f\u0017\u018f\u0017\u0004\u0197\"\u018f\u0026\u0197\u0026\u0004\u01a0\u0011\u0197\"\u01a0\"\u0004\u01b6\u000e\u01a0\u0011\u01b6\u0011\u0004\u01b6\u000e\u01c2\u0010\u01b6\u0010\u0004\u01c2\u0010\u01d7\u0020\u01c2\u0020\u0004\u01d7\u0020\u01e2\u0046\u01d7\u0046\u0004\u01e2\u0046\u01f4\u0115\u01e2\u0115\u0004\u01f4\u0115\u0207\u013d\u01f4\u013d\u0004\u0207\u013d\u0217\u014e\u0207\u014e\u0004\u0217\u014e\u022d\u015a\u0217\u015a\u0004\u022d\u015a\u0246\u015f\u022d\u015f\u0004\u025a\u015e\u0246\u015f\u025a\u015f\u0004\u0280\u0153\u025a\u015e\u0280\u015e\u0004\u02b6\u0140\u0280\u0153\u02b6\u0153\u0004\u0310\u012b\u02b6\u0140\u0310\u0140\u0004\u0367\u0124\u0310\u012a\u0367\u012a\u0004\u0367\u0124\u039c\u0129\u0367\u0129\u0004\u03af\u0120\u039c\u0129\u03af\u0129\u0004\u03c0\u00fc\u03af\u0120\u03c0\u0120";
 	
@@ -55,6 +57,10 @@ public class G extends Applet implements Runnable {
 	private double stillCalc;
 	private double armAngle;
 	private double armMoveY;
+	private double angle;
+	
+	private double[][] allObjects = new double[100][8];
+	private int numObjects = 0;
 	
 	private boolean[] keys = new boolean[0xFFFF];
 
@@ -90,11 +96,9 @@ public class G extends Applet implements Runnable {
 		//		for triangles: [2] = x1, [3] = y1, [4] = x2, [5] = y2, [6] = x3, [7] = y3
 		//		for circles: [2] = centerX, [3] = centerY, [4] = radius, [5] = thickness
 		
-		double[][] allObjects = new double[100][8];
-		
 		// load da level
 			
-		int index = 0, numObjects = 0;
+		int index = 0;
 		while(index < level.length()) {
 			// type is in lower 8 bits, flags are in upper 8 bits
 			char ch = level.charAt(index++);
@@ -153,6 +157,7 @@ public class G extends Applet implements Runnable {
 		boolean grabbing = false;
 		boolean onGround = false;
 		int weight = 0;
+		
 		while (true) {
 			long now = System.nanoTime();
 			acc += now - lastTime;
@@ -181,28 +186,13 @@ public class G extends Applet implements Runnable {
 			} else {
 				moveX -= Math.signum(moveX)/2;
 			}
-			if(keys['w'] && onGround) {
+			if(keys['w'] && onGround && Math.abs(Math.cos(angle)) >= STEEPNESS) {
 				moveY += -7;
+				angle = 0; //so if you jump it doesn't keep the old angle.
 			}
 			grabbing = keys['e'];
 			
-			for(int k = 0; k < numObjects; k++) {
-				double[] obj = allObjects[k];
-				switch((int) obj[TYPE]) {
-					case TYPE_TRIANGLE:
-						obj[X1] -= moveX; obj[Y1] -= moveY;
-						obj[X2] -= moveX; obj[Y2] -= moveY;
-						obj[X3] -= moveX; obj[Y3] -= moveY;
-						break;
-					case TYPE_LINE:
-						obj[X1] -= moveX; obj[Y1] -= moveY;
-						obj[X2] -= moveX; obj[Y2] -= moveY;
-						break;
-					case TYPE_CIRCLE:
-						obj[X] -= moveX; obj[Y] -= moveY;
-						break;
-				}
-			}
+			moveObj(moveX, moveY, 0);
 			
 			onGround = false;
 			for(int k = 0; k < numObjects; k++) {
@@ -226,49 +216,20 @@ public class G extends Applet implements Runnable {
 							if (percAcross <= 1 && percAcross >=0) {
 								
 								if (Math.abs(inside) <= 10) {
-									for(int j = 0; j < numObjects; j++) {
-										double[] obj2 = allObjects[j];
-										switch((int) obj2[TYPE]) {
-											case TYPE_TRIANGLE:
-												obj2[Y1] -= inside;
-												obj2[Y2] -= inside;
-												obj2[Y3] -= inside;
-												break;
-											case TYPE_LINE:
-												obj2[Y1] -= inside;
-												obj2[Y2] -= inside;
-												break;
-											case TYPE_CIRCLE:
-												obj2[Y] -= inside;
-												break;
-										}
-									}
+									moveObj(0, inside, 0);
+
+									//fer bouncing
+									moveY = 1;
+									onGround = true;
+									
+									angle = Math.atan2(y2-y1, x2-x1);
+									//when it finishes looping this should be whichever object the guy is on.
 								} else {
 									if (Math.abs(inside) >= 10) {
-										for(int j = 0; j < numObjects; j++) {
-											double[] obj2 = allObjects[j];
-											switch((int) obj2[TYPE]) {
-												case TYPE_TRIANGLE:
-													obj2[X1] += moveX;
-													obj2[X2] += moveX;
-													obj2[X3] += moveX;
-													break;
-												case TYPE_LINE:
-													obj2[X1] += moveX;
-													obj2[X2] += moveX;
-													break;
-												case TYPE_CIRCLE:
-													obj2[X] += moveX;
-													break;
-											}
-										}
+										moveObj(-moveX, 0, 0);
 									}
 									moveX = 0;
 								}
-								
-								//fer bouncing
-								moveY = 1;
-								onGround = true;
 							}
 						}
 						
@@ -282,6 +243,9 @@ public class G extends Applet implements Runnable {
 						
 						break;
 				}
+			}
+			if (Math.abs(Math.cos(angle))<STEEPNESS) {
+				moveObj(Math.cos(angle)*4, Math.sin(angle)*4, 1);
 			}
 
 			lastTime = now;
@@ -357,6 +321,39 @@ public class G extends Applet implements Runnable {
 			}
 		}
 	}
+	
+	public void moveObj(double x, double y, int slope) {
+		for(int k = 0; k < numObjects; k++) {
+			double[] obj = allObjects[k];
+			double useX = 0;
+			double testX = 0;
+			if (Math.toDegrees(angle)<90) {
+				testX = x;
+			} else {
+				testX = -x;
+			}
+			if (Math.abs(Math.cos(angle))>=STEEPNESS) {
+				 useX = (int)x;
+			} else if (slope == 1 || Math.signum(testX) == Math.signum(Math.abs(Math.cos(angle)))) {
+				useX = (int)x;
+			}
+			switch((int) obj[TYPE]) {
+				case TYPE_TRIANGLE:
+					obj[X1] -= useX; obj[Y1] -= (int)y;
+					obj[X2] -= useX; obj[Y2] -= (int)y;
+					obj[X3] -= useX; obj[Y3] -= (int)y;
+					break;
+				case TYPE_LINE:
+					obj[X1] -= useX; obj[Y1] -= (int)y;
+					obj[X2] -= useX; obj[Y2] -= (int)y;
+					break;
+				case TYPE_CIRCLE:
+					obj[X] -= useX; obj[Y] -= (int)y;
+					break;
+			}
+		}
+	}
+	
 	public void drawGuy(Graphics _g, int action, double param, int time) {
 		Graphics2D g = (Graphics2D) _g.create();
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
