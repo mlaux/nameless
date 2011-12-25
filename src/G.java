@@ -29,7 +29,7 @@ public class G extends Applet implements Runnable {
 	// for lines
 	private static final int X1 = 2;
 	private static final int Y1 = 3;
-	private static final int X2 = 4;
+	private static final int X2 = 4; 
 	private static final int Y2 = 5;
 	private static final int X3 = 6;
 	private static final int Y3 = 7;
