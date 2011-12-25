@@ -17,7 +17,7 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
 //wheeeeeeeeeee
-public class LevelEditor extends JFrame implements ActionListener {
+public class LevelEditor extends JFrame implements ActionListener {	
 	private static LevelEditor instance;
 	
 	private LevelView level = new LevelView();
