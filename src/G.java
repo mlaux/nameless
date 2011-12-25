@@ -16,6 +16,8 @@ public class G extends Applet implements Runnable {
 	private static final int TYPE_CIRCLE = 0x05;
 	private static final int FLAG_FILLED = 0x100;
 	
+	private static final double HALF_PI = Math.PI / 2;
+	
 	// for ALL the objects
 	private static final int TYPE = 0;
 	private static final int FLAGS = 1;
@@ -184,8 +186,9 @@ public class G extends Applet implements Runnable {
 					moveX = 2;
 				}
 			} else {
-				moveX -= Math.signum(moveX)/2;
+				moveX -= Math.signum(moveX) / 2;
 			}
+			
 			if(keys['w'] && onGround && Math.abs(Math.cos(angle)) >= STEEPNESS) {
 				moveY += -7;
 				angle = 0; //so if you jump it doesn't keep the old angle.
@@ -244,8 +247,9 @@ public class G extends Applet implements Runnable {
 						break;
 				}
 			}
-			if (Math.abs(Math.cos(angle))<STEEPNESS) {
-				moveObj(Math.cos(angle)*4, Math.sin(angle)*4, 1);
+			
+			if (Math.abs(Math.cos(angle)) < STEEPNESS) {
+				moveObj(Math.cos(angle) * 4, Math.sin(angle) * 4, 1);
 			}
 
 			lastTime = now;
@@ -287,17 +291,21 @@ public class G extends Applet implements Runnable {
 			}
 			
 			g.drawImage(level, 0, 0, width * scale, height * scale, this);
+			
 			if (!onGround) {
 				armMoveY = moveY;
 			} else {
 				armMoveY -= 5;
 			}
+			
+			boolean flip = moveX < 0;
+			
 			if (grabbing) {
-				drawGuy(g, PUSH, weight, time);
+				drawGuy(g, PUSH, weight, time, flip);
 			} else if (!onGround || (int) moveX == 0) {
-				drawGuy(g, STAND, armMoveY, time);
+				drawGuy(g, STAND, armMoveY, time, flip);
 			}else if ((int)moveX != 0) {
-				drawGuy(g, WALK, 0, time);
+				drawGuy(g, WALK, 0, time, flip);
 			}
 			time++;
 
@@ -327,16 +335,17 @@ public class G extends Applet implements Runnable {
 			double[] obj = allObjects[k];
 			double useX = 0;
 			double testX = 0;
-			if (Math.toDegrees(angle)<90) {
+			
+			if (angle < HALF_PI) {
 				testX = x;
 			} else {
 				testX = -x;
 			}
-			if (Math.abs(Math.cos(angle))>=STEEPNESS) {
-				 useX = (int)x;
-			} else if (slope == 1 || Math.signum(testX) == Math.signum(Math.abs(Math.cos(angle)))) {
-				useX = (int)x;
+			
+			if (Math.abs(Math.cos(angle)) >= STEEPNESS || slope == 1 || Math.signum(testX) == 1) {
+				useX = (int) x;
 			}
+			
 			switch((int) obj[TYPE]) {
 				case TYPE_TRIANGLE:
 					obj[X1] -= useX; obj[Y1] -= (int)y;
@@ -354,8 +363,13 @@ public class G extends Applet implements Runnable {
 		}
 	}
 	
-	public void drawGuy(Graphics _g, int action, double param, int time) {
+	public void drawGuy(Graphics _g, int action, double param, int time, boolean flip) {
 		Graphics2D g = (Graphics2D) _g.create();
+		if(flip) {
+			g.translate(posX * 2, 0);
+			g.scale(-1.0, 1.0);
+		}
+		
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setColor(Color.black);
 		
