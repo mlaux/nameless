@@ -6,13 +6,17 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
-public class Line implements Item {
+public class Line extends Item {
 	public double x1;
 	public double y1;
+	
 	private int originalX1;
 	private int originalY1;
 	private int fakeX2;
 	private int fakeY2;
+	
+	private int xChange;
+	private int yChange;
 	
 	public double x2;
 	public double y2;
@@ -23,7 +27,7 @@ public class Line implements Item {
 		
 	}
 	
-	public Line(int x1, int y1, int x2, int y2, int thick) {
+	public Line(double x1, double y1, double x2, double y2, int ox1, int oy1, int fx2, int fy2, int thick) {
 		this.thickness = thick;
 		
 		this.x1 = x1;
@@ -31,6 +35,11 @@ public class Line implements Item {
 		
 		this.x2 = x2;
 		this.y2 = y2;
+		
+		originalX1 = ox1;
+		originalY1 = oy1;
+		fakeX2 = fx2;
+		fakeY2 = fy2;
 	}
 	
 	public String serialize() {
@@ -44,6 +53,11 @@ public class Line implements Item {
 	public void render(Graphics g) {
 		((Graphics2D) g).setStroke(new BasicStroke(thickness));
 		g.drawLine((int)x1, (int)y1, (int)x2, (int)y2);
+		
+		if(animation != null)
+			animation.render(g);
+		
+		g.setColor(Color.white);
 	}
 	
 	public void setPosition(int x, int y) {
@@ -100,11 +114,13 @@ public class Line implements Item {
 		
 		int c1 = vx * wx + vy * wy;
 		if(c1 <= 0) {
+			// to the left
 			return (int) Math.sqrt(wx * wx + wy * wy);
 		}
 		
 		int c2 = vx * vx + vy * vy;
 		if(c2 <= c1) {
+			// to the right
 			int dx = (int)(px - x2), dy = (int)(py - y2);
 			return (int) Math.sqrt(dx * dx + dy * dy);
 		}
@@ -114,6 +130,26 @@ public class Line implements Item {
 		int by = (int) (y1 + (b * vy));
 		
 		int dx = px - bx, dy = py - by;
+		// on top or below
 		return (int) Math.sqrt(dx * dx + dy * dy);
+	}
+	
+	public Item clone() {
+		return new Line(x1, x2, y1, y2, originalX1, originalY1, fakeX2, fakeY2, thickness);
+	}
+
+	public void animateItemDrag(Cursor cursor) {
+		setPosition(cursor.getGridX(), cursor.getGridY());
+		
+		if(animation != null)
+			animation.setEndPoint((int) x2, (int) y2);
+	}
+
+	public void animateItemStart(Cursor cursor) {
+		xChange = (int) (cursor.getGridX() - x1);
+		yChange = (int) (cursor.getGridY() - y1);
+		
+		if(animation != null)
+			animation.setStartPoint((int) x1, (int) y1);
 	}
 }

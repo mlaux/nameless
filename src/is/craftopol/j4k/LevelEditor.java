@@ -22,10 +22,11 @@ public class LevelEditor extends JFrame implements ActionListener {
 	
 	private LevelView level = new LevelView();
 	
-	private JComboBox typeCombo = new JComboBox(new String[] { "Line", "Circle", "Triangle", "Spawn point", "Exit point" });
+	private JComboBox typeCombo = new JComboBox(new Class<?>[] { Button.class, Line.class, Triangle.class });
 	
-	private JToggleButton addButton = new JToggleButton("Add");
-	private JToggleButton delButton = new JToggleButton("Remove");
+	private JToggleButton addremButton = new JToggleButton("Add/remove");
+	private JToggleButton cloneButton = new JToggleButton("Clone");
+	private JToggleButton animButton = new JToggleButton("Animate");
 	
 	private JToggleButton getCodeButton = new JToggleButton("Get code");
 	
@@ -40,9 +41,10 @@ public class LevelEditor extends JFrame implements ActionListener {
 		
 		getCodeButton.addActionListener(this);
 		
-		optionGroup.add(addButton);
-		optionGroup.add(delButton);
-		optionGroup.setSelected(addButton.getModel(), true);
+		optionGroup.add(addremButton);
+		optionGroup.add(cloneButton);
+		optionGroup.add(animButton);
+		optionGroup.setSelected(addremButton.getModel(), true);
 		
 		JPanel content = new JPanel(new BorderLayout());
 		
@@ -53,8 +55,9 @@ public class LevelEditor extends JFrame implements ActionListener {
 		
 		toolbar.add(typeCombo);
 		toolbar.addSeparator();
-		toolbar.add(addButton);
-		toolbar.add(delButton);
+		toolbar.add(addremButton);
+		toolbar.add(cloneButton);
+		toolbar.add(animButton);
 		toolbar.addSeparator();
 		toolbar.add(getCodeButton);
 		
@@ -82,15 +85,17 @@ public class LevelEditor extends JFrame implements ActionListener {
 	
 	public String getSelectedMode() {
 		ButtonModel mod = optionGroup.getSelection();
-		if(mod.equals(addButton.getModel()))
-			return "add";
-		else if(mod.equals(delButton.getModel()))
-			return "remove";
+		if(mod.equals(addremButton.getModel()))
+			return "addremove";
+		else if(mod.equals(cloneButton.getModel()))
+			return "clone";
+		else if(mod.equals(animButton.getModel()))
+			return "animate";
 		else throw new RuntimeException("wat");
 	}
 	
-	public String getSelectedTool() {
-		return (String) typeCombo.getSelectedItem();
+	public Class<?> getSelectedTool() {
+		return (Class<?>) typeCombo.getSelectedItem();
 	}
 	
 	public void setStatusText(String str) {

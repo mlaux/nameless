@@ -3,7 +3,7 @@ package is.craftopol.j4k;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
-public class Triangle implements Item {
+public class Triangle extends Item {
 	public int x1;
 	public int y1;
 	
@@ -14,7 +14,7 @@ public class Triangle implements Item {
 		
 	}
 	
-	public Triangle(int x1, int y1, int x2, int y2, int thick) {
+	public Triangle(int x1, int y1, int x2, int y2) {
 		this.x1 = x1;
 		this.y1 = y1;
 		
@@ -83,10 +83,25 @@ public class Triangle implements Item {
 		if (y <= minY + 2000 && y >= (minY - ((double) height) * ((double) percAcross))) {
 			if (percAcross <= 1 && percAcross >=0) {
 				//did it on a different line so you'll get it. because of how I did percAcross it's always in between 0 and 1 if your mouse is inside the triangle.
-				System.out.println("true");
 				return true;
 			}
 		}
 		return false;
+	}
+
+	public Item clone() {
+		return new Triangle(x1, y1, x2, y2);
+	}
+
+	@Override
+	public void animateItemDrag(Cursor cursor) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void animateItemStart(Cursor cursor) {
+		// TODO Auto-generated method stub
+		
 	}
 }

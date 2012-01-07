@@ -4,9 +4,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
-public class PointItem extends java.awt.Point implements Item {
+public class PointItem extends Item {
 	private static int spawnCounter = 1;
 	private static int exitCounter = 1;
+	
+	public int x;
+	public int y;
 	
 	public int type;
 	public int id;
@@ -16,8 +19,6 @@ public class PointItem extends java.awt.Point implements Item {
 	}
 	
 	public PointItem(int type, int x, int y) {
-		super(x, y);
-		
 		this.type = type;
 		
 		if(type == Item.TYPE_SPAWNPOINT)
@@ -39,15 +40,18 @@ public class PointItem extends java.awt.Point implements Item {
 	}
 
 	public void setPosition(int x, int y) {
-		setLocation(x, y);
+		this.x = x;
+		this.y = y;
 	}
 
 	public void placeItemStart(Cursor cursor) {
-		setLocation(cursor.getGridPos());
+		this.x = cursor.getGridX();
+		this.y = cursor.getGridY();
 	}
 
 	public void placeItemDrag(Cursor cursor) {
-		setLocation(cursor.getGridPos());
+		this.x = cursor.getGridX();
+		this.y = cursor.getGridY();
 	}
 
 	public void setThickness(int thickness) {
@@ -60,5 +64,22 @@ public class PointItem extends java.awt.Point implements Item {
 
 	public boolean contains(int x, int y) {
 		return x == this.x && y == this.y;
+	}
+
+	@Override
+	public Item clone() {
+		return new PointItem(type, x, y);
+	}
+
+	@Override
+	public void animateItemDrag(Cursor cursor) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void animateItemStart(Cursor cursor) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -303,11 +303,26 @@ public class LevelView extends JComponent {
 		repaint();
 	}
 	
+	public void animateItemStart() {
+		if(newItem != null)
+			newItem.animateItemStart(cursor);
+		repaint();
+	}
+	
+	public void animateItemDrag() {
+		if(newItem != null)
+			newItem.animateItemDrag(cursor);
+		repaint();
+	}
+	
 	public void placeItemEnd() {
 		if(newItem == null)
 			return;
 		
-		items.add(newItem);
+		if(!LevelEditor.getInstance().getSelectedMode().equals("animate")) {
+			items.add(newItem);
+		}
+
 		newItem = null;
 		
 		repaint();
@@ -317,6 +332,13 @@ public class LevelView extends JComponent {
 		for(int k = items.size() - 1; k >= 0; k--) 
 			if(items.get(k).contains(cursor.getGridX(), cursor.getGridY()))
 				items.remove(k);
+	}
+	
+	public Item getItemUnderCursor() {
+		for(int k = items.size() - 1; k >= 0; k--) 
+			if(items.get(k).contains(cursor.getGridX(), cursor.getGridY()))
+				return items.get(k);
+		return null;
 	}
 	
 	class KeyHandler extends KeyAdapter {
@@ -333,11 +355,28 @@ public class LevelView extends JComponent {
 		public void mousePressed(MouseEvent e) {
 			cursor.clicked(e.getX(), e.getY(), e.getButton());
 			
-			if(cursor.isButtonDown(MouseEvent.BUTTON1)) {
-				String mode = LevelEditor.getInstance().getSelectedMode();
-				if(mode.equals("add"))
+
+			String mode = LevelEditor.getInstance().getSelectedMode();
+			
+			if(mode.equals("addremove")) {
+				if(cursor.isButtonDown(MouseEvent.BUTTON1)) {
 					placeItemStart(ItemFactory.newItem(LevelEditor.getInstance().getSelectedTool()));
-				else removeItemUnderCursor();
+				} else if(cursor.isButtonDown(MouseEvent.BUTTON3)) {
+					removeItemUnderCursor();
+				}
+			} else if(mode.equals("clone") || mode.equals("animate")) {
+				if(cursor.isButtonDown(MouseEvent.BUTTON1)) {
+					Item it = getItemUnderCursor();
+					
+					if(it == null)
+						return;
+					
+					if(mode.equals("animate"))
+						it.animation = new Animation();
+					
+					newItem = it.clone();
+					animateItemStart();
+				}
 			}
 		}
 
@@ -354,9 +393,16 @@ public class LevelView extends JComponent {
 
 		public void mouseDragged(MouseEvent e) {
 			cursor.updatePosition(e.getX(), e.getY());
-			if(cursor.isButtonDown(MouseEvent.BUTTON1))
-				placeItemDrag();
-			else if(cursor.isButtonDown(MouseEvent.BUTTON3))
+			
+			String mode = LevelEditor.getInstance().getSelectedMode();
+			
+			if(cursor.isButtonDown(MouseEvent.BUTTON1)) {
+				if(mode.equals("addremove"))
+					placeItemDrag();
+				else if(mode.equals("clone") || mode.equals("animate")) {
+					animateItemDrag();
+				}
+			} else if(cursor.isButtonDown(MouseEvent.BUTTON3))
 				scroll(cursor.getDeltaScreenPos());
 		}
 

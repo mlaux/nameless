@@ -1,11 +1,9 @@
 package is.craftopol.j4k;
 
-import java.awt.BasicStroke;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 
-public class Circle implements Item {
+public class Circle extends Item {
 	public int centerX;
 	public int centerY;
 	
@@ -17,10 +15,11 @@ public class Circle implements Item {
 		
 	}
 	
-	public Circle(int cx, int cy, int r, int t) {
+	public Circle(int cx, int cy, int r, boolean f) {
 		centerX = cx;
 		centerY = cy;
 		radius = r;
+		filled = f;
 	}
 
 	public String serialize() {
@@ -64,5 +63,21 @@ public class Circle implements Item {
 
 	public boolean contains(int x, int y) {
 		return Math.hypot(x - centerX, y - centerY) <= radius;
+	}
+
+	public Item clone() {
+		return new Circle(centerX, centerY, radius, filled);
+	}
+
+	@Override
+	public void animateItemDrag(Cursor cursor) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void animateItemStart(Cursor cursor) {
+		// TODO Auto-generated method stub
+		
 	}
 }

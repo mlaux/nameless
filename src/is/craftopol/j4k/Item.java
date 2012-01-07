@@ -7,7 +7,7 @@ import java.awt.Graphics;
  * An Item is an entity that can be placed in a level for the character to
  * interact with.
  */
-public interface Item {
+public abstract class Item implements Cloneable {
 	/** Type constant for a {@link java.awt.Point}. */
 	public static final byte TYPE_SPAWNPOINT = 0x01;
 	
@@ -23,8 +23,13 @@ public interface Item {
 	/** Type constant for a {@link Circle}. */
 	public static final byte TYPE_CIRCLE = 0x05;
 	
+	/** Type constant for a {@link Button}. */
+	public static final byte TYPE_BUTTON = 0x06;
+	
 	/** Flag constant indicating that this Item is filled in. */
 	public static final char FLAG_FILLED = 0x100;
+	
+	public Animation animation;
 	
 	/**
 	 * Returns the string representation of this Item, readable by the game.
@@ -60,9 +65,15 @@ public interface Item {
 	
 	public abstract void placeItemDrag(Cursor cursor);
 	
+	public abstract void animateItemStart(Cursor cursor);
+	
+	public abstract void animateItemDrag(Cursor cursor);
+	
 	public abstract void setThickness(int thickness);
 	
 	public abstract int getThickness();
 	
 	public abstract boolean contains(int x, int y);
+	
+	public abstract Item clone();
 }
