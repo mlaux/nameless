@@ -1,5 +1,6 @@
 package is.craftopol.j4k;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
@@ -9,17 +10,23 @@ public class Triangle extends Item {
 	
 	public int x2;
 	public int y2;
+	private int dragStartX;
+	private int dragStartY;
+	private int changeX;
+	private int changeY;
 	
 	public Triangle() {
 		
 	}
 	
-	public Triangle(int x1, int y1, int x2, int y2) {
+	public Triangle(int x1, int y1, int x2, int y2, Animation anim) {
 		this.x1 = x1;
 		this.y1 = y1;
 		
 		this.x2 = x2;
 		this.y2 = y2;
+		
+		this.animation = anim;
 	}
 	
 	public String serialize() {
@@ -40,12 +47,21 @@ public class Triangle extends Item {
 
 	public void render(Graphics g) {
 		int x3 = (y1 < y2 ? x1 : x2);
-		int[] xp = { x1, x2, x3 };
-		int[] yp = { y1, y2, Math.max(y1, y2) };
+		int[] xp = { x1 + changeX, x2 + changeX, x3 + changeX};
+		int[] yp = { y1 + changeY, y2 + changeY, Math.max(y1, y2) + changeY};
+		
+		if(changeX != 0 || changeY != 0)
+			g.setColor(Color.gray);
+		else 
+			g.setColor(Color.black);
 		
 		g.fillPolygon(xp, yp, 3);
 		
-		g.fillRect(Math.min(x1, x2), Math.max(y1, y2), Math.abs(x2 - x1), 2000);
+		g.fillRect(Math.min(x1, x2) + changeX, Math.max(y1, y2) + changeY, Math.abs(x2 - x1), 2000);
+		
+		if (animation!=null) {
+			animation.render(g);
+		}
 	}
 
 	public void setPosition(int x, int y) {
@@ -90,18 +106,26 @@ public class Triangle extends Item {
 	}
 
 	public Item clone() {
-		return new Triangle(x1, y1, x2, y2);
+		return new Triangle(x1, y1, x2, y2, animation);
 	}
 
 	@Override
 	public void animateItemDrag(Cursor cursor) {
-		// TODO Auto-generated method stub
+		changeX = cursor.getGridX() - dragStartX;
+		changeY = cursor.getGridY() - dragStartY;
 		
+		if(animation != null) {
+			animation.setEndPoint((int) (x1 + changeX), (int) (y1 + changeY));
+		}
 	}
 
 	@Override
 	public void animateItemStart(Cursor cursor) {
-		// TODO Auto-generated method stub
+		dragStartX = cursor.getGridX();
+		dragStartY = cursor.getGridY();
+		
+		if(animation != null)
+			animation.setStartPoint((int) x1, (int) y1);
 		
 	}
 }

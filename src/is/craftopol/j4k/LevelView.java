@@ -64,7 +64,7 @@ public class LevelView extends JComponent {
 	public void paintComponent(Graphics _g) {
 		Graphics2D g = (Graphics2D) _g;
 		
-		g.setColor(Color.black);
+		g.setColor(new Color(210,210,210));
 		g.fillRect(0, 0, getWidth(), getHeight());
 		
 		if(showGrid)
@@ -96,7 +96,7 @@ public class LevelView extends JComponent {
 		g.drawImage(img, scrollX % zoom, scrollY % zoom, getWidth()
 				- (getWidth() % zoom), getHeight() - (getHeight() % zoom), this);
 		
-		g.setColor(Color.white);
+		g.setColor(Color.black);
 		g.drawString("Zoom: " + zoom + "x", 5, 15);
 	}
 	

@@ -7,7 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
 public class Button extends Item {
-	public static final int HEIGHT = 16;
+	public static final int HEIGHT = 8;
 	
 	public int x;
 	public int y;
@@ -36,24 +36,25 @@ public class Button extends Item {
 	}
 
 	public void render(Graphics g) {
-		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		//((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		if(xChange != 0 || yChange != 0)
-			g.setColor(new Color(255, 255, 255, 100));
+			g.setColor(Color.gray);
+		else 
+			g.setColor(Color.black);
 		
-		int[] xp = { x, x + 16, x + 16 };
-		int[] yp = { y, y, y - 8 };
+		int[] xp = { x, x + 8, x + 8 };
+		int[] yp = { y, y, y - 4 };
 		
 		g.fillPolygon(xp, yp, 3);
 		
-		xp = new int[] { x + width + 32, x + width + 16, x + width + 16 };
-		yp = new int[] { y, y, y - 8 };
+		xp = new int[] { x + width + 16, x + width + 8, x + width + 8 };
+		yp = new int[] { y, y, y - 4 };
 		g.fillPolygon(xp, yp, 3);
-		g.fillRect(x + 16, y - 16 , width, HEIGHT);
+		g.fillRect(x + 8, y - 8 , width, HEIGHT);
 		
 		if(animation != null)
 			animation.render(g);
 
-		g.setColor(Color.white);
 	}
 
 	public void setPosition(int x, int y) {
@@ -67,7 +68,7 @@ public class Button extends Item {
 	}
 
 	public void placeItemDrag(Cursor cursor) {
-		width = cursor.getGridX() - x - 32;
+		width = cursor.getGridX() - x - 16;
 		if (width < 0) {
 			width = 0;
 		}
