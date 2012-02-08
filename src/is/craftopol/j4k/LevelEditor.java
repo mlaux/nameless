@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -28,7 +29,8 @@ public class LevelEditor extends JFrame implements ActionListener {
 	private JToggleButton cloneButton = new JToggleButton("Clone");
 	private JToggleButton animButton = new JToggleButton("Animate");
 	
-	private JToggleButton getCodeButton = new JToggleButton("Get code");
+	private JButton loadButton = new JButton("Load");
+	private JButton getCodeButton = new JButton("Get code");
 	
 	private JLabel statusLabel = new JLabel();
 	
@@ -39,6 +41,7 @@ public class LevelEditor extends JFrame implements ActionListener {
 		
 		// set up toolbar buttons
 		
+		loadButton.addActionListener(this);
 		getCodeButton.addActionListener(this);
 		
 		optionGroup.add(addremButton);
@@ -59,6 +62,7 @@ public class LevelEditor extends JFrame implements ActionListener {
 		toolbar.add(cloneButton);
 		toolbar.add(animButton);
 		toolbar.addSeparator();
+		toolbar.add(loadButton);
 		toolbar.add(getCodeButton);
 		
 		content.add(toolbar, BorderLayout.SOUTH);
@@ -75,7 +79,10 @@ public class LevelEditor extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		String cmd = e.getActionCommand();
 		
-		if(cmd.equals("Get code")) {
+		if(cmd.equals("Load")) {
+			String code = JOptionPane.showInputDialog(this, "Enter level string");
+			level.decode(code);
+		} else if(cmd.equals("Get code")) {
 			StringSelection ss = new StringSelection(level.encodeJava());
 			Toolkit.getDefaultToolkit().getSystemClipboard()
 					.setContents(ss, null);

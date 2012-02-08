@@ -5,11 +5,9 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 
 public class Triangle extends Item {
-	public int x1;
-	public int y1;
-	
 	public int x2;
 	public int y2;
+	
 	private int dragStartX;
 	private int dragStartY;
 	private int changeX;
@@ -110,22 +108,14 @@ public class Triangle extends Item {
 	}
 
 	@Override
-	public void animateItemDrag(Cursor cursor) {
+	public void cloneItemDrag(Cursor cursor) {
 		changeX = cursor.getGridX() - dragStartX;
 		changeY = cursor.getGridY() - dragStartY;
-		
-		if(animation != null) {
-			animation.setEndPoint((int) (x1 + changeX), (int) (y1 + changeY));
-		}
 	}
 
 	@Override
-	public void animateItemStart(Cursor cursor) {
+	public void cloneItemStart(Cursor cursor) {
 		dragStartX = cursor.getGridX();
 		dragStartY = cursor.getGridY();
-		
-		if(animation != null)
-			animation.setStartPoint((int) x1, (int) y1);
-		
 	}
 }

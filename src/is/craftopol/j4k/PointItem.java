@@ -3,6 +3,7 @@ package is.craftopol.j4k;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 
 public class PointItem extends Item {
 	private static int spawnCounter = 1;
@@ -72,14 +73,18 @@ public class PointItem extends Item {
 	}
 
 	@Override
-	public void animateItemDrag(Cursor cursor) {
+	public void cloneItemDrag(Cursor cursor) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void animateItemStart(Cursor cursor) {
+	public void cloneItemStart(Cursor cursor) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public Point getPosition() {
+		return new Point(x, y);
 	}
 }

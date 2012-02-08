@@ -2,6 +2,7 @@ package is.craftopol.j4k;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 
 /**
  * An Item is an entity that can be placed in a level for the character to
@@ -30,6 +31,9 @@ public abstract class Item implements Cloneable {
 	public static final char FLAG_FILLED = 0x100;
 	
 	public Animation animation;
+	
+	public int x1;
+	public int y1;
 	
 	/**
 	 * Returns the string representation of this Item, readable by the game.
@@ -65,9 +69,9 @@ public abstract class Item implements Cloneable {
 	
 	public abstract void placeItemDrag(Cursor cursor);
 	
-	public abstract void animateItemStart(Cursor cursor);
+	public abstract void cloneItemStart(Cursor cursor);
 	
-	public abstract void animateItemDrag(Cursor cursor);
+	public abstract void cloneItemDrag(Cursor cursor);
 	
 	public abstract void setThickness(int thickness);
 	

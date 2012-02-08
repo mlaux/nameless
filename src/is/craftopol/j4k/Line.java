@@ -5,18 +5,16 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 
 public class Line extends Item {
-	public double x1;
-	public double y1;
-	
 	private int originalX1;
 	private int originalY1;
 	private int fakeX2;
 	private int fakeY2;
 	
-	public double x2;
-	public double y2;
+	public int x2;
+	public int y2;
 	
 	private int dragStartX;
 	private int dragStartY;
@@ -30,7 +28,7 @@ public class Line extends Item {
 		
 	}
 	
-	public Line(double x1, double y1, double x2, double y2, int ox1, int oy1, int fx2, int fy2, int thick, Animation anim) {
+	public Line(int x1, int y1, int x2, int y2, int ox1, int oy1, int fx2, int fy2, int thick, Animation anim) {
 		this.thickness = thick;
 		
 		this.x1 = x1;
@@ -50,7 +48,11 @@ public class Line extends Item {
 	}
 	
 	public String serialize() {
-		return "" + (char) Item.TYPE_LINE + (char) x1 + (char) y1 + (char) x2 + (char) y2 + (char) thickness;
+		if (y2>y1) {
+			return "" + (char) Item.TYPE_LINE + (char) x1 + (char) y1 + (char) x2 + (char) y2 + (char) thickness;
+		} else {
+			return "" + (char) Item.TYPE_LINE + (char) x2 + (char) y2 + (char) x1 + (char) y1 + (char) thickness;
+		}
 	}
 	
 	public Dimension getSize() {
@@ -88,14 +90,14 @@ public class Line extends Item {
 //		if (!clone) {
 			double angle = Math.atan2(y2-originalY1, x2-originalX1);
 			
-			x1 = originalX1 + Math.cos(angle)*thickness/2;
-			y1 = originalY1 + Math.sin(angle)*thickness/2;
+			x1 = (int) (originalX1 + Math.cos(angle)*thickness/2);
+			y1 = (int) (originalY1 + Math.sin(angle)*thickness/2);
 			
 			fakeX2 = cursor.getGridX();
 			fakeY2 = cursor.getGridY();
 			
-			x2 = fakeX2 - Math.cos(angle)*thickness/2;
-			y2 = fakeY2 - Math.sin(angle)*thickness/2;
+			x2 = (int) (fakeX2 - Math.cos(angle)*thickness/2);
+			y2 = (int) (fakeY2 - Math.sin(angle)*thickness/2);
 //		}
 	}
 	
@@ -104,11 +106,11 @@ public class Line extends Item {
 			if (thickness > 0) {
 				double angle = Math.atan2(y2-originalY1, x2-originalX1);
 				
-				x1 = originalX1 + Math.cos(angle)*thickness/2;
-				y1 = originalY1 + Math.sin(angle)*thickness/2;
+				x1 = (int) (originalX1 + Math.cos(angle)*thickness/2);
+				y1 = (int) (originalY1 + Math.sin(angle)*thickness/2);
 				
-				x2 = fakeX2 - Math.cos(angle)*thickness/2;
-				y2 = fakeY2 - Math.sin(angle)*thickness/2;
+				x2 = (int) (fakeX2 - Math.cos(angle)*thickness/2);
+				y2 = (int) (fakeY2 - Math.sin(angle)*thickness/2);
 				
 				this.thickness = thickness;
 			}
@@ -153,20 +155,13 @@ public class Line extends Item {
 		return new Line(x1, y1, x2, y2, originalX1, originalY1, fakeX2, fakeY2, thickness, animation);
 	}
 
-	public void animateItemDrag(Cursor cursor) {
+	public void cloneItemDrag(Cursor cursor) {
 		changeX = cursor.getGridX() - dragStartX;
 		changeY = cursor.getGridY() - dragStartY;
-		
-		if(animation != null) {
-			animation.setEndPoint((int) (x1 + changeX), (int) (y1 + changeY));
-		}
 	}
 
-	public void animateItemStart(Cursor cursor) {
+	public void cloneItemStart(Cursor cursor) {
 		dragStartX = cursor.getGridX();
 		dragStartY = cursor.getGridY();
-		
-		if(animation != null)
-			animation.setStartPoint((int) x1, (int) y1);
 	}
 }

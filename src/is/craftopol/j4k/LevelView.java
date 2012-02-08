@@ -32,7 +32,7 @@ public class LevelView extends JComponent {
 	private static final Color X_COLOR = new Color(0, 64, 0);
 	private static final Color Y_COLOR = new Color(64, 0, 0);
 	
-	private static final Color REG_COLOR = new Color(24, 24, 24);
+	private static final Color REG_COLOR = new Color(0, 0, 0);
 	
 	private boolean showGrid = false;
 	
@@ -44,6 +44,7 @@ public class LevelView extends JComponent {
 	private List<Item> items;
 	
 	private Item newItem;
+	private Item animatingItem;
 	private Cursor cursor = new Cursor(this);
 	
 	public LevelView() {
@@ -220,8 +221,12 @@ public class LevelView extends JComponent {
 	public String encode() {
 		StringBuilder builder = new StringBuilder();
 		
-		for(Item item : items)
+		for(Item item : items) {
 			builder.append(item.serialize());
+			if(item.animation != null)
+				builder.append(item.animation.serialize());
+			else builder.append((char) 0);
+		}
 		
 		return builder.toString();
 	}
@@ -234,7 +239,7 @@ public class LevelView extends JComponent {
 				result += "\\r";
 			else if(ch == 10)
 				result += "\\n";
-			else if(ch == 22)
+			else if(ch == 34)
 				result += "\\\"";
 			else result += String.format("\\u%04x", (int) ch);
 		}
@@ -244,8 +249,35 @@ public class LevelView extends JComponent {
 	}
 	
 	// this whole decode method is pretty bad but whatever
-	public void decode(String str) {
+	public void decode(String codestr) {
 		items.clear();
+		
+		// convert unicode, \r, \n, \" to the real character values
+		
+		String str = "";
+		for(int k = 0; k < codestr.length(); k++) {
+			char ch = codestr.charAt(k);
+			if(ch == '\\')
+				continue;
+			
+			if(ch == 'u') {
+				System.out.println(codestr.substring(k + 1, k + 5));
+				str += (char) Integer.parseInt(codestr.substring(k + 1, k + 5), 16);
+				k += 3;
+			}
+			
+			if(ch == 'r') {
+				str += "\r";
+			}
+			
+			if(ch == 'n') {
+				str += "\n";
+			}
+			
+			if(ch == '"') {
+				str += "\"";
+			}
+		}
 		
 		int index = 0;
 		while(index < str.length()) {
@@ -257,38 +289,58 @@ public class LevelView extends JComponent {
 				case Item.TYPE_SPAWNPOINT:
 				case Item.TYPE_EXITPOINT:
 					PointItem pt = new PointItem(flags);
-					pt.x = str.charAt(index++);
-					pt.y = str.charAt(index++);
+					pt.x = (short) str.charAt(index++);
+					pt.y = (short) str.charAt(index++);
+					index = readAnimation(pt, str, index);
 					items.add(pt);
 					break;
 				case Item.TYPE_LINE:
 					Line line = new Line();
-					line.x1 = str.charAt(index++);
-					line.y1 = str.charAt(index++);
-					line.x2 = str.charAt(index++);
-					line.y2 = str.charAt(index++);
-					
-					line.thickness = str.charAt(index++);
+					line.x1 = (short) str.charAt(index++);
+					line.y1 = (short) str.charAt(index++);
+					line.x2 = (short) str.charAt(index++);
+					line.y2 = (short) str.charAt(index++);
+					line.thickness = (short) str.charAt(index++);
+					index = readAnimation(line, str, index);
 					items.add(line);
 					break;
 				case Item.TYPE_TRIANGLE:
 					Triangle tri = new Triangle();
-					tri.x1 = str.charAt(index++);
-					tri.y1 = str.charAt(index++);
-					tri.x2 = str.charAt(index++);
-					tri.y2 = str.charAt(index++);
+					tri.x1 = (short) str.charAt(index++);
+					tri.y1 = (short) str.charAt(index++);
+					tri.x2 = (short) str.charAt(index++);
+					tri.y2 = (short) str.charAt(index++);
+					str.charAt(index++); str.charAt(index++); // x3 and y3 unneeded
+					index = readAnimation(tri, str, index);
 					items.add(tri);
-					break;
-				case Item.TYPE_CIRCLE:
-					Circle circle = new Circle();
-					circle.filled = (flags & Item.FLAG_FILLED) != 0;
-					circle.centerX = str.charAt(index++);
-					circle.centerY = str.charAt(index++);
-					circle.radius = str.charAt(index++);
-					items.add(circle);
 					break;
 			}
 		}
+		
+		repaint();
+	}
+	
+	private int readAnimation(Item item, String str, int index) {
+		int nPoints = str.charAt(index++);
+		
+		if(nPoints == 0)
+			return index;
+		
+		item.animation = new Animation();
+			
+		int x = 0, y = 0;
+		for(int k = 0; k < nPoints; k++) {
+			x = (short) str.charAt(index++);
+			y = (short) str.charAt(index++);
+			
+			item.animation.addPoint(x, y);
+			System.out.println(x + " " + y + " " + k);
+		}
+		
+		item.animation.curX = x;
+		item.animation.curY = y;
+		
+		return index;
 	}
 
 	public void placeItemStart(Item item) {
@@ -303,15 +355,23 @@ public class LevelView extends JComponent {
 		repaint();
 	}
 	
-	public void animateItemStart() {
+	public void cloneItemStart() {
 		if(newItem != null)
-			newItem.animateItemStart(cursor);
+			newItem.cloneItemStart(cursor);
+		if(animatingItem != null) {
+			animatingItem.animation.curX = cursor.getGridX();
+			animatingItem.animation.curY = cursor.getGridY();
+		}
 		repaint();
 	}
 	
-	public void animateItemDrag() {
+	public void cloneItemDrag() {
 		if(newItem != null)
-			newItem.animateItemDrag(cursor);
+			newItem.cloneItemDrag(cursor);
+		if(animatingItem != null) {
+			animatingItem.animation.curX = cursor.getGridX();
+			animatingItem.animation.curY = cursor.getGridY();
+		}
 		repaint();
 	}
 	
@@ -321,8 +381,11 @@ public class LevelView extends JComponent {
 		
 		if(!LevelEditor.getInstance().getSelectedMode().equals("animate")) {
 			items.add(newItem);
+		} else {
+			newItem.animation.addPoint(cursor.getGridX(), cursor.getGridY());
 		}
-
+		
+		animatingItem = null;
 		newItem = null;
 		
 		repaint();
@@ -371,11 +434,14 @@ public class LevelView extends JComponent {
 					if(it == null)
 						return;
 					
-					if(mode.equals("animate"))
+					if(mode.equals("animate") && newItem == null) {
 						it.animation = new Animation();
+						it.animation.addPoint(cursor.getGridX(), cursor.getGridY());
+					}
 					
+					animatingItem = it;
 					newItem = it.clone();
-					animateItemStart();
+					cloneItemStart();
 				}
 			}
 		}
@@ -388,7 +454,16 @@ public class LevelView extends JComponent {
 		
 		public void mouseReleased(MouseEvent e) {
 			cursor.released(e.getX(), e.getY(), e.getButton());
-			placeItemEnd();
+			if (e.getButton() == MouseEvent.BUTTON1) {
+				placeItemEnd();
+			} else if(e.getButton() == MouseEvent.BUTTON3) {
+				if(LevelEditor.getInstance().getSelectedMode().equals("animate")) {
+					if(animatingItem != null) {
+						animatingItem.animation.addPoint(cursor.getGridX(), cursor.getGridY());
+						repaint();
+					}
+				}
+			}
 		}
 
 		public void mouseDragged(MouseEvent e) {
@@ -400,7 +475,7 @@ public class LevelView extends JComponent {
 				if(mode.equals("addremove"))
 					placeItemDrag();
 				else if(mode.equals("clone") || mode.equals("animate")) {
-					animateItemDrag();
+					cloneItemDrag();
 				}
 			} else if(cursor.isButtonDown(MouseEvent.BUTTON3))
 				scroll(cursor.getDeltaScreenPos());

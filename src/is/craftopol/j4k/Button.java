@@ -3,14 +3,10 @@ package is.craftopol.j4k;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 
 public class Button extends Item {
 	public static final int HEIGHT = 8;
 	
-	public int x;
-	public int y;
 	private int xChange;
 	private int yChange;
 	
@@ -21,14 +17,14 @@ public class Button extends Item {
 	}
 	
 	public Button(int x, int y, int w, Animation a) {
-		this.x = x;
-		this.y = y;
+		this.x1 = x;
+		this.y1 = y;
 		this.width = w;
 		animation = a;
 	}
 
 	public String serialize() {
-		return "" + (char) Item.TYPE_BUTTON + (char) x + (char) y + (char) width;
+		return "" + (char) Item.TYPE_BUTTON + (char) x1 + (char) y1 + (char) width;
 	}
 
 	public Dimension getSize() {
@@ -36,39 +32,37 @@ public class Button extends Item {
 	}
 
 	public void render(Graphics g) {
-		//((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		if(xChange != 0 || yChange != 0)
 			g.setColor(Color.gray);
 		else 
 			g.setColor(Color.black);
 		
-		int[] xp = { x, x + 8, x + 8 };
-		int[] yp = { y, y, y - 4 };
+		int[] xp = { x1, x1 + 8, x1 + 8 };
+		int[] yp = { y1, y1, y1 - 4 };
 		
 		g.fillPolygon(xp, yp, 3);
 		
-		xp = new int[] { x + width + 16, x + width + 8, x + width + 8 };
-		yp = new int[] { y, y, y - 4 };
+		xp = new int[] { x1 + width + 16, x1 + width + 8, x1 + width + 8 };
+		yp = new int[] { y1, y1, y1 - 4 };
 		g.fillPolygon(xp, yp, 3);
-		g.fillRect(x + 8, y - 8 , width, HEIGHT);
+		g.fillRect(x1 + 8, y1 - 8 , width, HEIGHT);
 		
 		if(animation != null)
 			animation.render(g);
-
 	}
 
 	public void setPosition(int x, int y) {
-		this.x = x;
-		this.y = y;
+		this.x1 = x;
+		this.y1 = y;
 	}
 
 	public void placeItemStart(Cursor cursor) {
-		x = cursor.getGridX();
-		y = cursor.getGridY();
+		x1 = cursor.getGridX();
+		y1 = cursor.getGridY();
 	}
 
 	public void placeItemDrag(Cursor cursor) {
-		width = cursor.getGridX() - x - 16;
+		width = cursor.getGridX() - x1 - 16;
 		if (width < 0) {
 			width = 0;
 		}
@@ -83,25 +77,19 @@ public class Button extends Item {
 	}
 
 	public boolean contains(int x, int y) {
-		return x >= this.x && y <= this.y && x <= this.x + this.width + 32 && y >= this.y - HEIGHT;
+		return x >= this.x1 && y <= this.y1 && x <= this.x1 + this.width + 32 && y >= this.y1 - HEIGHT;
 	}
 
 	public Item clone() {
-		return new Button(this.x, this.y, this.width, this.animation);
+		return new Button(this.x1, this.y1, this.width, this.animation);
 	}
 
-	public void animateItemDrag(Cursor cursor) {
+	public void cloneItemDrag(Cursor cursor) {
 		setPosition(cursor.getGridX() - xChange, cursor.getGridY() - yChange);
-		
-		if(animation != null)
-			animation.setEndPoint(x, y);
 	}
 
-	public void animateItemStart(Cursor cursor) {
-		xChange = cursor.getGridX() - x;
-		yChange = cursor.getGridY() - y;
-		
-		if(animation != null)
-			animation.setStartPoint(x, y);
+	public void cloneItemStart(Cursor cursor) {
+		xChange = cursor.getGridX() - x1;
+		yChange = cursor.getGridY() - y1;
 	}
 }
