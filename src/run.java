@@ -88,6 +88,8 @@ public class run extends Applet implements Runnable {
 	private double lowestY = 300;
 	private double moveOverTimeY;
 	
+	private boolean stuck = false;
+	
 	private int diedTimer;
 	
 	private double[][] allObjects = new double[1000][15];
@@ -101,6 +103,7 @@ public class run extends Applet implements Runnable {
 	}
 
 	public void run() {
+		
 		setSize(width * SCALE, height * SCALE); // For AppletViewer, remove later.
 		
 		BufferedImage bkg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -165,14 +168,14 @@ public class run extends Applet implements Runnable {
 				moveY = 14;
 			}
 			// Update here
-			if(keys['a'] && !keys['d']/* && insideObj != -1*/) {
+			if((keys['a'] || keys['A'])&& !keys['d']/* && insideObj != -1*/) {
 				//insideObj = 0;
 				if (moveX>-2) {
 					moveX += -0.5;
 				}/* else {
 					moveX = -2;
 				}*/
-			} else if(keys['d'] && !keys['a']/* && insideObj != 1*/) {
+			} else if((keys['d'] || keys['D']) && !keys['a']/* && insideObj != 1*/) {
 				//insideObj = 0;
 				if (moveX<2) {
 					moveX += 0.5;
@@ -183,7 +186,7 @@ public class run extends Applet implements Runnable {
 				moveX -= Math.signum(moveX) / 4;
 			}
 			
-			if((keys['w'] || keys[' ']) && onGround && Math.abs(Math.cos(angle)) >= STEEPNESS) {
+			if((keys['w'] || keys['W'] || keys[' ']) && onGround && Math.abs(Math.cos(angle)) >= STEEPNESS && !stuck) {
 				moveY += -7;
 				angle = 0; //so if you jump it doesn't keep the old angle.
 			}
@@ -290,11 +293,32 @@ public class run extends Applet implements Runnable {
 						double percAcross = 1 - (posX/SCALE - x1) / ((double) width);
 						double inside = (minY - (percAcross * height)) - posY/SCALE;
 						
-						if (percAcross <= 1 && percAcross >=0  &&  inside >= -50 && inside <= -40) {
-							moveY = 0;
-							System.out.println(-50 - inside);
-							moveObj(0, -(-50 - inside), 0);
+						double percA1 = (1-percAcross) * Math.abs(width);
+						double percA2 = percAcross * Math.abs(width);
+						double useA = Math.min(percA1, percA2);
+						
+						boolean collide = false;
+						stuck = false;
+						
+						if (obj[TYPE]==TYPE_LINE) {
+							if (percAcross <= 1 && percAcross >=0) {
+								if (/*useHeight > 98 && useHeight < 145*/inside >= -50 && inside <= -5) {
+									collide = true;
+								}
+							}
+							final int PIXEL_AMOUNT = 10;
+							if (percAcross <= 1 && percAcross >=0  &&  inside >= -50 && inside <= -40 && percAcross > PIXEL_AMOUNT/Math.abs(width) && percAcross < 1 - (PIXEL_AMOUNT/Math.abs(width))) {
+								moveY = 0;
+								moveObj(0, -(-50 - inside), 0);
+								collide = false;
+								if (onGround == true) {
+									stuck = true;
+									collide = true;
+								}
+							}
 						}
+						System.out.println(stuck);
+						
 						if (posY/SCALE <= minY + (obj[TYPE]==TYPE_TRIANGLE ? 2000 : 14) && inside < 0) {
 							if (percAcross <= 1 && percAcross >=0) {
 								
@@ -307,7 +331,7 @@ public class run extends Applet implements Runnable {
 										onGround = true;
 									}
 									if (onGround) {
-										moveY = obj[MOVEY] + 1;
+										moveY = (Math.abs(obj[MOVEY])>=1 ? Math.round(obj[MOVEY]) : obj[MOVEY]) + 1;
 									}
 									
 									angle = Math.atan2(y2-y1, x2-x1);
@@ -317,32 +341,39 @@ public class run extends Applet implements Runnable {
 									}
 									//when it finishes looping this should be whichever object the guy is on.
 								} else {
-									//FER BOUNCING
-									//moveY = inside/2;
-									
-									if (obj[TYPE]==TYPE_TRIANGLE) { // ALSO DO THIS IF THE YOUR COLLIDING WITH THE LINE THE WAY I DESCRIBED TO MATT AT THE BEGINNING OF THE YEAR!!!!!!!!!!!
-										double percA1 = (1-percAcross) * Math.abs(width);
-										double percA2 = percAcross * Math.abs(width);
-										double useA = Math.min(percA1, percA2);
-										double insideAmountMove;
-										if (posX/2 > Math.abs(x2-x1)/2 + Math.min(x1, x2)) {
-											insideAmountMove = useA;
-										} else {
-											insideAmountMove = -useA;
-										}
-										moveObj(insideAmountMove, 0, 0);
-										moveX = 0;
-										
-										if (obj[MOVEX]!=0) {
-											if (Math.signum(obj[MOVEX]) == -Math.signum(moveX)) {
-												moveX = obj[MOVEX];
-											}
-										}
+									//if the guy hits a wall on a triangle
+									if (obj[TYPE]==TYPE_TRIANGLE) {
+										collide = true;
 									}
-									
-									moveObj(moveX, 0, 0);
 								}
 							}
+						}
+						System.out.println(stuck + " - " + collide);
+						if (collide) {
+							//FER BOUNCING
+							//moveY = inside/2;
+							if (/*obj[TYPE]==TYPE_TRIANGLE*/true) { // ALSO DO THIS IF THE YOUR COLLIDING WITH THE LINE THE WAY I DESCRIBED TO MATT AT THE BEGINNING OF THE YEAR!!!!!!!!!!!
+								double insideAmountMove;
+								if (posX/2 > Math.abs(x2-x1)/2 + Math.min(x1, x2)) {
+									insideAmountMove = useA;
+								} else {
+									insideAmountMove = -useA;
+								}
+								
+								if (stuck) {
+									insideAmountMove = -moveX;
+								}
+								moveObj(insideAmountMove, 0, 0);
+								moveX = 0;
+								
+								if (obj[MOVEX]!=0) {
+									if (Math.signum(obj[MOVEX]) == -Math.signum(moveX)) {
+										moveX = (Math.round(obj[MOVEX])>=1 ? Math.round(obj[MOVEX]) : obj[MOVEX]);
+									}
+								}
+							}
+							
+							moveObj(moveX, 0, 0);
 						}
 						
 						break;
