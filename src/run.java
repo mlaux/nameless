@@ -332,7 +332,7 @@ public class run extends Applet implements Runnable {
 				}
 			}
 
-			if (Math.abs(Math.cos(angle)) < STEEPNESS) {
+			if (Math.abs(Math.cos(angle)) < STEEPNESS && onGround) {
 				moveObj(Math.cos(angle) * 4 + ((Math.abs(Math.cos(angle))<STEEPNESS/2) ? Math.sin(angle)/2 : 0), Math.sin(angle) * 4, 1);
 				//if(true) ? a : b
 			}
