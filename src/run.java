@@ -102,7 +102,7 @@ public class run extends Applet implements Runnable {
 		new Thread(this).start();
 	}
 
-	public void run() {
+	public void run() {//TODO I dont think this is supposed to be a method since we named it run
 		
 		setSize(width * SCALE, height * SCALE); // For AppletViewer, remove later.
 		
@@ -308,7 +308,6 @@ public class run extends Applet implements Runnable {
 							}
 							final int PIXEL_AMOUNT = 10;
 							if (percAcross <= 1 && percAcross >=0  &&  inside >= -50 && inside <= -40 && percAcross > PIXEL_AMOUNT/Math.abs(width) && percAcross < 1 - (PIXEL_AMOUNT/Math.abs(width))) {
-								System.out.println("WAT");
 								moveY = 0;
 								moveObj(0, -(-50 - inside), 0);
 								collide = false;
