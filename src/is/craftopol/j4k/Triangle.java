@@ -93,7 +93,13 @@ public class Triangle extends Item {
 		int minY = Math.max(y2, y1);
 		int width = x2-x1;
 		
-		double percAcross = (x - x1) / ((double) width);
+		double percAcross;
+		if (y1 > y2) {
+			percAcross = (x - x1) / ((double) width);
+		} else {
+			percAcross = 1 - ((x - x1) / ((double) width));
+		}
+		
 		if (y <= minY + 2000 && y >= (minY - ((double) height) * ((double) percAcross))) {
 			if (percAcross <= 1 && percAcross >=0) {
 				//did it on a different line so you'll get it. because of how I did percAcross it's always in between 0 and 1 if your mouse is inside the triangle.
