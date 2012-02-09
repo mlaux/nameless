@@ -27,14 +27,9 @@ public class LevelView extends JComponent {
 	public static final int SNAP_AMOUNT = 4;
 	
 	private static final Stroke BOLD_STROKE = new BasicStroke(4.0f);
-	private static final Stroke THIN_STROKE = new BasicStroke(1.0f);
 	
 	private static final Color X_COLOR = new Color(0, 64, 0);
 	private static final Color Y_COLOR = new Color(64, 0, 0);
-	
-	private static final Color REG_COLOR = new Color(0, 0, 0);
-	
-	private boolean showGrid = false;
 	
 	private int zoom = 2;
 	
@@ -65,11 +60,8 @@ public class LevelView extends JComponent {
 	public void paintComponent(Graphics _g) {
 		Graphics2D g = (Graphics2D) _g;
 		
-		g.setColor(new Color(210,210,210));
+		g.setColor(new Color(210, 210, 210));
 		g.fillRect(0, 0, getWidth(), getHeight());
-		
-		if(showGrid)
-			drawGrid(g);
 
 		g.setStroke(BOLD_STROKE);
 		
@@ -86,6 +78,9 @@ public class LevelView extends JComponent {
 		Graphics2D imgGraphics = img.createGraphics();
 		
 		imgGraphics.translate(scrollX / zoom, scrollY / zoom);
+		
+		imgGraphics.setColor(new Color(0, 0, 0, 100));
+		imgGraphics.fillRect(187, 100, 25, 50);
 
 		for(Item item : items)
 			item.render(imgGraphics);
@@ -101,21 +96,6 @@ public class LevelView extends JComponent {
 		g.drawString("Zoom: " + zoom + "x", 5, 15);
 	}
 	
-	private void drawGrid(Graphics2D g) {
-		int startX = scrollX % zoom;
-		int startY = scrollY % zoom;
-		
-		g.setStroke(THIN_STROKE);
-		g.setColor(REG_COLOR);
-		
-		for(int y = startY; y < getHeight(); y += zoom) {
-			g.drawLine(0, y, getWidth(), y);
-			for(int x = startX; x < getWidth(); x += zoom) {
-				g.drawLine(x, 0, x, getHeight());
-			}
-		}
-	}
-	
 	public void scroll(int dx, int dy) {
 		scrollX += dx;
 		scrollY += dy;
@@ -126,19 +106,11 @@ public class LevelView extends JComponent {
 		scroll(pt.x, pt.y);
 	}
 	
-	public void toggleShowGrid() {
-		showGrid = !showGrid;
-		repaint();
-	}
-	
 	public void zoomIn() {
 		if(zoom == 16)
 			return;
 		
 		zoom++;
-		if(zoom >= 4)
-			showGrid = true;
-		
 		repaint();
 	}
 	
@@ -147,9 +119,6 @@ public class LevelView extends JComponent {
 			return;
 		
 		zoom--;
-		if(zoom < 4)
-			showGrid = false;
-		
 		repaint();
 	}
 	
