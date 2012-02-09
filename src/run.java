@@ -177,11 +177,11 @@ public class run extends Applet implements Runnable {
 				obj[SWITCH] = BTN_ON; //TODO place this in the button collision code, if there is no button it's on
 				
 				if (obj[SWITCH] == BTN_ON && animation.length > 1) {
-					
 					int curX = animation[(int) obj[CURRENT_POINT]].x;
 					int curY = animation[(int) obj[CURRENT_POINT]].y;
+					
 					int prevY, prevX;
-					if (obj[CURRENT_POINT]==0) {
+					if (obj[CURRENT_POINT] == 0) {
 						prevX = curX;
 						prevY = curY;
 					} else {
@@ -208,16 +208,12 @@ public class run extends Applet implements Runnable {
 						double useX = obj[X1]+obj[XDIF] - prevX;
 						double useY = obj[Y1]+obj[YDIF] - prevY;
 						
-						switch((int) obj[TYPE]) {
-							case TYPE_TRIANGLE:
-								obj[X1] -= useX; obj[Y1] -= useY;
-								obj[X2] -= useX; obj[Y2] -= useY;
-								obj[X3] -= useX; obj[Y3] -= useY;
-								break;
-							case TYPE_LINE:
-								obj[X1] -= useX; obj[Y1] -= useY;
-								obj[X2] -= useX; obj[Y2] -= useY;
-								break;
+						obj[X1] -= useX; obj[Y1] -= useY;
+						obj[X2] -= useX; obj[Y2] -= useY;
+						
+						if(obj[TYPE] == TYPE_TRIANGLE) {
+							obj[X3] -= useX;
+							obj[Y3] -= useY;
 						}
 						
 						int length = (int) Math.sqrt(Math.pow(curX - prevX, 2) + Math.pow(curY - prevY, 2));
@@ -225,7 +221,6 @@ public class run extends Applet implements Runnable {
 						obj[MOVEY] = (double)(curY - prevY) / length * SPEED;
 					}
 				}
-			
 				
 				obj[X1] += obj[MOVEX];
 				obj[Y1] += obj[MOVEY];
@@ -238,119 +233,114 @@ public class run extends Applet implements Runnable {
 				double y1 = obj[Y1];
 				double y2 = obj[Y2];
 				
-				switch((int) obj[TYPE]) {
-					case TYPE_TRIANGLE:
-						obj[X3] += obj[MOVEX];
-						obj[Y3] += obj[MOVEY];
-					case TYPE_LINE:
-						// do things pertaining to triangles
-						
-						if (obj[TYPE]==TYPE_LINE) {
-							double thicknessUse = obj[THICKNESS]/2;
-							if (x1 < x2) {
-								x1 -= thicknessUse;
-								x2 += thicknessUse;
-							} else {
-								x1 += thicknessUse;
-								x2 -= thicknessUse;
-							}
-							y1 -= thicknessUse;
-							y2 -= thicknessUse;
+				double height = Math.abs(y2 - y1);
+				double minY = Math.max(y2, y1);
+				double width = x2-x1;
+				
+				double percAcross = 1 - (posX / SCALE - x1) / ((double) width);
+				double inside = (minY - (percAcross * height)) - posY / SCALE;
+				
+				double percA1 = (1 - percAcross) * Math.abs(width);
+				double percA2 = percAcross * Math.abs(width);
+				double useA = Math.min(percA1, percA2);
+				
+				boolean collide = false;
+				stuck = false;
+				
+				if(obj[TYPE] == TYPE_TRIANGLE) {
+					obj[X3] += obj[MOVEX];
+					obj[Y3] += obj[MOVEY];
+				}
+				
+				if (obj[TYPE] == TYPE_LINE) {
+					double thicknessUse = obj[THICKNESS]/2;
+					
+					if (x1 < x2) {
+						x1 -= thicknessUse;
+						x2 += thicknessUse;
+					} else {
+						x1 += thicknessUse;
+						x2 -= thicknessUse;
+					}
+					
+					y1 -= thicknessUse;
+					y2 -= thicknessUse;
+					
+					if (percAcross <= 1 && percAcross >=0) {
+						if (/*useHeight > 98 && useHeight < 145*/inside >= -50 && inside <= -14) {
+							collide = true;
 						}
+					}
+					
+					final int PIXEL_AMOUNT = 10;
+					if (percAcross <= 1 && percAcross >=0  &&  inside >= -50 && inside <= -40 && percAcross > PIXEL_AMOUNT/Math.abs(width) && percAcross < 1 - (PIXEL_AMOUNT/Math.abs(width))) {
+						moveY = 0;
+						moveObj(0, -(-50 - inside), 0);
 						
-						double height = Math.abs(y2 - y1);
-						double minY = Math.max(y2, y1);
-						double width = x2-x1;
-						
-						double percAcross = 1 - (posX/SCALE - x1) / ((double) width);
-						double inside = (minY - (percAcross * height)) - posY/SCALE;
-						
-						double percA1 = (1-percAcross) * Math.abs(width);
-						double percA2 = percAcross * Math.abs(width);
-						double useA = Math.min(percA1, percA2);
-						
-						boolean collide = false;
-						stuck = false;
-						
-						if (obj[TYPE]==TYPE_LINE) {
-							if (percAcross <= 1 && percAcross >=0) {
-								if (/*useHeight > 98 && useHeight < 145*/inside >= -50 && inside <= -14) {
-									collide = true;
-								}
-							}
-							final int PIXEL_AMOUNT = 10;
-							if (percAcross <= 1 && percAcross >=0  &&  inside >= -50 && inside <= -40 && percAcross > PIXEL_AMOUNT/Math.abs(width) && percAcross < 1 - (PIXEL_AMOUNT/Math.abs(width))) {
-								moveY = 0;
-								moveObj(0, -(-50 - inside), 0);
-								collide = false;
-								if (onGround == true) {
-									stuck = true;
-									collide = true;
-								}
-							}
+						collide = false;
+						if (onGround) {
+							stuck = true;
+							collide = true;
 						}
-						
-						if (posY/SCALE <= minY + (obj[TYPE]==TYPE_TRIANGLE ? 2000 : 14) && inside < 0) {
-							if (percAcross <= 1 && percAcross >=0) {
-								
-								if (inside >= -14 && inside < 0) {
-
-									moveObj(0, inside, 0);
-									
-									//fer bouncing
-									if (moveY >= obj[MOVEY]) {
-										onGround = true;
-									}
-									if (onGround) {
-										moveY = (Math.abs(obj[MOVEY])>=1 ? Math.round(obj[MOVEY]) : obj[MOVEY]) + 1;
-									}
-									
-									angle = Math.atan2(y2-y1, x2-x1);
-									
-									if (Math.abs(Math.cos(angle))>=STEEPNESS) {
-										moveObj(obj[MOVEX], 0, 0);
-									}
-									//when it finishes looping this should be whichever object the guy is on.
-								} else {
-									//if the guy hits a wall on a triangle
-									if (obj[TYPE]==TYPE_TRIANGLE) {
-										collide = true;
-									}
-								}
+					}
+				}
+				
+				if (posY/SCALE <= minY + (obj[TYPE]==TYPE_TRIANGLE ? 2000 : 14) && inside < 0) {
+					if (percAcross <= 1 && percAcross >= 0) {
+						if (inside >= -14 && inside < 0) {
+							moveObj(0, inside, 0);
+							
+							//fer bouncing
+							if (moveY >= obj[MOVEY]) {
+								onGround = true;
 							}
-						}
-						
-						if (collide) {
-							//FER BOUNCING
-							//moveY = inside/2;
-							if (/*obj[TYPE]==TYPE_TRIANGLE*/true) { // ALSO DO THIS IF YOU'RE COLLIDING WITH THE LINE THE WAY I DESCRIBED TO MATT AT THE BEGINNING OF THE YEAR!!!!!!!!!!!
-								double insideAmountMove;
-								if (posX/2 > Math.abs(x2-x1)/2 + Math.min(x1, x2)) {
-									insideAmountMove = useA;
-								} else {
-									insideAmountMove = -useA;
-								}
-								
-								if (stuck) {
-									insideAmountMove = -moveX;
-								}
-								moveObj(insideAmountMove, 0, 0);
-								moveX = 0;
-								
-								if (obj[MOVEX]!=0) {
-									if (Math.signum(obj[MOVEX]) == -Math.signum(moveX)) {
-										moveX = (Math.round(obj[MOVEX])>=1 ? Math.round(obj[MOVEX]) : obj[MOVEX]);
-									}
-								}
+							if (onGround) {
+								moveY = (Math.abs(obj[MOVEY])>=1 ? Math.round(obj[MOVEY]) : obj[MOVEY]) + 1;
 							}
 							
-							moveObj(moveX, 0, 0);
+							angle = Math.atan2(y2-y1, x2-x1);
+							
+							if (Math.abs(Math.cos(angle))>=STEEPNESS) {
+								moveObj(obj[MOVEX], 0, 0);
+							}
+							//when it finishes looping this should be whichever object the guy is on.
+						} else {
+							//if the guy hits a wall on a triangle
+							if (obj[TYPE] == TYPE_TRIANGLE) {
+								collide = true;
+							}
+						}
+					}
+				}
+				
+				if (collide) {
+					//FER BOUNCING
+					//moveY = inside/2;
+					if (/*obj[TYPE]==TYPE_TRIANGLE*/true) { // ALSO DO THIS IF YOU'RE COLLIDING WITH THE LINE THE WAY I DESCRIBED TO MATT AT THE BEGINNING OF THE YEAR!!!!!!!!!!!
+						double insideAmountMove;
+						if (posX/2 > Math.abs(x2-x1)/2 + Math.min(x1, x2)) {
+							insideAmountMove = useA;
+						} else {
+							insideAmountMove = -useA;
 						}
 						
-						break;
+						if (stuck) {
+							insideAmountMove = -moveX;
+						}
+						moveObj(insideAmountMove, 0, 0);
+						moveX = 0;
+						
+						if (obj[MOVEX]!=0) {
+							if (Math.signum(obj[MOVEX]) == -Math.signum(moveX)) {
+								moveX = (Math.round(obj[MOVEX])>=1 ? Math.round(obj[MOVEX]) : obj[MOVEX]);
+							}
+						}
+					}
+					
+					moveObj(moveX, 0, 0);
 				}
 			}
-			
+
 			if (Math.abs(Math.cos(angle)) < STEEPNESS) {
 				moveObj(Math.cos(angle) * 4 + ((Math.abs(Math.cos(angle))<STEEPNESS/2) ? Math.sin(angle)/2 : 0), Math.sin(angle) * 4, 1);
 				//if(true) ? a : b
@@ -562,17 +552,14 @@ public class run extends Applet implements Runnable {
 				anim[j].y -= useY;
 			}
 			
-			switch((int) obj[TYPE]) {
-				case TYPE_TRIANGLE:
-					obj[X1] -= useX; obj[Y1] -= useY;
-					obj[X2] -= useX; obj[Y2] -= useY;
-					obj[X3] -= useX; obj[Y3] -= useY;
-					break;
-				case TYPE_LINE:
-					obj[X1] -= useX; obj[Y1] -= useY;
-					obj[X2] -= useX; obj[Y2] -= useY;
-					break;
+			obj[X1] -= useX; obj[Y1] -= useY;
+			obj[X2] -= useX; obj[Y2] -= useY;
+			
+			if(obj[TYPE] == TYPE_TRIANGLE) {
+				obj[X3] -= useX;
+				obj[Y3] -= useY;
 			}
+			
 		}
 		moveOverTimeY += useY;
 	}
