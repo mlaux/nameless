@@ -102,37 +102,19 @@ public class run extends Applet implements Runnable {
 		new Thread(this).start();
 	}
 
-	public void run() {//TODO I dont think this is supposed to be a method since we named it run
-		
+	public void run() { //TODO I dont think this is supposed to be a method since we named it run
 		setSize(width * SCALE, height * SCALE); // For AppletViewer, remove later.
 		
 		BufferedImage bkg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		int[] pixels = ((DataBufferInt) bkg.getRaster().getDataBuffer()).getData();
 		
-		double shade = 0;
-		
 		for(int y = 0; y < height; y++) {
 			for(int x = 0; x < width; x++) {
-				int is = (int) shade;
+				int is = (int) (y * (150.0 / height));
 				pixels[y * (width) + x] = is << 16 | is << 8 | is;
 			}
-			shade += (150.0 / (height));
 		}
 		
-		// make giant array for items since we can't have multiple classes
-		// assume 100 max objects in the level for now
-		
-		// for each item index:
-		// [0] = item type, [1] = flags (currently, filled/not filled is only flag)
-		
-		// [2]-[7] = item-specific data:
-		//		for points: [2] = x, [3] = y
-		//		for lines: [2] = x1, [3] = y1, [4] = x2, [5] = y2, [6] = thickness
-		//		for triangles: [2] = x1, [3] = y1, [4] = x2, [5] = y2, [6] = x3, [7] = y3
-		//		for circles: [2] = centerX, [3] = centerY, [4] = radius, [5] = thickness
-		
-		// load da level
-			
 		resetLevel();
 		
 		BufferedImage level = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -144,30 +126,20 @@ public class run extends Applet implements Runnable {
 		
 		Graphics appletGraphics = getGraphics();
 
-		int tick = 0, fps = 0, acc = 0;
-		long lastTime = System.nanoTime();
-
-		// Game loop.
 		double moveX = 0, moveY = 0;
-		
 		boolean onGround = false;
 		//int weight = 0;
-		
+
+		// Game loop.
 		while (true) {
-			long now = System.nanoTime();
-			acc += now - lastTime;
-			tick++;
-			if (acc >= 1000000000L) {
-				acc -= 1000000000L;
-				fps = tick;
-				tick = 0;
-			}
+			long start = System.nanoTime();
 			
+			// Update here
 			moveY += 0.2;
 			if (moveY > 14) {
 				moveY = 14;
 			}
-			// Update here
+			
 			if((keys['a'] || keys['A'])&& !keys['d']/* && insideObj != -1*/) {
 				//insideObj = 0;
 				if (moveX>-2) {
@@ -351,7 +323,7 @@ public class run extends Applet implements Runnable {
 						if (collide) {
 							//FER BOUNCING
 							//moveY = inside/2;
-							if (/*obj[TYPE]==TYPE_TRIANGLE*/true) { // ALSO DO THIS IF THE YOUR COLLIDING WITH THE LINE THE WAY I DESCRIBED TO MATT AT THE BEGINNING OF THE YEAR!!!!!!!!!!!
+							if (/*obj[TYPE]==TYPE_TRIANGLE*/true) { // ALSO DO THIS IF YOU'RE COLLIDING WITH THE LINE THE WAY I DESCRIBED TO MATT AT THE BEGINNING OF THE YEAR!!!!!!!!!!!
 								double insideAmountMove;
 								if (posX/2 > Math.abs(x2-x1)/2 + Math.min(x1, x2)) {
 									insideAmountMove = useA;
@@ -376,30 +348,6 @@ public class run extends Applet implements Runnable {
 						}
 						
 						break;
-					/*
-					case TYPE_LINE:
-						// do things pertaining to lines
-						double dist = distanceTo(x1, y1, x2, y2, posX / scale, posY / scale);
-						if(dist < -obj[THICKNESS] / 2) {
-							continue;
-						}
-						
-						System.out.println(dist + " " + moveY);
-						if(dist < Math.abs(moveY)) {
-							moveY -= 0.2;
-							onGround = true;
-							if(obj[MOVEY] == 0 && obj[MOVEX] == 0) {
-								System.out.println("on");
-								moveObj(0, (int) (dist - moveY), 0);
-								
-							} else {
-								moveX = obj[MOVEX];
-								moveY = obj[MOVEY];
-							}
-						}
-					
-						break;
-					*/
 				}
 			}
 			
@@ -407,8 +355,6 @@ public class run extends Applet implements Runnable {
 				moveObj(Math.cos(angle) * 4 + ((Math.abs(Math.cos(angle))<STEEPNESS/2) ? Math.sin(angle)/2 : 0), Math.sin(angle) * 4, 1);
 				//if(true) ? a : b
 			}
-
-			lastTime = now;
 			
 			g.setColor(Color.black);
 			g.fillRect(0, 0, 800, 600);
@@ -430,12 +376,12 @@ public class run extends Applet implements Runnable {
 						lg.drawLine((int) obj[X1], (int) obj[Y1], (int) obj[X2], (int) obj[Y2]);
 						break;
 					case TYPE_TRIANGLE:
-						int[] xp = { (int) obj[2], (int) obj[4], (int) obj[6] };
-						int[] yp = { (int) obj[3], (int) obj[5], (int) obj[7] };
+						int[] xp = { (int) obj[X1], (int) obj[X2], (int) obj[X3] };
+						int[] yp = { (int) obj[Y1], (int) obj[Y2], (int) obj[Y3] };
 						
 						lg.fillPolygon(xp, yp, 3);
 						
-						lg.fillRect((int) Math.min(obj[2], obj[4]), (int) obj[7], (int) Math.abs(obj[4] - obj[2]), 2000);
+						lg.fillRect((int) Math.min(obj[X1], obj[X2]), (int) obj[Y3], (int) Math.abs(obj[X2] - obj[X1]), 2000);
 						break;
 				}
 			}
@@ -473,57 +419,30 @@ public class run extends Applet implements Runnable {
 			} else if ((int)moveX != 0) {
 				drawGuy(g, WALK, 0, time, flip);
 			}
+			
 			time++;
 			
 			g.setColor(Color.white);
-			g.drawString("FPS " + String.valueOf(fps), 20, 30);
+			//g.drawString("FPS " + String.valueOf(fps), 20, 30);
 			
 			// render the buffer to the applet
 			appletGraphics.drawImage(screen, 0, 0, this);
 			
+			long end = System.nanoTime();
+			
+			long delta = 20 - ((end - start) / 1000000L);
+			if(delta < 0)
+				delta = 0;
+			
 			try {
-				Thread.sleep(10);
+				Thread.sleep(delta);
 			} catch(Exception e) { }
-
-			/*do {
-				Thread.yield();
-			} while (System.nanoTime() - lastTime < 0); */
-
+			
 			if (!isActive()) {
 				return;
 			}
 		}
 	}
-	
-	/*
-	public double distanceTo(double x1, double y1, double x2, double y2, double px, double py) {
-		double vx = x2 - x1, vy = y2 - y1;
-		double wx = px - x1, wy = py - y1;
-		
-		double c1 = vx * wx + vy * wy;
-		if(c1 <= 0) {
-			// to the left
-			return -9999.0;//Math.sqrt(wx * wx + wy * wy);
-		}
-		
-		double c2 = vx * vx + vy * vy;
-		if(c2 <= c1) {
-			// to the right
-			double dx = px - x2, dy = py - y2;
-			return -9999.0;//Math.sqrt(dx * dx + dy * dy);
-		}
-		
-		double b  = c1 / c2;
-		double bx = x1 + (b * vx);
-		double by = y1 + (b * vy);
-		
-		double dx = px - bx, dy = py - by;
-		// on top or below
-		if(dy < 0)
-			return Math.sqrt(dx * dx + dy * dy);
-		return -Math.sqrt(dx * dx + dy * dy);
-	}
-	*/
 	
 	private int readAnimation(int index) {
 		// number of points in the animation
@@ -550,6 +469,20 @@ public class run extends Applet implements Runnable {
 	public void resetLevel() {
 		numObjects = 0;
 		moveOverTimeY = 0;
+		
+		// make giant array for items since we can't have multiple classes
+		// assume 100 max objects in the level for now
+		
+		// for each item index:
+		// [0] = item type, [1] = flags (currently, filled/not filled is only flag)
+		
+		// [2]-[7] = item-specific data:
+		//		for points: [2] = x, [3] = y
+		//		for lines: [2] = x1, [3] = y1, [4] = x2, [5] = y2, [6] = thickness
+		//		for triangles: [2] = x1, [3] = y1, [4] = x2, [5] = y2, [6] = x3, [7] = y3
+		//		for circles: [2] = centerX, [3] = centerY, [4] = radius, [5] = thickness
+		
+		// load da level
 		
 		int index = 0;
 		while(index < level.length()) {
