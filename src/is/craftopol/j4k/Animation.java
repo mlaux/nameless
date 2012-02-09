@@ -16,6 +16,7 @@ public class Animation {
 	
 	public int curX;
 	public int curY;
+	public int speed = 1;
 	
 	public Animation() {
 		
@@ -29,6 +30,7 @@ public class Animation {
 		String s = "";
 		
 		s += (char) points.size();
+		s += (char) speed;
 		
 		for(int k = 0; k < points.size(); k++) {
 			s += (char) points.get(k).x;

@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.event.MouseInputAdapter;
 
 /**
@@ -208,6 +209,8 @@ public class LevelView extends JComponent {
 				result += "\\r";
 			else if(ch == 10)
 				result += "\\n";
+			else if(ch == 92)
+				result += "\\\\";
 			else if(ch == 34)
 				result += "\\\"";
 			else result += String.format("\\u%04x", (int) ch);
@@ -226,11 +229,14 @@ public class LevelView extends JComponent {
 		String str = "";
 		for(int k = 0; k < codestr.length(); k++) {
 			char ch = codestr.charAt(k);
-			if(ch == '\\')
-				continue;
+			if(ch == '\\') {
+				if(codestr.charAt(k + 1) == '\\') {
+					str += "\\";
+					k++;
+				} else continue;
+			}
 			
 			if(ch == 'u') {
-				System.out.println(codestr.substring(k + 1, k + 5));
 				str += (char) Integer.parseInt(codestr.substring(k + 1, k + 5), 16);
 				k += 3;
 			}
@@ -296,6 +302,8 @@ public class LevelView extends JComponent {
 			return index;
 		
 		item.animation = new Animation();
+		item.animation.speed = str.charAt(index++);
+		System.out.println("speed="+ item.animation.speed);
 			
 		int x = 0, y = 0;
 		for(int k = 0; k < nPoints; k++) {
@@ -303,7 +311,6 @@ public class LevelView extends JComponent {
 			y = (short) str.charAt(index++);
 			
 			item.animation.addPoint(x, y);
-			System.out.println(x + " " + y + " " + k);
 		}
 		
 		item.animation.curX = x;
@@ -327,7 +334,7 @@ public class LevelView extends JComponent {
 	public void cloneItemStart() {
 		if(newItem != null)
 			newItem.cloneItemStart(cursor);
-		if(animatingItem != null) {
+		if(animatingItem != null && animatingItem.animation != null) {
 			animatingItem.animation.curX = cursor.getGridX();
 			animatingItem.animation.curY = cursor.getGridY();
 		}
@@ -337,7 +344,8 @@ public class LevelView extends JComponent {
 	public void cloneItemDrag() {
 		if(newItem != null)
 			newItem.cloneItemDrag(cursor);
-		if(animatingItem != null) {
+		
+		if(animatingItem != null && animatingItem.animation != null) {
 			animatingItem.animation.curX = cursor.getGridX();
 			animatingItem.animation.curY = cursor.getGridY();
 		}
@@ -352,6 +360,11 @@ public class LevelView extends JComponent {
 			items.add(newItem);
 		} else {
 			newItem.animation.addPoint(cursor.getGridX(), cursor.getGridY());
+			try {
+				newItem.animation.speed = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter animation speed in pixels per tick"));
+			} catch(Exception e) {
+				newItem.animation.speed = 1;
+			}
 		}
 		
 		animatingItem = null;
