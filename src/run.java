@@ -8,10 +8,8 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-import java.util.Arrays;
 
 public class run extends Applet implements Runnable {
-	private static final int TYPE_SPAWNPOINT = 0x01;
 	private static final int TYPE_EXITPOINT = 0x02;
 	private static final int TYPE_LINE = 0x03;
 	private static final int TYPE_TRIANGLE = 0x04;
@@ -24,13 +22,7 @@ public class run extends Applet implements Runnable {
 	
 	// for ALL the objects
 	private static final int TYPE = 0;
-	private static final int FLAGS = 1;
 	
-	// for points
-	private static final int X = 2;
-	private static final int Y = 3;
-	
-	// for lines
 	private static final int X1 = 2;
 	private static final int Y1 = 3;
 	private static final int X2 = 4; 
@@ -64,9 +56,12 @@ public class run extends Applet implements Runnable {
 	private static final double STEEPNESS = 0.6;
 	
 	// Removed all prior levels because they are now incompatible with the addition of animation speed
-	//private static final String level = "\u0004\u0065\u00b0\u0001\u00c0\u0065\u00c0\u0000\u0004\u0065\u00b0\u00e5\u00d3\u0065\u00d3\u0000\u0004\u0151\u00b2\u00e5\u00d3\u0151\u00d3\u0000\u0004\u018c\u00ca\u0152\u00ca\u018c\u00ca\u0002\u0007\u0174\u00ea\u0174\u031b";
-	//private static final String level = "\u0004\u0002\u0129\u00d8\u0144\u0002\u0144\u0000\u0004\u00d8\u0144\u0111\u0148\u00d8\u0148\u0000\u0004\u0174\u0141\u0111\u0148\u0174\u0148\u0000\u0004\u0174\u0141\u0174\u0141\u0174\u0141\u0000\u0004\u01ae\u0138\u0174\u0141\u01ae\u0141\u0000\u0004\u0247\u0159\u0287\u015f\u0247\u015f\u0000\u0004\u02d8\u0159\u0286\u015f\u02d8\u015f\u0000\u0004\u030a\u0155\u02d8\u0159\u030a\u0159\u0000\u0004\u032c\u0149\u030a\u0155\u032c\u0155\u0000\u0004\u053d\u0182\u0609\u01a9\u053d\u01a9\u0000\u0004\u0608\u01a9\u0667\u01b7\u0608\u01b7\u0000\u0004\u06b6\u01b1\u0667\u01b7\u06b6\u01b7\u0000\u0004\u06e7\u019f\u06b6\u01b1\u06e7\u01b1\u0000\u0004\u0729\u0150\u06e7\u019f\u0729\u019f\u0000\u0004\u0753\u014a\u0729\u0150\u0753\u0150\u0000\u0004\u0780\u012e\u0753\u014a\u0780\u014a\u0000\u0004\u0765\u0099\u0780\u012e\u0765\u012e\u0000\u0004\u01f9\u013a\u01e6\u0195\u01f9\u0195\u0000\u0004\u01f8\u013d\u020e\u014b\u01f8\u014b\u0000\u0004\u032b\u014a\u0371\u017c\u032b\u017c\u0000\u0004\u0758\u00f4\u0765\u00f4\u0758\u00f4\u0000\u0004\u077e\u012a\u07ae\u01aa\u077e\u01aa\u0000\u0004\u07ae\u01aa\u07eb\u01fd\u07ae\u01fd\u0000\u0004\u07eb\u01fd\u0835\u0220\u07eb\u0220\u0000\u0004\u0835\u0220\u0895\u0232\u0835\u0232\u0000\u0004\u0895\u0232\u08b8\u0232\u0895\u0232\u0000\u0004\u08db\u0233\u090b\u0233\u08db\u0233\u0000\u0004\u093f\u0233\u0961\u0233\u093f\u0233\u0000\u0004\u0994\u0235\u09a8\u0235\u0994\u0235\u0000\u0004\u09d9\u0236\u09e5\u0236\u09d9\u0236\u0000\u0004\u0a28\u0259\u0ae9\u0259\u0a28\u0259\u0000\u0004\u0ae9\u0259\u0ae9\u0259\u0ae9\u0259\u0000\u0004\u0b34\u0255\u0ae9\u0259\u0b34\u0259\u0000\u0004\u0b7c\u0249\u0b34\u0255\u0b7c\u0255\u0000\u0004\u0bc0\u023b\u0b7c\u0249\u0bc0\u0249\u0000\u0004\u0bee\u022b\u0bc0\u023b\u0bee\u023b\u0000\u0004\u0c10\u0226\u0bee\u022b\u0c10\u022b\u0000\u0004\u0c10\u0226\u0c10\u0226\u0c10\u0226\u0000\u0004\u0c3b\u0225\u0c10\u0226\u0c3b\u0226\u0000\u0004\u0c39\u0225\u0c5b\u022a\u0c39\u022a\u0000\u0004\u0c5b\u022a\u0c75\u022c\u0c5b\u022c\u0000\u0004\u0c95\u0229\u0c75\u022c\u0c95\u022c\u0000\u0004\u0cc1\u020f\u0c94\u0229\u0cc1\u0229\u0000\u0004\u0cc1\u020f\u0cc1\u020f\u0cc1\u020f\u0000\u0004\u0cfe\u01de\u0cc1\u020f\u0cfe\u020f\u0000\u0004\u0d3b\u018a\u0cfe\u01de\u0d3b\u01de\u0000\u0004\u0d53\u0180\u0d39\u018c\u0d53\u018c\u0000\u0004\u0d7e\u017d\u0d53\u0180\u0d7e\u0180\u0000\u0004\u0d7e\u017d\u0d9c\u017e\u0d7e\u017e\u0000\u0004\u1160\u056e\u0d68\u059c\u1160\u059c\u0000\u0004\u11ab\u055e\u115e\u056e\u11ab\u056e\u0000\u0004\u11e0\u054c\u11ab\u055e\u11e0\u055e\u0000\u0004\u11e0\u054c\u11e0\u054c\u11e0\u054c\u0000\u0004\u1217\u051c\u11e0\u054c\u1217\u054c\u0000\u0004\u1255\u04ce\u1217\u051c\u1255\u051c\u0000\u0004\u127c\u0465\u1255\u04ce\u127c\u04ce\u0000\u0004\u1297\u03f8\u127b\u0465\u1297\u0465\u0000\u0004\u12ac\u039e\u1295\u03fc\u12ac\u03fc\u0000\u0004\u12ab\u039f\u1452\u039f\u12ab\u039f\u0000\u0004\u0003\u0129\ufef6\u0137\u0003\u0137\u0000\u0004\ufef6\u0137\ufe4a\u0138\ufef6\u0138\u0000\u0004\ufe9a\u0126\ufec9\u0126\ufe9a\u0126\u000c\u0001\ufeb3\u012e\ufe8c\u0125\ufe6f\u0108\ufe69\u00e6\ufe76\u00cc\ufe94\u00b9\ufebc\u00b6\ufeeb\u00c4\ufef5\u00ea\ufee8\u010f\ufed1\u0125\ufeb3\u012e\u0003\u0068\u0111\u00b0\u0119\u000c\u0002\u0001\u0093\u0115\u0171\u007a\u0003\u0344\u005b\u0169\u00ab\u0001\u0000\u0003\u03c3\u0023\u0344\u005a\u0001\u0000\u0003\u04a2\u0027\u04fa\u0056\u0001\u0000\u0003\u0594\u0077\u0505\u0077\u0005\u0002\u0001\u0551\u0077\u04f7\u0184\u0003\u03f6\u0013\u03c4\"\u0001\u0000\u0003\u0425\u000e\u03f7\u0012\u0001\u0000\u0003\u0426\u000e\u0460\u0011\u0001\u0000\u0003\u0461\u0011\u04a1\u0026\u0001\u0000\u0003\u0159\u012b\u00da\u012b\u0001\u0000\u0003\u0195\u011d\u0165\u012a\u0009\u0000\u0006\u02af\u015b\u0330\u014e\u0000\u0004\u03f2\u01ac\u0383\u01ac\u03f2\u01ac\u0002\u0003\u03b8\u0216\u04f5\u0216";
-	private static final String level = "\u0004\u03c0\u00be\u0000\u00d7\u03c0\u00d7\u0000\u0006\u008a\u00c8\u0018\u00c8\u0000\u0004\u018a\u009c\u0107\u009d\u018a\u009d\u0002\u0003\u015e\u00b9\u02d5\u008e\u0004\u03ad\u009b\u0371\u009b\u03ad\u009b\u0002\u0003\u0392\u00a5\u044e\u00a5";
+	private static final String[] levels = {
+		// TODO: Paste more levels here
+		"\u0004\u0002\u0129\u00d8\u0144\u0002\u0144\u0000\u0004\u00d8\u0144\u0111\u0148\u00d8\u0148\u0000\u0004\u0174\u0141\u0111\u0148\u0174\u0148\u0000\u0004\u0174\u0141\u0174\u0141\u0174\u0141\u0000\u0004\u01ae\u0138\u0174\u0141\u01ae\u0141\u0000\u0004\u0247\u0159\u0287\u015f\u0247\u015f\u0000\u0004\u02d8\u0159\u0286\u015f\u02d8\u015f\u0000\u0004\u030a\u0155\u02d8\u0159\u030a\u0159\u0000\u0004\u032c\u0149\u030a\u0155\u032c\u0155\u0000\u0004\u053d\u0182\u0609\u01a9\u053d\u01a9\u0000\u0004\u0608\u01a9\u0667\u01b7\u0608\u01b7\u0000\u0004\u06b6\u01b1\u0667\u01b7\u06b6\u01b7\u0000\u0004\u06e7\u019f\u06b6\u01b1\u06e7\u01b1\u0000\u0004\u0729\u0150\u06e7\u019f\u0729\u019f\u0000\u0004\u0753\u014a\u0729\u0150\u0753\u0150\u0000\u0004\u0780\u012e\u0753\u014a\u0780\u014a\u0000\u0004\u0765\u0099\u0780\u012e\u0765\u012e\u0000\u0004\u01f9\u013a\u01e6\u0195\u01f9\u0195\u0000\u0004\u01f8\u013d\u020e\u014b\u01f8\u014b\u0000\u0004\u032b\u014a\u0371\u017c\u032b\u017c\u0000\u0004\u0765\u00f4\u0758\u00f4\u0765\u00f4\u0000\u0004\u077e\u012a\u07ae\u01aa\u077e\u01aa\u0000\u0004\u07ae\u01aa\u07eb\u01fd\u07ae\u01fd\u0000\u0004\u07eb\u01fd\u0835\u0220\u07eb\u0220\u0000\u0004\u0835\u0220\u0895\u0232\u0835\u0232\u0000\u0004\u08b8\u0232\u0895\u0232\u08b8\u0232\u0000\u0004\u090b\u0233\u08db\u0233\u090b\u0233\u0000\u0004\u0961\u0233\u093f\u0233\u0961\u0233\u0000\u0004\u09a8\u0235\u0994\u0235\u09a8\u0235\u0000\u0004\u09e5\u0236\u09d9\u0236\u09e5\u0236\u0000\u0004\u0ae9\u0259\u0a28\u0259\u0ae9\u0259\u0000\u0004\u0ae9\u0259\u0ae9\u0259\u0ae9\u0259\u0000\u0004\u0b34\u0255\u0ae9\u0259\u0b34\u0259\u0000\u0004\u0b7c\u0249\u0b34\u0255\u0b7c\u0255\u0000\u0004\u0bc0\u023b\u0b7c\u0249\u0bc0\u0249\u0000\u0004\u0bee\u022b\u0bc0\u023b\u0bee\u023b\u0000\u0004\u0c10\u0226\u0bee\u022b\u0c10\u022b\u0000\u0004\u0c10\u0226\u0c10\u0226\u0c10\u0226\u0000\u0004\u0c3b\u0225\u0c10\u0226\u0c3b\u0226\u0000\u0004\u0c39\u0225\u0c5b\u022a\u0c39\u022a\u0000\u0004\u0c5b\u022a\u0c75\u022c\u0c5b\u022c\u0000\u0004\u0c95\u0229\u0c75\u022c\u0c95\u022c\u0000\u0004\u0cc1\u020f\u0c94\u0229\u0cc1\u0229\u0000\u0004\u0cc1\u020f\u0cc1\u020f\u0cc1\u020f\u0000\u0004\u0cfe\u01de\u0cc1\u020f\u0cfe\u020f\u0000\u0004\u0d3b\u018a\u0cfe\u01de\u0d3b\u01de\u0000\u0004\u0d53\u0180\u0d39\u018c\u0d53\u018c\u0000\u0004\u0d7e\u017d\u0d53\u0180\u0d7e\u0180\u0000\u0004\u0d7e\u017d\u0d9c\u017e\u0d7e\u017e\u0000\u0004\u1160\u056e\u0d68\u059c\u1160\u059c\u0000\u0004\u11ab\u055e\u115e\u056e\u11ab\u056e\u0000\u0004\u11e0\u054c\u11ab\u055e\u11e0\u055e\u0000\u0004\u11e0\u054c\u11e0\u054c\u11e0\u054c\u0000\u0004\u1217\u051c\u11e0\u054c\u1217\u054c\u0000\u0004\u1255\u04ce\u1217\u051c\u1255\u051c\u0000\u0004\u127c\u0465\u1255\u04ce\u127c\u04ce\u0000\u0004\u1297\u03f8\u127b\u0465\u1297\u0465\u0000\u0004\u12ac\u039e\u1295\u03fc\u12ac\u03fc\u0000\u0004\u1452\u039f\u12ab\u039f\u1452\u039f\u0000\u0004\u0003\u0129\ufef6\u0137\u0003\u0137\u0000\u0004\ufef6\u0137\ufe4a\u0138\ufef6\u0138\u0000\u0004\ufec9\u0126\ufe9a\u0126\ufec9\u0126\u000c\u0001\ufeb3\u012e\ufe8c\u0125\ufe6f\u0108\ufe69\u00e6\ufe76\u00cc\ufe94\u00b9\ufebc\u00b6\ufeeb\u00c4\ufef5\u00ea\ufee8\u010f\ufed1\u0125\ufeb3\u012e\u0003\u0068\u0111\u00b0\u0119\u000c\u0002\u0001\u0093\u0115\u0171\u007a\u0003\u0344\u005b\u0169\u00ab\u0001\u0000\u0003\u03c3\u0023\u0344\u005a\u0001\u0000\u0003\u04a2\u0027\u04fa\u0056\u0001\u0000\u0003\u0505\u0077\u0594\u0077\u0005\u0002\u0001\u0551\u0077\u04f7\u0184\u0003\u03f6\u0013\u03c4\"\u0001\u0000\u0003\u0425\u000e\u03f7\u0012\u0001\u0000\u0003\u0426\u000e\u0460\u0011\u0001\u0000\u0003\u0461\u0011\u04a1\u0026\u0001\u0000\u0003\u00da\u012b\u0159\u012b\u0001\u0000\u0003\u0195\u011d\u0165\u012a\u0009\u0000\u0004\u0383\u01ac\u03f2\u01ac\u0383\u01ac\u0002\u0003\u03b8\u0216\u04f5\u0216\u0002\u029b\u0150\u0000",
+		"\u0004\u03c0\u00be\u0000\u00d7\u03c0\u00d7\u0000\u0006\u008a\u00c8\u0018\u00c8\u0000\u0004\u018a\u009c\u0107\u009d\u018a\u009d\u0002\u0003\u015e\u00b9\u02d5\u008e\u0004\u03ad\u009b\u0371\u009b\u03ad\u009b\u0002\u0003\u0392\u00a5\u044e\u00a5"
+	};
+	private int levelNum = 0;
 	
 	private int time = 10;
 	private int calc = 2;
@@ -110,7 +105,7 @@ public class run extends Applet implements Runnable {
 			}
 		}
 		
-		resetLevel();
+		loadLevel(levels[levelNum]);
 		
 		BufferedImage level = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D lg = (Graphics2D) level.getGraphics();
@@ -169,12 +164,24 @@ public class run extends Applet implements Runnable {
 				double[] obj = allObjects[k];
 				Point[] animation = animations[k];
 				
+				if(obj[TYPE] == TYPE_EXITPOINT) {
+					double dx = obj[X1] - posX / SCALE;
+					double dy = obj[Y1] - posY / SCALE;
+					double di = dx * dx + dy * dy;
+					
+					if(di < 300) {
+						levelNum++;
+						loadLevel(levels[levelNum]);
+					}
+					continue;
+				}
+				
 				//obj[SWITCH] = BTN_ON; //TODO place this in the button collision code, if there is no button it's on
 				boolean atZero = true;
 				if (animation.length > 1)
 					atZero = ((obj[CURRENT_POINT] - obj[DIRECTION] == 0) && obj[PREV_CURRENT_POINT] == 0);
 				obj[PREV_CURRENT_POINT] = obj[CURRENT_POINT];
-				System.out.println(atZero + " - " + (obj[SWITCH] == BTN_OFF));
+				
 				if (atZero && obj[SWITCH] == BTN_OFF && animation.length > 1) {
 					obj[AT_ZERO] = 0;
 				}
@@ -436,6 +443,9 @@ public class run extends Applet implements Runnable {
 						lg.fillPolygon(xp2, yp2, 3);
 						((Graphics2D) lg).rotate(-angle, (int) obj[X1], (int) obj[Y1]);
 						break;
+					case TYPE_EXITPOINT:
+						lg.fillOval((int) obj[X1], (int) obj[Y1], 10, 10);
+						break;
 				}
 			}
 			
@@ -449,7 +459,7 @@ public class run extends Applet implements Runnable {
 					moveY = -3;
 				}
 				if (diedTimer > 300) {
-					resetLevel();
+					loadLevel(levels[levelNum]);
 					moveX = 0;
 					moveY = 0;
 					diedTimer = 0;
@@ -497,7 +507,7 @@ public class run extends Applet implements Runnable {
 		}
 	}
 	
-	private int readAnimation(int index) {
+	private int readAnimation(String level, int index) {
 		// number of points in the animation
 		animations[numObjects] = new Point[level.charAt(index++)];
 		
@@ -526,7 +536,7 @@ public class run extends Applet implements Runnable {
 		return index;
 	}
 	
-	public void resetLevel() {
+	public void loadLevel(String level) {
 		numObjects = 0;
 		moveOverTimeY = 0;
 		
@@ -547,26 +557,25 @@ public class run extends Applet implements Runnable {
 		int index = 0;
 		while(index < level.length()) {
 			// type is in lower 8 bits, flags are in upper 8 bits
+			// FLAGS DOES NOT EVEN MATTER ANYMORE
 			char ch = level.charAt(index++);
-			int type = ch & 0xff, flags = ch & 0xff00;
+			int type = ch & 0xff;
 			
 			// store base information that's common to every object in 
 			// the first 2 fields
 			allObjects[numObjects][TYPE] = type;
-			allObjects[numObjects][FLAGS] = flags;
 			
 			switch(type) {
-				case TYPE_SPAWNPOINT:
 				case TYPE_EXITPOINT:
-					allObjects[numObjects][X] = (short) level.charAt(index++); // x
-					allObjects[numObjects][Y] = (short) level.charAt(index++); // y
-					if (allObjects[numObjects][Y]>lowestY)
-						lowestY = allObjects[numObjects][Y];
+					allObjects[numObjects][X1] = (short) level.charAt(index++); // x
+					allObjects[numObjects][Y1] = (short) level.charAt(index++); // y
+					if (allObjects[numObjects][Y1]>lowestY)
+						lowestY = allObjects[numObjects][Y1];
 					break;
+					
 				case TYPE_LINE:
 				case TYPE_BUTTON:
 				case TYPE_TRIANGLE:
-					
 					allObjects[numObjects][X1] = (short) level.charAt(index++); // x1
 					allObjects[numObjects][Y1] = (short) level.charAt(index++); // y1
 					if (allObjects[numObjects][Y1] > lowestY)
@@ -588,11 +597,12 @@ public class run extends Applet implements Runnable {
 						allObjects[numObjects][THICKNESS] = level.charAt(index++); // thickness
 					else if (type == TYPE_BUTTON)
 						allObjects[numObjects][THICKNESS] = 16; // button thickness is always 8
-
-					index = readAnimation(index);
 					break;
 			}
+			index = readAnimation(level, index);
+			
 			allObjects[numObjects][SWITCH] = BTN_ON;
+			allObjects[numObjects][AT_ZERO] = 1.0;
 			numObjects++;
 		}
 
@@ -600,6 +610,7 @@ public class run extends Applet implements Runnable {
 			if (allObjects[k][TYPE] == TYPE_BUTTON) {
 				for (int j = k; j < numObjects; j++) {
 					if (animations[j].length > 0) {
+						allObjects[j][AT_ZERO] = 0.0;
 						allObjects[k][ATTACHED] = j;
 						break;
 					}

@@ -258,14 +258,14 @@ public class LevelView extends JComponent {
 		while(index < str.length()) {
 			// type is in lower 8 bits, flags are in upper 8 bits
 			char ch = str.charAt(index++);
-			int type = ch & 0xff, flags = ch & 0xff00;
+			int type = ch & 0xff;
 			
 			switch(type) {
-				case Item.TYPE_SPAWNPOINT:
 				case Item.TYPE_EXITPOINT:
-					PointItem pt = new PointItem(flags);
-					pt.x = (short) str.charAt(index++);
-					pt.y = (short) str.charAt(index++);
+					ExitPoint pt = new ExitPoint();
+					pt.x1 = (short) str.charAt(index++);
+					pt.y1 = (short) str.charAt(index++);
+					// Exit points don't have animation but w/e
 					index = readAnimation(pt, str, index);
 					items.add(pt);
 					break;

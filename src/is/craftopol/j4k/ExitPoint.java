@@ -5,30 +5,18 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 
-public class PointItem extends Item {
-	private static int spawnCounter = 1;
-	private static int exitCounter = 1;
-	
-	public int x;
-	public int y;
-	
-	public int type;
-	public int id;
-	
-	public PointItem(int type) {
-		this(type, 0, 0);
+public class ExitPoint extends Item {
+	public ExitPoint() {
+		
 	}
 	
-	public PointItem(int type, int x, int y) {
-		this.type = type;
-		
-		if(type == Item.TYPE_SPAWNPOINT)
-			id = spawnCounter++;
-		else id = exitCounter++;
+	public ExitPoint(int x, int y) {
+		x1 = x;
+		y1 = y;
 	}
 	
 	public String serialize() {
-		return "" + (char) (type | (id << 8)) + (char) x + (char) y;
+		return "" + (char) Item.TYPE_EXITPOINT + (char) x1 + (char) y1;
 	}
 
 	public Dimension getSize() {
@@ -36,23 +24,23 @@ public class PointItem extends Item {
 	}
 
 	public void render(Graphics g) {
-		g.setColor(type == Item.TYPE_SPAWNPOINT ? Color.green : Color.red);
-		g.drawRect(x, y, 1, 1);
+		g.setColor(Color.red);
+		g.drawRect(x1 - 2, y1 - 2, 4, 4);
 	}
 
 	public void setPosition(int x, int y) {
-		this.x = x;
-		this.y = y;
+		this.x1 = x;
+		this.y1 = y;
 	}
 
 	public void placeItemStart(Cursor cursor) {
-		this.x = cursor.getGridX();
-		this.y = cursor.getGridY();
+		this.x1 = cursor.getGridX();
+		this.y1 = cursor.getGridY();
 	}
 
 	public void placeItemDrag(Cursor cursor) {
-		this.x = cursor.getGridX();
-		this.y = cursor.getGridY();
+		this.x1 = cursor.getGridX();
+		this.y1 = cursor.getGridY();
 	}
 
 	public void setThickness(int thickness) {
@@ -64,12 +52,12 @@ public class PointItem extends Item {
 	}
 
 	public boolean contains(int x, int y) {
-		return x == this.x && y == this.y;
+		return Math.abs(x - x1) <= 5 && Math.abs(y - y1) <= 5;
 	}
 
 	@Override
 	public Item clone() {
-		return new PointItem(type, x, y);
+		return new ExitPoint(x1, y1);
 	}
 
 	@Override
@@ -85,6 +73,6 @@ public class PointItem extends Item {
 	}
 	
 	public Point getPosition() {
-		return new Point(x, y);
+		return new Point(x1, y1);
 	}
 }

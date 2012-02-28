@@ -23,7 +23,7 @@ public class LevelEditor extends JFrame implements ActionListener {
 	
 	private LevelView level = new LevelView();
 	
-	private JComboBox typeCombo = new JComboBox(new Class<?>[] { Button.class, Line.class, Triangle.class });
+	private JComboBox typeCombo = new JComboBox(new Class<?>[] { Button.class, Line.class, Triangle.class, ExitPoint.class });
 	
 	private JToggleButton addremButton = new JToggleButton("Add/remove");
 	private JToggleButton cloneButton = new JToggleButton("Clone");

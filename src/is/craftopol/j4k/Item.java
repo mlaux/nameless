@@ -2,16 +2,12 @@ package is.craftopol.j4k;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Point;
 
 /**
  * An Item is an entity that can be placed in a level for the character to
  * interact with.
  */
 public abstract class Item implements Cloneable {
-	/** Type constant for a {@link java.awt.Point}. */
-	public static final byte TYPE_SPAWNPOINT = 0x01;
-	
 	/** Type constant for an exit of a level. */
 	public static final byte TYPE_EXITPOINT = 0x02;
 	
