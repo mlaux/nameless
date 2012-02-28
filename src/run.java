@@ -63,7 +63,6 @@ public class run extends Applet implements Runnable {
 	};
 	private int levelNum = 0;
 	
-	private int time = 10;
 	private int calc = 2;
 	private int direction = 1;
 	//private double bodyAngle;
@@ -71,7 +70,6 @@ public class run extends Applet implements Runnable {
 	private static final int posY = 300;
 	private double stillCalc;
 	private double armAngle;
-	private double armMoveY;
 	private double angle;
 	//private byte insideObj;
 	
@@ -93,8 +91,6 @@ public class run extends Applet implements Runnable {
 	}
 
 	public void run() {
-		setSize(width * SCALE, height * SCALE); // For AppletViewer, remove later.
-		
 		BufferedImage bkg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		int[] pixels = ((DataBufferInt) bkg.getRaster().getDataBuffer()).getData();
 		
@@ -105,7 +101,7 @@ public class run extends Applet implements Runnable {
 			}
 		}
 		
-		loadLevel(levels[levelNum]);
+		loadLevel(levelNum);
 		
 		BufferedImage level = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D lg = (Graphics2D) level.getGraphics();
@@ -117,6 +113,8 @@ public class run extends Applet implements Runnable {
 		Graphics appletGraphics = getGraphics();
 
 		double moveX = 0, moveY = 0;
+		double armMoveY = 0;
+		int time = 10;
 		boolean onGround = false;
 		//int weight = 0;
 
@@ -171,7 +169,7 @@ public class run extends Applet implements Runnable {
 					
 					if(di < 300) {
 						levelNum++;
-						loadLevel(levels[levelNum]);
+						loadLevel(levelNum);
 					}
 					continue;
 				}
@@ -459,7 +457,7 @@ public class run extends Applet implements Runnable {
 					moveY = -3;
 				}
 				if (diedTimer > 300) {
-					loadLevel(levels[levelNum]);
+					loadLevel(levelNum);
 					moveX = 0;
 					moveY = 0;
 					diedTimer = 0;
@@ -536,7 +534,8 @@ public class run extends Applet implements Runnable {
 		return index;
 	}
 	
-	public void loadLevel(String level) {
+	public void loadLevel(int num) {
+		String level = levels[num];
 		numObjects = 0;
 		moveOverTimeY = 0;
 		
