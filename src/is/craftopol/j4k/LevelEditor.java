@@ -81,6 +81,7 @@ public class LevelEditor extends JFrame implements ActionListener {
 		
 		if(cmd.equals("Load")) {
 			String code = JOptionPane.showInputDialog(this, "Enter level string");
+			code = code.replace("\t", "").replace(" ", ""); // remove tabs and spaces
 			level.decode(code);
 		} else if(cmd.equals("Get code")) {
 			StringSelection ss = new StringSelection(level.encodeJava());

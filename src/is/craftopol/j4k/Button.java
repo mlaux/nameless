@@ -44,6 +44,17 @@ public class Button extends Item {
 		else 
 			g.setColor(Color.black);
 		
+		if(x2 < x1) {
+			// swap
+			
+			int t = x1;
+			x1 = x2;
+			x2 = t;
+			t = y1;
+			y1 = y2;
+			y2 = t;
+		}
+		
 		double angle = Math.atan2(y2 - y1, x2 - x1);
 		int distance = (int) Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 		
@@ -82,8 +93,6 @@ public class Button extends Item {
 	}
 
 	public void placeItemDrag(Cursor cursor) {
-		double angle = Math.atan2(y2, x2);
-		
 		x2 = cursor.getGridX();
 		y2 = cursor.getGridY();
 	}
