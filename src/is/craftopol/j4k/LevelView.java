@@ -289,6 +289,15 @@ public class LevelView extends JComponent {
 					index = readAnimation(tri, str, index);
 					items.add(tri);
 					break;
+				case Item.TYPE_BUTTON:
+					Button b = new Button();
+					b.x1 = (short) str.charAt(index++);
+					b.y1 = (short) str.charAt(index++);
+					b.x2 = (short) str.charAt(index++);
+					b.y2 = (short) str.charAt(index++);
+					index = readAnimation(b, str, index);
+					items.add(b);
+					break;
 			}
 		}
 		
