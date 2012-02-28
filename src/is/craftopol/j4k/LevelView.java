@@ -326,8 +326,10 @@ public class LevelView extends JComponent {
 	}
 
 	public void placeItemDrag() {
-		if(newItem != null)
+		if(newItem != null) {
+			System.out.println(newItem instanceof Line);
 			newItem.placeItemDrag(cursor);
+		}
 		repaint();
 	}
 	

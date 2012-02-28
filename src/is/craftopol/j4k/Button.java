@@ -27,7 +27,11 @@ public class Button extends Item {
 	}
 
 	public String serialize() {
-		return "" + (char) Item.TYPE_BUTTON + (char) x1 + (char) y1 + (char) x2 + (char) y2;
+		if (y2>y1) {
+			return "" + (char) Item.TYPE_BUTTON + (char) x1 + (char) y1 + (char) x2 + (char) y2;
+		} else {
+			return "" + (char) Item.TYPE_BUTTON + (char) x2 + (char) y2 + (char) x1 + (char) y1;
+		}
 	}
 
 	public Dimension getSize() {
@@ -40,12 +44,10 @@ public class Button extends Item {
 		else 
 			g.setColor(Color.black);
 		
-		boolean flip = false;
 		double angle = Math.atan2(y2 - y1, x2 - x1);
 		int distance = (int) Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
-		final int MAX_BUTTON_SIZE = 8;
 		
-		x2 = x1 + distance;
+		int newx2 = x1 + distance;
 		System.out.println(distance);
 		//if (x2 - 16 - MAX_BUTTON_SIZE < x1) {
 		///	x2 = x1 + 16 + MAX_BUTTON_SIZE;
@@ -54,12 +56,12 @@ public class Button extends Item {
 		int[] xp1 = {x1, x1 + 8, x1 + 8};
 		int[] yp1 = {y1, y1, y1 - 4};
 		
-		int[] xp2 = {x2, x2 - 8, x2 - 8};
+		int[] xp2 = {newx2, newx2 - 8, newx2 - 8};
 		int[] yp2 = {y1, y1, y1 - 4};
 		
 		((Graphics2D) g).rotate(angle, x1, y1);
 		g.fillPolygon(xp1, yp1, 3);
-		g.fillRect(x1 + 8, y1 - 8, (x2 - x1) - 16, 8);
+		g.fillRect(x1 + 8, y1 - 8, (newx2 - x1) - 16, 8);
 		g.fillPolygon(xp2, yp2, 3);
 		((Graphics2D) g).rotate(-angle, x1, y1);
 		
@@ -75,6 +77,8 @@ public class Button extends Item {
 	public void placeItemStart(Cursor cursor) {
 		x1 = cursor.getGridX();
 		y1 = cursor.getGridY();
+		x2 = x1;
+		y2 = y1;
 	}
 
 	public void placeItemDrag(Cursor cursor) {
