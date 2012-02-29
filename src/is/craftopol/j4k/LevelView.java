@@ -202,7 +202,7 @@ public class LevelView extends JComponent {
 	}
 	
 	public String encodeJava() {
-		String result = "private static final String level = \"";
+		String result = "";
 		String actual = encode();
 		for(char ch : actual.toCharArray()) {
 			if(ch == 13)
@@ -215,8 +215,6 @@ public class LevelView extends JComponent {
 				result += "\\\"";
 			else result += String.format("\\u%04x", (int) ch);
 		}
-		result += "\";";
-		
 		return result;
 	}
 	
@@ -461,6 +459,7 @@ public class LevelView extends JComponent {
 
 		public void mouseDragged(MouseEvent e) {
 			cursor.updatePosition(e.getX(), e.getY());
+			LevelEditor.getInstance().setDragText(cursor.getGridPos().toString());
 			
 			String mode = LevelEditor.getInstance().getSelectedMode();
 			

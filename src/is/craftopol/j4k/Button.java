@@ -27,7 +27,7 @@ public class Button extends Item {
 	}
 
 	public String serialize() {
-		if (y2>y1) {
+		if (y2 > y1) {
 			return "" + (char) Item.TYPE_BUTTON + (char) x1 + (char) y1 + (char) x2 + (char) y2;
 		} else {
 			return "" + (char) Item.TYPE_BUTTON + (char) x2 + (char) y2 + (char) x1 + (char) y1;
@@ -40,7 +40,7 @@ public class Button extends Item {
 
 	public void render(Graphics g) {
 		if(xChange != 0 || yChange != 0)
-			g.setColor(Color.gray);
+			return;
 		else 
 			g.setColor(Color.black);
 		

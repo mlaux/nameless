@@ -1,8 +1,10 @@
 package is.craftopol.j4k;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 
 public class ExitPoint extends Item {
@@ -24,8 +26,9 @@ public class ExitPoint extends Item {
 	}
 
 	public void render(Graphics g) {
+		((Graphics2D) g).setStroke(new BasicStroke(1));
 		g.setColor(Color.red);
-		g.drawRect(x1 - 2, y1 - 2, 4, 4);
+		g.fillRect(x1 - 2, y1 - 2, 4, 4);
 	}
 
 	public void setPosition(int x, int y) {

@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
-
+	
 //wheeeeeeeeeee
 public class LevelEditor extends JFrame implements ActionListener {	
 	private static LevelEditor instance;
@@ -33,6 +33,7 @@ public class LevelEditor extends JFrame implements ActionListener {
 	private JButton getCodeButton = new JButton("Get code");
 	
 	private JLabel statusLabel = new JLabel();
+	private JLabel dragLabel = new JLabel();
 	
 	private ButtonGroup optionGroup = new ButtonGroup();
 	
@@ -66,7 +67,11 @@ public class LevelEditor extends JFrame implements ActionListener {
 		toolbar.add(getCodeButton);
 		
 		content.add(toolbar, BorderLayout.SOUTH);
-		content.add(statusLabel, BorderLayout.NORTH);
+		
+		JPanel status = new JPanel();
+		status.add(statusLabel);
+		status.add(dragLabel);
+		content.add(status, BorderLayout.NORTH);
 		
 		setContentPane(content);
 		pack();
@@ -108,6 +113,10 @@ public class LevelEditor extends JFrame implements ActionListener {
 	
 	public void setStatusText(String str) {
 		statusLabel.setText(str);
+	}
+	
+	public void setDragText(String str) {
+		dragLabel.setText(str);
 	}
 	
 	public static LevelEditor getInstance() {
