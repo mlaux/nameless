@@ -417,6 +417,7 @@ public class LevelView extends JComponent {
 					placeItemStart(ItemFactory.newItem(LevelEditor.getInstance().getSelectedTool()));
 				} else if(cursor.isButtonDown(MouseEvent.BUTTON3)) {
 					removeItemUnderCursor();
+					repaint();
 				}
 			} else if(mode.equals("clone") || mode.equals("animate")) {
 				if(cursor.isButtonDown(MouseEvent.BUTTON1)) {

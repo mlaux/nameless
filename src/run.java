@@ -20,30 +20,28 @@ public class run extends Applet implements Runnable {
 	
 	private static final double HALF_PI = Math.PI / 2;
 	
-	// for ALL the objects
 	private static final int TYPE = 0;
 	
-	private static final int X1 = 2;
-	private static final int Y1 = 3;
-	private static final int X2 = 4; 
-	private static final int Y2 = 5;
-	private static final int X3 = 6;
-	private static final int Y3 = 7;
+	private static final int X1 = 1;
+	private static final int Y1 = 2;
+	private static final int X2 = 3; 
+	private static final int Y2 = 4;
+	private static final int X3 = 5;
+	private static final int Y3 = 6;
 	
-	private static final int SWITCH = 11;
-	private static final int CURRENT_POINT = 10;
-	private static final int DIRECTION = 12;
-	private static final int XDIF = 13;
-	private static final int YDIF = 14;
-	private static final int ANIM_SPEED = 15;
-	private static final int ATTACHED = 16;
-	private static final int PREV_CURRENT_POINT = 17;
-	private static final int AT_ZERO = 18;
-	
-	private static final int MOVEX = 8;
-	private static final int MOVEY = 9;
-	
-	private static final int THICKNESS = 6;
+	private static final int MOVEX = 7;
+	private static final int MOVEY = 8;
+
+	private static final int CURRENT_POINT = 9;
+	private static final int SWITCH = 10;
+	private static final int DIRECTION = 11;
+	private static final int XDIF = 12;
+	private static final int YDIF = 13;
+	private static final int ANIM_SPEED = 14;
+	private static final int ATTACHED = 15;
+	private static final int PREV_CURRENT_POINT = 16;
+	private static final int AT_ZERO = 17;
+	private static final int THICKNESS = 18;
 	
 	private static final int width = 400;
 	private static final int height = 300;
@@ -64,7 +62,6 @@ public class run extends Applet implements Runnable {
 		"\u0004\u00fd\uff7d\u02bd\uff7d\u00fd\uff7d\u0000\u0004\u010d\u0092\ufe76\u00b7\u010d\u00b7\u0000\u0004\ufe12\u00b7\ufdc5\u00b7\ufe12\u00b7\u0000\u0004\ufd61\u00b7\ufd31\u00b7\ufd61\u00b7\u0000\u0004\ufccd\u00b7\ufcb9\u00b7\ufccd\u00b7\u0000\u0004\ufc55\u00b8\ufc29\u00ea\ufc55\u00ea\u0000\u0004\ufc55\u00b9\ufc6c\u0135\ufc55\u0135\u0000\u0004\ufbe4\u0009\ufb34\u0009\ufbe4\u0009\u0000\u0006\ufc29\u0179\ufbe4\u0179\u0000\u0004\ufc2c\u0178\ufbca\u0178\ufc2c\u0178\u0002\u0004\ufc06\u01a7\ufc06\u0119\u0003\ufacc\u0009\ufb35\u0009\u0001\u0002\u0002\ufad1\u0008\uf75b\u0008\u0003\uf690\uffcf\uf61a\uffcf\u0001\u0002\u0002\uf688\uffce\uf995\uffce\u0003\uf9b6\uff84\ufa3b\uff84\u0001\u0002\u0002\uf9d2\uff85\uf767\uff85\u0003\uf4cb\uff3f\uf48c\uff3f\u0001\u0002\u0002\uf4c8\uff3f\uf85a\uff3f\u0004\uf2de\uff40\uf48c\uff40\uf2de\uff40\u0000\u0002\uf2ee\uff2f\u0000\u0004\ueeff\u042a\uf30f\u042a\ueeff\u042a\u0000\u0003\uef30\u0397\uef29\u03e9\u000f\u0000\u0003\uef32\u03ea\uef4d\u03f2\u000f\u0000\u0003\uefab\u0398\uef83\u03bf\n\u0000\u0003\uef84\u03c6\uefa5\u03e3\u000b\u0000\u0003\uefcc\u03c7\uefa9\u03e1\u000c\u0000\u0003\uefb0\u0399\uefcc\u03c1\u0007\u0000\u0003\ueff8\u0391\uefe3\u03ee\n\u0000\u0003\uf01e\u03ec\uefe9\u03ee\u000b\u0000\u0002\uf2c7\u0417\u0000",
 		"\u0004\uffb6\u0096\u0230\u0096\uffb6\u0096\u0000\u0004\u0235\uffdf\u011c\uffe9\u0235\uffe9\u0000\u0004\uff3d\uffdf\ufffa\uffe7\uff3d\uffe7\u0000\u0003\u0132\u0048\uffe4\u0051\u0004\u0000\u0003\u0019\u0015\u001b\u0036\u0011\u0000\u0003\u0039\n\u0003\u000b\u0008\u0000\u0003\u0044\u000f\u0041\u0033\u0009\u0000\u0003\u0047\u0027\u0050\u0035\u0007\u0000\u0003\u005b\u000e\u005e\u0034\u0008\u0000\u0003\u005f\u000b\u0071\u000c\u0007\u0000\u0003\u0060\u0034\u007a\u0037\u0007\u0000\u0003\u0061\u0021\u006a\"\u0005\u0000\u0003\u009a\u0009\u009d\u0038\u0009\u0000\u0003\u009d\u0008\u00b8\u0009\u0007\u0000\u0003\u00a1\u0038\u00b7\u003a\u0009\u0000\u0003\u00a0\u0023\u00a8\u0024\u0008\u0000\u0003\u00c5\u0016\u00c3\u0033\u000b\u0000\u0003\u00c9\u0015\u00d4\u0035\u0007\u0000\u0003\u00dd\u0015\u00d6\u0033\u0005\u0000\u0003\u00eb\u0006\u00ea\u0037\u0005\u0000\u0003\u00ee\u0007\u0107\u001e\u0006\u0000\u0003\u0106\u0020\u00eb\u0037\u0005\u0000\u0003\u01c0\uff7c\uffad\uff7d\u00da\u0000\u0003\u0112\u0035\u0112\u0038\u0007\u0000\u0003\u010e\u0000\u0111\"\u000c\u0000"	
 	};
-	private int levelNum = 0;
 	
 	private int calc = 2;
 	private int direction = 1; //TODO maybe dont need this because the direction changes whenever you press A and D, when you let go it resets it to right. So.....
@@ -79,21 +76,25 @@ public class run extends Applet implements Runnable {
 	private double lowestY = 300;
 	private double moveOverTimeY;
 	
-	private boolean stuck = false;
-	
-	private int diedTimer;
-	
-	private double[][] allObjects = new double[1000][19];
-	private Point[][] animations = new Point[1000][];
+	private double[][] allObjects = new double[400][19];
+	private Point[][] animations = new Point[400][];
 	private int numObjects = 0;
 	
-	private boolean[] keys = new boolean[0xFFFF];
+	private boolean[] keys = new boolean[400];
 
 	public void start() {
 		new Thread(this).start();
 	}
 
 	public void run() {
+		double moveX = 0, moveY = 0;
+		double armMoveY = 0;
+		int time = 10;
+		boolean stuck = false;
+		boolean onGround = false;
+		int levelNum = 0;
+		int diedTimer = 0;
+		
 		BufferedImage bkg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		int[] pixels = ((DataBufferInt) bkg.getRaster().getDataBuffer()).getData();
 		
@@ -104,23 +105,15 @@ public class run extends Applet implements Runnable {
 			}
 		}
 		
-		loadLevel(levelNum);
-		
 		BufferedImage level = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D lg = (Graphics2D) level.getGraphics();
-		
-		// set up graphics
 		BufferedImage screen = new BufferedImage(width * SCALE, height * SCALE, BufferedImage.TYPE_INT_RGB);
-		Graphics2D g = (Graphics2D) screen.getGraphics();
 		
+		Graphics2D lg = (Graphics2D) level.getGraphics();
+		Graphics2D g = (Graphics2D) screen.getGraphics();
 		Graphics appletGraphics = getGraphics();
 
-		double moveX = 0, moveY = 0;
-		double armMoveY = 0;
-		int time = 10;
-		boolean onGround = false;
-		//int weight = 0;
-
+		loadLevel(levelNum);
+		
 		// Game loop.
 		while (true) {
 			long start = System.nanoTime();
@@ -131,14 +124,14 @@ public class run extends Applet implements Runnable {
 				moveY = 7;
 			}
 			
-			if((keys['a'] || keys['A'])&& !keys['d']/* && insideObj != -1*/) {
+			if(keys['a'] || keys['A']/* && insideObj != -1*/) {
 				//insideObj = 0;
 				if (moveX>-2) {
 					moveX += -0.5;
 				}/* else {
 					moveX = -2;
 				}*/
-			} else if((keys['d'] || keys['D']) && !keys['a']/* && insideObj != 1*/) {
+			} else if(keys['d'] || keys['D']/* && insideObj != 1*/) {
 				//insideObj = 0;
 				if (moveX<2) {
 					moveX += 0.5;
@@ -168,9 +161,7 @@ public class run extends Applet implements Runnable {
 				if(obj[TYPE] == TYPE_EXITPOINT) {
 					double dx = obj[X1] - posX / SCALE;
 					double dy = obj[Y1] - posY / SCALE;
-					double di = dx * dx + dy * dy;
-					
-					if(di < 600 && diedTimer == 0) {
+					if(dx * dx + dy * dy < 600 && diedTimer == 0) {
 						levelNum++;
 						diedTimer++;
 					}
@@ -205,17 +196,6 @@ public class run extends Applet implements Runnable {
 						curY = animation[animation.length - 2].y;
 					}
 					
-					if (obj[SWITCH] == BTN_OFF && obj[DIRECTION] != -1 && obj[CURRENT_POINT] != animation.length - 1) {
-						obj[DIRECTION] = -1;
-						prevX ^= curX;
-						curX ^= prevX;
-						prevX ^= curX;
-						
-						prevY ^= curY;
-						curY ^= prevY;
-						prevY ^= curY;
-					}
-					
 					if (Math.abs(curX - obj[X1]-obj[XDIF]) <= Math.abs(obj[MOVEX]/2 * obj[ANIM_SPEED]) && Math.abs(curY - obj[Y1]-obj[YDIF]) <= Math.abs(obj[MOVEY]/2 * obj[ANIM_SPEED])) {
 						if (animation[0].equals(animation[animation.length-1]) && obj[CURRENT_POINT]==animation.length-1) {
 							obj[CURRENT_POINT] = 0;
@@ -238,23 +218,22 @@ public class run extends Applet implements Runnable {
 						obj[X1] -= useX; obj[Y1] -= useY;
 						obj[X2] -= useX; obj[Y2] -= useY;
 						
-						if(obj[TYPE] == TYPE_TRIANGLE) {
-							obj[X3] -= useX;
-							obj[Y3] -= useY;
-						}
+						obj[X3] -= useX;
+						obj[Y3] -= useY;
 						
 						int length = (int) Math.sqrt(Math.pow(curX - prevX, 2) + Math.pow(curY - prevY, 2));
 						obj[MOVEX] = (double)(curX - prevX) / length * obj[ANIM_SPEED];
 						obj[MOVEY] = (double)(curY - prevY) / length * obj[ANIM_SPEED];
 					}
-				}
-				
-				if (obj[AT_ZERO] == 1) {
+					
 					obj[X1] += obj[MOVEX];
 					obj[Y1] += obj[MOVEY];
 					
 					obj[X2] += obj[MOVEX];
 					obj[Y2] += obj[MOVEY];
+					
+					obj[X3] += obj[MOVEX];
+					obj[Y3] += obj[MOVEY];
 				}
 				
 				double x1 = obj[X1];
@@ -276,7 +255,7 @@ public class run extends Applet implements Runnable {
 				}
 				
 				if (obj[TYPE] == TYPE_LINE || obj[TYPE] == TYPE_BUTTON) {
-					double thicknessUse = obj[THICKNESS]/2;
+					double thicknessUse = obj[THICKNESS]/2.0;
 					
 					if (x1 < x2) {
 						x1 -= thicknessUse;
@@ -297,38 +276,20 @@ public class run extends Applet implements Runnable {
 				double percAcross = 1 - (posX / SCALE - x1) / ((double) width);
 				double inside = (minY - (percAcross * height)) - posY / SCALE;
 				
-				double percA1 = (1 - percAcross) * Math.abs(width);
-				double percA2 = percAcross * Math.abs(width);
-				double useA = Math.min(percA1, percA2);
+				double useA = Math.min((1 - percAcross) * Math.abs(width), percAcross * Math.abs(width));
 				
 				boolean collide = false;
 				stuck = false;
-				
-				if(obj[TYPE] == TYPE_TRIANGLE) {
-					if (obj[AT_ZERO] == 1) {
-						obj[X3] += obj[MOVEX];
-						obj[Y3] += obj[MOVEY];
-					}
-				}
+
 				
 				if (obj[TYPE] == TYPE_LINE || obj[TYPE] == TYPE_BUTTON) {
-					
-					if (percAcross <= 1 && percAcross >=0) {
-						if (/*useHeight > 98 && useHeight < 145*/inside >= -50 && inside <= -14) {
-							collide = true;
-						}
-					}
-					
-					final int PIXEL_AMOUNT = 10;
-					if (percAcross <= 1 && percAcross >=0  &&  inside >= -50 && inside <= -40 && percAcross > PIXEL_AMOUNT/Math.abs(width) && percAcross < 1 - (PIXEL_AMOUNT/Math.abs(width))) {
+					if (percAcross <= 1 && percAcross >=0  && inside >= -50 && inside <= -40 && percAcross > 10.0/Math.abs(width) && percAcross < 1 - (10.0/Math.abs(width))) {
 						moveY = 0;
 						moveObj(0, -(-50 - inside), 0);
 						
-						collide = false;
-						if (onGround) {
-							stuck = true;
-							collide = true;
-						}
+						// simplified..
+						// seems to work exactly the same as was previously
+						collide = stuck = onGround;
 					}
 				}
 				
@@ -419,6 +380,7 @@ public class run extends Applet implements Runnable {
 				
 				switch((int) obj[TYPE]) {
 					case TYPE_LINE:
+					case TYPE_BUTTON:
 						lg.setStroke(new BasicStroke((float) obj[THICKNESS]));
 						lg.drawLine((int) obj[X1], (int) obj[Y1], (int) obj[X2], (int) obj[Y2]);
 						break;
@@ -430,7 +392,7 @@ public class run extends Applet implements Runnable {
 						
 						lg.fillRect((int) Math.min(obj[X1], obj[X2]), (int) obj[Y3], (int) Math.abs(obj[X2] - obj[X1]), 2000);
 						break;
-					case TYPE_BUTTON:
+				/*	case TYPE_BUTTON:
 						double angle = Math.atan2(obj[Y2] - obj[Y1], obj[X2] - obj[X1]);
 						int distance = (int) Math.sqrt((obj[X2] - obj[X1]) * (obj[X2] - obj[X1]) + (obj[Y2] - obj[Y1]) * (obj[Y2] - obj[Y1]));
 						
@@ -442,24 +404,16 @@ public class run extends Applet implements Runnable {
 						int[] xp2 = {(int) x2, (int) x2 - 8, (int) x2 - 8};
 						int[] yp2 = {(int) obj[Y1], (int) obj[Y1], (int) obj[Y1] + 4};
 						
-						((Graphics2D) lg).rotate(angle, (int) obj[X1], (int) obj[Y1]);
+						lg.rotate(angle, (int) obj[X1], (int) obj[Y1]);
 						lg.fillPolygon(xp1, yp1, 3);
 						lg.fillRect((int) obj[X1] + 8, (int) obj[Y1], ((int) x2 - (int) obj[X1]) - 16, (int) obj[THICKNESS]/2);
 						lg.fillPolygon(xp2, yp2, 3);
-						((Graphics2D) lg).rotate(-angle, (int) obj[X1], (int) obj[Y1]);
-						break;
+						lg.rotate(-angle, (int) obj[X1], (int) obj[Y1]);
+						break;*/
 					case TYPE_EXITPOINT:
-						for (int x = -8; x <= 8; x++) {
-							for (int y = -8; y <= 8; y++) {
-								int value = (8 - (Math.abs(x) + Math.abs(y))/2) * 4;
-								if (value < 0) {
-									value = 0;
-								}
-								lg.setColor(new Color(value * 2, 0, 0));
-								lg.fillRect((int) obj[X1] + x, (int) obj[Y1] + y, 1, 1);
-							}
-						}
-						//lg.fillOval((int) obj[X1], (int) obj[Y1], 10, 10);
+						lg.setColor(new Color(100, 0, 0));
+						lg.fillOval((int) obj[X1] - 8, (int) obj[Y1] - 8, 16, 16);
+						lg.setColor(Color.black);
 						break;
 				}
 			}
@@ -468,13 +422,12 @@ public class run extends Applet implements Runnable {
 			if (diedTimer>0) {
 				diedTimer++;
 				
-				g.setColor(new Color(0, 0, 0, (int)(diedTimer <= 200 ? diedTimer * 1.275 : 255)));
+				g.setColor(new Color(0, 0, 0, diedTimer));
 				g.fillRect(0, 0, width * SCALE, height * SCALE);
-				if (diedTimer >= 200) {
-					moveY = -3;
-				}
-				if (diedTimer > 300) {
+				
+				if (diedTimer >= 255) {
 					loadLevel(levelNum);
+					moveY = -3;
 					moveX = 0;
 					moveY = 0;
 					diedTimer = 0;
@@ -490,35 +443,22 @@ public class run extends Applet implements Runnable {
 			//moveX = Math.round(moveX * 4) / 4.0;
 			moveX = Math.round(moveX * 1000) / 1000.0;
 			
-			boolean flip = moveX <= -0.25;
-			
 			if (!onGround || (int) moveX == 0) {
-				drawGuy(g, STAND, armMoveY, time, flip);
+				drawGuy(g, STAND, armMoveY, time, moveX <= -0.25);
 			} else if ((int)moveX != 0) {
-				drawGuy(g, WALK, 0, time, flip);
+				drawGuy(g, WALK, 0, time, moveX <= -0.25);
 			}
 			
 			time++;
 			
+			// Removing this method call ADDED bytes wtf
 			g.setColor(Color.white);
-			//g.drawString("FPS " + String.valueOf(fps), 20, 30);
 			
-			// render the buffer to the applet
 			appletGraphics.drawImage(screen, 0, 0, this);
 			
-			long end = System.nanoTime();
-			
-			long delta = 20 - ((end - start) / 1000000L);
-			if(delta < 0)
-				delta = 0;
-			
 			try {
-				Thread.sleep(delta);
+				Thread.sleep(Math.max(0, 20 - ((System.nanoTime() - start) / 1000000L)));
 			} catch(Exception e) { }
-			
-			if (!isActive()) {
-				return;
-			}
 		}
 	}
 	
@@ -576,47 +516,36 @@ public class run extends Applet implements Runnable {
 		while(index < level.length()) {
 			// type is in lower 8 bits, flags are in upper 8 bits
 			// FLAGS DOES NOT EVEN MATTER ANYMORE
-			char ch = level.charAt(index++);
-			int type = ch & 0xff;
+			int type = level.charAt(index++);
 			
 			// store base information that's common to every object in 
 			// the first 2 fields
 			allObjects[numObjects][TYPE] = type;
 			
-			switch(type) {
-				case TYPE_EXITPOINT:
-					allObjects[numObjects][X1] = (short) level.charAt(index++); // x
-					allObjects[numObjects][Y1] = (short) level.charAt(index++); // y
-					if (allObjects[numObjects][Y1]>lowestY)
-						lowestY = allObjects[numObjects][Y1];
-					break;
-					
-				case TYPE_LINE:
-				case TYPE_BUTTON:
-				case TYPE_TRIANGLE:
-					allObjects[numObjects][X1] = (short) level.charAt(index++); // x1
-					allObjects[numObjects][Y1] = (short) level.charAt(index++); // y1
-					if (allObjects[numObjects][Y1] > lowestY)
-						lowestY = allObjects[numObjects][Y1];
-	
-					allObjects[numObjects][X2] = (short) level.charAt(index++); // x2
-					allObjects[numObjects][Y2] = (short) level.charAt(index++); // y2
-					if (allObjects[numObjects][Y2] > lowestY)
-						lowestY = allObjects[numObjects][Y2];
-	
-					if (type == TYPE_TRIANGLE) {
-						allObjects[numObjects][X3] = (short) level.charAt(index++); // x3
-						allObjects[numObjects][Y3] = (short) level.charAt(index++); // y3
-						if (allObjects[numObjects][Y3] > lowestY)
-							lowestY = allObjects[numObjects][Y3];
-					}
-	
-					if (type == TYPE_LINE)
-						allObjects[numObjects][THICKNESS] = level.charAt(index++); // thickness
-					else if (type == TYPE_BUTTON)
-						allObjects[numObjects][THICKNESS] = 16; // button thickness is always 8
-					break;
+			allObjects[numObjects][X1] = (short) level.charAt(index++); // x
+			allObjects[numObjects][Y1] = (short) level.charAt(index++); // y
+			if (allObjects[numObjects][Y1]>lowestY)
+				lowestY = allObjects[numObjects][Y1];
+			
+			if(type != TYPE_EXITPOINT) {
+				allObjects[numObjects][X2] = (short) level.charAt(index++); // x2
+				allObjects[numObjects][Y2] = (short) level.charAt(index++); // y2
+				if (allObjects[numObjects][Y2] > lowestY)
+					lowestY = allObjects[numObjects][Y2];
+
+				if (type == TYPE_TRIANGLE) {
+					allObjects[numObjects][X3] = (short) level.charAt(index++); // x3
+					allObjects[numObjects][Y3] = (short) level.charAt(index++); // y3
+					if (allObjects[numObjects][Y3] > lowestY)
+						lowestY = allObjects[numObjects][Y3];
+				}
+
+				if (type == TYPE_LINE)
+					allObjects[numObjects][THICKNESS] = level.charAt(index++); // thickness
+				else if (type == TYPE_BUTTON)
+					allObjects[numObjects][THICKNESS] = 16; // button thickness is always 8
 			}
+			
 			index = readAnimation(level, index);
 			
 			allObjects[numObjects][SWITCH] = BTN_ON;
@@ -639,10 +568,11 @@ public class run extends Applet implements Runnable {
 
 	public void moveObj(double x, double y, int slope) {
 		double useY = 0;
+		double useX = 0;
+		double testX = 0;
+		
 		for(int k = 0; k < numObjects; k++) {
 			double[] obj = allObjects[k];
-			double useX = 0;
-			double testX = 0;
 			
 			if (angle < HALF_PI) {
 				testX = x;
@@ -657,10 +587,9 @@ public class run extends Applet implements Runnable {
 			
 			useY = Math.ceil(Math.abs(y)) * Math.signum(y);
 
-			Point[] anim = animations[k];
-			for(int j = 0; j < anim.length; j++) {
-				anim[j].x -= useX;
-				anim[j].y -= useY;
+			for(int j = 0; j < animations[k].length; j++) {
+				animations[k][j].x -= useX;
+				animations[k][j].y -= useY;
 			}
 			
 			obj[X1] -= useX; obj[Y1] -= useY;
@@ -689,7 +618,7 @@ public class run extends Applet implements Runnable {
 			direction = -direction;
 		}
 		if (action == WALK) 
-		calc+=direction*2;
+			calc+=direction*2;
 		
 		//if (action == WALK || action == STAND) {
 			//stillCalc = calc;
@@ -776,25 +705,10 @@ public class run extends Applet implements Runnable {
 	}
 
 	public boolean handleEvent(Event e) {
-		switch (e.id) {
-			case Event.KEY_PRESS:
-			case Event.KEY_ACTION:
-				keys[e.key] = true;
-				break;
-			case Event.KEY_RELEASE:
-				keys[e.key] = false;
-				break;
-			case Event.MOUSE_DOWN:
-				// mouse button pressed
-				break;
-			case Event.MOUSE_UP:
-				// mouse button released
-				break;
-			case Event.MOUSE_MOVE:
-				break;
-			case Event.MOUSE_DRAG:
-				break;
-		}
+		if(e.id == Event.KEY_PRESS)
+			keys[e.key] = true;
+		else if(e.id == Event.KEY_RELEASE)
+			keys[e.key] = false;
 		return false;
 	}
 }
