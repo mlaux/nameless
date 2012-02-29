@@ -691,7 +691,7 @@ public class run extends Applet implements Runnable {
 		if (action == WALK) 
 		calc+=direction*2;
 		
-		if (action == WALK || action == STAND) {
+		//if (action == WALK || action == STAND) {
 			//stillCalc = calc;
 			//armAngle = calc;
 			
@@ -770,8 +770,7 @@ public class run extends Applet implements Runnable {
 			//front leg2
 			g.rotate(Math.toRadians(calc+15),(int)(posX - 4 + Math.sin(Math.toRadians(calc+15))*16 - 2), (int)(posY - 35 + Math.cos(Math.toRadians(calc+15))*16) + 2);
 			g.fillRoundRect((int)(posX - 4 + Math.sin(Math.toRadians(-calc+15))*16) - 2, (int)(posY - 35 + Math.cos(Math.toRadians(-calc+15))*16) + 2, 6, 20, 6, 10);
-			g.rotate(Math.toRadians(-(calc+15)),(int)(posX - 4 + Math.sin(Math.toRadians(calc+15))*16 - 2), (int)(posY - 35 + Math.cos(Math.toRadians(calc+15))*16) + 2);
-		}
+		//}
 		
 		g.dispose();
 	}
