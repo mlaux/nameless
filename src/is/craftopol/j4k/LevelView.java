@@ -48,8 +48,9 @@ public class LevelView extends JComponent {
 		
 		setDoubleBuffered(true);
 		setPreferredSize(new Dimension(800, 616));
-		
-		// set up event listeners
+	}
+	
+	public void registerListeners() {
 		MouseHandler mh = new MouseHandler();
 		addMouseListener(mh);
 		addMouseMotionListener(mh);
