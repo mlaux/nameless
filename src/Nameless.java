@@ -1,6 +1,4 @@
 import info.gridworld.actor.ActorWorld;
-import info.gridworld.actor.Bug;
-import info.gridworld.gui.GUIController;
 import info.gridworld.gui.GridPanel;
 import info.gridworld.gui.WorldFrame;
 import info.gridworld.world.World;
@@ -110,30 +108,15 @@ public class Nameless extends GridPanel implements KeyListener {
 
 	public static void main(String[] args) throws Exception {
 		ActorWorld world = new ActorWorld();
-		world.add(new Bug());
 		world.show();
 		
 		Field frameField = World.class.getDeclaredField("frame");
 		frameField.setAccessible(true);
 		WorldFrame<?> wf = (WorldFrame<?>) frameField.get(world);
 		
-		Nameless n = new Nameless();
-
-		Field displayField = WorldFrame.class.getDeclaredField("display");
-		displayField.setAccessible(true);
-		displayField.set(wf, n);
-		
-		Field controlField = WorldFrame.class.getDeclaredField("control");
-		controlField.setAccessible(true);
-		GUIController<?> control = (GUIController<?>) controlField.get(wf);
-		
-		displayField = GUIController.class.getDeclaredField("display");
-		displayField.setAccessible(true);
-		displayField.set(control, n);
-		
 		wf.setResizable(false);
 		wf.getContentPane().remove(wf.getContentPane().getComponentAt(50, 50));
-		wf.getContentPane().add(n, BorderLayout.CENTER);
+		wf.getContentPane().add(new Nameless(), BorderLayout.CENTER);
 		
 		wf.pack();
 	}
