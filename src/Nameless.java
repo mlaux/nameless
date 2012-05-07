@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
@@ -17,6 +18,8 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.lang.reflect.Field;
+
+import javax.swing.ImageIcon;
 
 public class Nameless extends GridPanel implements KeyListener {	
 	private static final int TYPE_EXITPOINT = 0x02;
@@ -119,6 +122,7 @@ public class Nameless extends GridPanel implements KeyListener {
 		wf.getContentPane().add(new Nameless(), BorderLayout.CENTER);
 		
 		wf.pack();
+		wf.setTitle("NamelessWorld");
 	}
 	
 	public Nameless() {
@@ -502,8 +506,15 @@ public class Nameless extends GridPanel implements KeyListener {
 		g.drawString("Deaths: " + diedCount, 730, 15);
 		
 		appletGraphics.drawImage(screen, 0, 0, this);
+		
+		appletGraphics.setColor(Color.black);
+		for(int y = 0; y < getHeight(); y += 48) {
+			appletGraphics.drawLine(0, y, getWidth(), y);
+		}
+		for(int x = 0; x < getWidth(); x += 48) {
+			appletGraphics.drawLine(x, 0, x, getHeight());
+		}
 	}
-	
 
 	private int readAnimation(String level, int index) {
 		// number of points in the animation
