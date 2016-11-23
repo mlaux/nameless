@@ -1,6 +1,6 @@
 # Nameless
 
-![screenshot](https://github.com/mlaux/sce/blob/master/gameplay.gif)
+![screenshot](https://github.com/mlaux/nameless/blob/master/gameplay.gif)
 
 Nameless is a minimalist platform game implemented in 4 kilobytes of Java
 bytecode. Trent Davies and I entered the game in the 2011 Java4k
